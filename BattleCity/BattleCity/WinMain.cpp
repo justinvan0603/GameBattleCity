@@ -3,6 +3,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPTSTR lpCmdLine, int nCmdShow)
 {
+	///this is a comment
 	Game game;
 	if (!game.GameInit(hInstance))
 		return false;
