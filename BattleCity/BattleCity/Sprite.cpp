@@ -54,12 +54,12 @@ void Sprite::Next()
 	this->_Index = (this->_Index + 1) % this->_Count;
 }
 
-void Sprite::Render(LPDIRECT3DSURFACE9 Target, int index, D3DXVECTOR3 Location)
+void Sprite::Render(int index, D3DXVECTOR3 Location)
 {
-	this->Render(Target, index, Location.x, Location.y);
+	this->Render(index, Location.x, Location.y);
 }
 
-void Sprite::Render(LPDIRECT3DSURFACE9 Target, int row, int col, D3DXVECTOR3 Location)
+void Sprite::Render(int row, int col, D3DXVECTOR3 Location)
 {
 	RECT srect;
 
@@ -77,18 +77,18 @@ void Sprite::Render(LPDIRECT3DSURFACE9 Target, int row, int col, D3DXVECTOR3 Loc
 
 }
 
-void Sprite::Render(LPDIRECT3DSURFACE9 Target, int index, int X, int Y)
+void Sprite::Render(int index, int X, int Y)
 {
 	this->_Index = index;
-	this->Render(Target, X, Y);
+	this->Render(X, Y);
 }
 
-void Sprite::Render(LPDIRECT3DSURFACE9 Target, D3DXVECTOR3 Location)
+void Sprite::Render(D3DXVECTOR3 Location)
 {
-	this->Render(Target, Location.x, Location.y);
+	this->Render(Location.x, Location.y);
 }
 
-void Sprite::Render(LPDIRECT3DSURFACE9 Target, int X, int Y)
+void Sprite::Render(int X, int Y)
 {
 	RECT srect;
 
