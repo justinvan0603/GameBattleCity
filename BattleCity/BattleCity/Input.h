@@ -1,27 +1,29 @@
-//#pragma once
-//#include "dinput.h"
-//#include <windows.h>
-//#include <stdio.h>
-//#include <time.h>
-//#include <d3d9.h>
-//#include <d3dx9.h>
-//
-//
-//class Input
-//{
-//public:
-//	LPDIRECTINPUT8 dinput;
-//	LPDIRECTINPUTDEVICE8 dev_keyboard;
-//	LPDIRECTINPUTDEVICE8 dev_mouse;
-//
-//	Input(HINSTANCE hInstance, HWND hWnd);
-//	int Init();
-//	void Release();
-//	~Input();
-//private:
-//	int InitMouse();
-//	int InitKeyboard();
-//	HINSTANCE hInstance;
-//	HWND hWnd;
-//};
-//
+#pragma once
+#define MOUSEL	0
+#define MOUSER	1
+#define MOUSEM	2
+#include <dinput.h>
+
+class Input
+{
+private:
+	LPDIRECTINPUT8 dinput;
+	LPDIRECTINPUTDEVICE8 dimouse;
+	LPDIRECTINPUTDEVICE8 dikeyboard;
+	DIMOUSESTATE mouse_state;
+public:
+	Input();
+	int Init_DirectInput(HWND);
+	int Init_Keyboard(HWND);
+	void Poll_Keyboard();
+	int Key_Down(int);
+	void Kill_Keyboard();
+	void Poll_Mouse();
+	int Init_Mouse(HWND);
+	int Mouse_Button(int);
+	int Mouse_X();
+	int Mouse_Y();
+	void Kill_Mouse();
+	~Input();
+};
+

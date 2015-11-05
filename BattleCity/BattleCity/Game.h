@@ -1,13 +1,11 @@
 ﻿#pragma once
 #include "Window.h"
-#include "DirectX.h"
 #include "Input.h"
 
 class Game
 {
 private:
 	Window win;
-	DirectX direct;
 	//Input input;
 public:
 	Game();

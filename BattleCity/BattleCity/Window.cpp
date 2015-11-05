@@ -8,6 +8,10 @@ Window::Window()
 
 Window::~Window()
 {
+	if (d3ddev != NULL)
+		d3ddev->Release();
+	if (d3d != NULL)
+		d3d->Release();
 }
 
 bool Window::initWindow(HINSTANCE hInstance)
@@ -36,8 +40,8 @@ bool Window::initWindow(HINSTANCE hInstance)
 		WS_OVERLAPPEDWINDOW, //loại của sổ chương trình
 		CW_USEDEFAULT, // toạ độ X của của sổ khi xuất hiện
 		CW_USEDEFAULT, // toạ độ Y của của sổ khi xuất hiện
-		Win_WIDTH, // kích thước bề ngang của cửa sổ - đơn vị là pixel
-		Win_HEIGHT, // kích thước chiều cao của cửa sổ
+		800, // kích thước bề ngang của cửa sổ - đơn vị là pixel
+		600, // kích thước chiều cao của cửa sổ
 		NULL, // con trỏ trỏ tới đối tượng cha ;
 		//NULL = đối tượng quản lý là desktop của Windows
 		NULL, // con trỏ đối tượng menu của chương trình; NULL = không sử dụng
@@ -52,6 +56,31 @@ bool Window::initWindow(HINSTANCE hInstance)
 	return true;
 }
 
+bool Window::initDirectX()
+{
+	d3d = Direct3DCreate9(D3D_SDK_VERSION);
+	if (!d3d) 
+		return 0;
+
+	D3DPRESENT_PARAMETERS d3dpp;
+	ZeroMemory(&d3dpp, sizeof(d3dpp));
+	d3dpp.Windowed = TRUE;
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+
+	d3d->CreateDevice(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		wndHandle,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+		&d3dpp,
+		&d3ddev);
+
+	if (d3ddev == NULL) {
+		MessageBox(NULL, "Failed to create device", "Error", MB_OK);
+		return 0;
+	}
+}
 LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,
 	WPARAM wParam, LPARAM lParam)
 {

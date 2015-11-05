@@ -18,7 +18,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 	if (!this->win.initWindow(hInstance))
 		return false; 
 	// Khởi tạo directX
-	if (!this->direct.initDirect3D(this->win.wndHandle))
+	if (!this->win.initDirectX())
 		return false;
 	// Khởi tạo bàn phím
 	/*if (!this->input.CreateInput() || !this->input.InitKeyboard(this->win.wndHandle))

@@ -17,7 +17,6 @@ protected:
 
 	D3DXVECTOR3 _CurrentSpriteLocation;//current sprite's location
 public:
-	// Hàm này trong demo thầy có làm
 	Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, int Count, int SpritePerRow);
 	void Next();
 

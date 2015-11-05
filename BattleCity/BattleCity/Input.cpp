@@ -1,122 +1,136 @@
-//#include "Input.h"
-//
-//Input::Input(HINSTANCE hInstance, HWND hWnd)
-//{
-//	this->hInstance = hInstance;
-//	this->hWnd = hWnd;
-//
-//	dinput = NULL;
-//	dev_keyboard = NULL;
-//	dev_mouse = NULL;
-//}
-//
-////--------------------------------------
-////Initalize all  controller devices
-////--------------------------------------
-//int Input::Init()
-//{
-//	InitKeyboard();
-//	InitMouse();
-//	//try
-//	//{
-//	//	if (!InitKeyboard())
-//	//		throw Exception(ERR_CREATE_KEYBOARD, IDERR_CREATE_KEYBOARD);
-//
-//	//	if (!InitMouse())
-//	//		throw Exception(ERR_CREATE_MOUSE, IDERR_CREATE_MOUSE);
-//
-//	//	return 1;
-//	//}
-//	//catch (Exception exc)
-//	//{
-//	//	throw exc;
-//	//}
-//}
-//
-////--------------------------------------
-////Initalize keyboard
-////--------------------------------------
-//int Input::InitKeyboard()
-//{
-//	HRESULT result;
-//	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, NULL);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dinput->CreateDevice(GUID_SysKeyboard, &dev_keyboard, NULL);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_keyboard->SetDataFormat(&c_dfDIKeyboard);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_keyboard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_keyboard->Acquire();
-//	if (result != DI_OK)
-//		return 0;
-//
-//	SetTimer(hWnd, 0, 1000 / 12, NULL);
-//
-//	return 1;
-//}
-//
-//
-////--------------------------------------
-////Initalize mouse
-////--------------------------------------
-//int Input::InitMouse()
-//{
-//	HRESULT result;
-//	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, NULL);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dinput->CreateDevice(GUID_SysMouse, &dev_mouse, NULL);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_mouse->SetDataFormat(&c_dfDIMouse);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_mouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-//	if (result != DI_OK)
-//		return 0;
-//
-//	result = dev_mouse->Acquire();
-//	if (result != DI_OK)
-//		return 0;
-//
-//	return 1;
-//}
-//
-////--------------------------------------
-////Get the state of keyboard
-///*/--------------------------------------
-//HRESULT Controls::ReadDataFromKeyboard()
-//{
-//HRESULT hr;
-//BYTE    diks[256];   // DirectInput keyboard state buffer
-//int     i;
-//
-//if( dev_keyboard == NULL)
-//return S_OK;
-//
-//return S_OK;
-//}*/
-//
-//void Input::Release()
-//{
-//	dev_keyboard->Unacquire();
-//	dev_keyboard->Release();
-//	dinput->Release();
-//
-//}
-//
-//Input::~Input(void)
-//{
-//}
+#include "Input.h"
+
+#define BUTTON_DOWN(obj, button) (obj.rgbButtons[button] & 0x80)
+
+//keyboard input
+char keys[256];
+
+Input::Input()
+{
+
+}
+Input::~Input()
+{
+
+}
+
+int Input::Init_DirectInput(HWND hwnd)
+{
+	//initialize DirectInput object
+	HRESULT result = DirectInput8Create(
+		GetModuleHandle(NULL),
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&dinput,
+		NULL);
+
+	if (result != DI_OK)
+		return 0;
+
+	//initialize the mouse
+
+	result = dinput->CreateDevice(GUID_SysMouse, &dimouse, NULL);
+	if (result != DI_OK)
+		return 0;
+
+	//initialize the keyboard
+	result = dinput->CreateDevice(GUID_SysKeyboard, &dikeyboard, NULL);
+	if (result != DI_OK)
+		return 0;
+
+	//clean return
+	return 1;
+}
+
+int Input::Init_Mouse(HWND hwnd)
+{
+	//set the data format for mouse input
+	HRESULT result = dimouse->SetDataFormat(&c_dfDIMouse);
+	if (result != DI_OK)
+		return 0;
+
+	//set the cooperative level
+	//this will also hide the mouse pointer
+	result = dimouse->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	if (result != DI_OK)
+		return 0;
+
+	//acquire the mouse
+	result = dimouse->Acquire();
+	if (result != DI_OK)
+		return 0;
+
+	//give the go-ahead
+	return 1;
+}
+
+int Input::Mouse_X()
+{
+	return mouse_state.lX;
+}
+
+int Input::Mouse_Y()
+{
+	return mouse_state.lY;
+}
+
+int Input::Mouse_Button(int button)
+{
+	return BUTTON_DOWN(mouse_state, button);
+}
+
+void Input::Poll_Mouse()
+{
+	dimouse->GetDeviceState(sizeof(mouse_state), (LPVOID)&mouse_state);
+}
+
+void Input::Kill_Mouse()
+{
+	if (dimouse != NULL)
+	{
+		dimouse->Unacquire();
+		dimouse->Release();
+		dimouse = NULL;
+	}
+}
+
+int Input::Init_Keyboard(HWND hwnd)
+{
+	//set the data format for mouse input
+	HRESULT result = dikeyboard->SetDataFormat(&c_dfDIKeyboard);
+	if (result != DI_OK)
+		return 0;
+
+	//set the cooperative level
+	result = dikeyboard->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	if (result != DI_OK)
+		return 0;
+
+	//acquire the mouse
+	result = dikeyboard->Acquire();
+	if (result != DI_OK)
+		return 0;
+
+	//give the go-ahead
+	return 1;
+}
+
+void Input::Poll_Keyboard()
+{
+	dikeyboard->GetDeviceState(sizeof(keys), (LPVOID)&keys);
+}
+
+int Input::Key_Down(int key)
+{
+	return (keys[key] & 0x80);
+}
+
+void Input::Kill_Keyboard()
+{
+	if (dikeyboard != NULL)
+	{
+		dikeyboard->Unacquire();
+		dikeyboard->Release();
+		dikeyboard = NULL;
+	}
+}
