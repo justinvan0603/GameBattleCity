@@ -32,27 +32,8 @@ bool Game::GameRun()
 	ZeroMemory(&msg, sizeof(msg));
 
 	DWORD timePerFrame = 100 / FRAME_RATE;
-	//float playerX = 0;
-	//float playerY = 0;
-	//float vx = 5.0;
-	//float vy = 0.0;
-	DWORD startTime = GetTickCount();
-	while (1)
-	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				break;
-			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		DWORD currentTime = GetTickCount();
-		DWORD passedTime = currentTime - startTime;
 
-		if (passedTime >= timePerFrame)
-		{
+
 			win.getDevice()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 			if (win.getDevice()->BeginScene())
 			{
@@ -63,7 +44,7 @@ bool Game::GameRun()
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);
 
-		}
-	}
+		
+	
 	return true;
 }
