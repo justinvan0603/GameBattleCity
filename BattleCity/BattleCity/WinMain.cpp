@@ -9,18 +9,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return false;
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
-	while (msg.message != WM_QUIT)
+	//while (msg.message != WM_QUIT)
+	//{
+	//	// Kiểm tra các sự kiện được gửi tới trong hàng đợi của ứng dụng
+	//	if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+	//	{
+	//		TranslateMessage(&msg);
+	//		DispatchMessage(&msg);
+	//	}
+	//	else
+	//	{
+	//		game.GameRun();
+	//		// Game run
+	//	}
+	//}
+	while (true)
 	{
-		// Kiểm tra các sự kiện được gửi tới trong hàng đợi của ứng dụng
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
+			if (msg.message == WM_QUIT)
+			{
+				break;
+			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-		{
-			// Game run
-		}
+		game.GameRun();
 	}
-	return (int)msg.wParam;
+	return 0;
 }

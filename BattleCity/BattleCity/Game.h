@@ -12,6 +12,6 @@ public:
 	~Game();
 
 	bool GameInit(HINSTANCE); // Khởi tạo game
-	
+	bool GameRun();
 };
 

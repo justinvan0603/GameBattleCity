@@ -1,21 +1,33 @@
 #pragma once
 #include "Sprite.h"
+#include "GameDefaultConstant.h"
 enum MoveDirection
 {
 	UP = 0,
 	LEFT = 1,
-	RIGHT = 2,
-	DOWN = 4,
-	NUM_OF_DIRECTION = 5
+	DOWN = 2,
+	RIGHT = 3,
+	NUM_OF_DIRECTION = 4
 };
 
 class DynamicObject
 {
 protected:
-	Sprite* _listSprite; //Quan ly tat ca cac frame cho tat ca cac huong chuyen dong
+	int _id;
+	LPD3DXSPRITE _spriteHandler;
+	LPDIRECT3DDEVICE9 _device;
 	bool _isTerminated;
-	int _hitPoint;
 	RECT _size;
+	int _positionX;
+	int _positionY;
+	int _speedX;
+	int _speedY;
+	int _level;
+	Sprite** _listSprite; //Quan ly tat ca cac frame cho tat ca cac huong chuyen dong
+	int _hitPoint;
+	MoveDirection _currentDirection;
+
+
 public:
 	DynamicObject();
 	virtual void Draw() = 0;

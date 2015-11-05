@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-
+#include "DefaultConstant.h"
 class Window
 {
 public:
@@ -17,5 +17,6 @@ public:
 	bool initWindow(HINSTANCE hInstance);
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 	bool initDirectX();
+	LPDIRECT3DDEVICE9 getDevice();
 };
 

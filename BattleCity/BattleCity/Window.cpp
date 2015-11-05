@@ -40,8 +40,8 @@ bool Window::initWindow(HINSTANCE hInstance)
 		WS_OVERLAPPEDWINDOW, //loại của sổ chương trình
 		CW_USEDEFAULT, // toạ độ X của của sổ khi xuất hiện
 		CW_USEDEFAULT, // toạ độ Y của của sổ khi xuất hiện
-		800, // kích thước bề ngang của cửa sổ - đơn vị là pixel
-		600, // kích thước chiều cao của cửa sổ
+		Win_WIDTH, // kích thước bề ngang của cửa sổ - đơn vị là pixel
+		Win_HEIGHT, // kích thước chiều cao của cửa sổ
 		NULL, // con trỏ trỏ tới đối tượng cha ;
 		//NULL = đối tượng quản lý là desktop của Windows
 		NULL, // con trỏ đối tượng menu của chương trình; NULL = không sử dụng
@@ -94,4 +94,9 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,
 	// Chú ý, hàm này yêu cầu bạn phải cung cấp thông điệp trả về cho quá trình
 	// xứ lý tiếp theo
 	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+LPDIRECT3DDEVICE9 Window::getDevice()
+{
+	return this->d3ddev;
 }

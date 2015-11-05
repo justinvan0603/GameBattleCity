@@ -5,5 +5,5 @@
 
 #define Win_WIDTH 800
 #define Win_HEIGHT 600
-
+#define FRAME_RATE 30
 #endif
