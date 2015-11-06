@@ -11,10 +11,10 @@
 #define DEFAULT_IMMORTAL_TIME 5
 #define DEFAULT_PLAYER_LEVEL 1
 #define DEFAULT_PLAYER_HP 1
-#define PLAYER_SPRITE_UP_PATH    "\\Resource\\Player\\0.png"
-#define PLAYER_SPRITE_LEFT_PATH  "\\Resource\\Player\\1.png"
-#define PLAYER_SPRITE_DOWN_PATH  "\\Resource\\Player\\2.png"
-#define PLAYER_SPRITE_RIGHT_PATH "\\Resource\\Player\\3.png"
+#define PLAYER_SPRITE_UP_PATH    "0.png"
+#define PLAYER_SPRITE_LEFT_PATH  "1.png"
+#define PLAYER_SPRITE_DOWN_PATH  "2.png"
+#define PLAYER_SPRITE_RIGHT_PATH "3.png"
 //Sprite
 #define SPRITE_WIDTH 32
 #define SPRITE_HEIGHT 32

@@ -16,6 +16,7 @@ Window::~Window()
 
 bool Window::initWindow(HINSTANCE hInstance)
 {
+	this->hInst = hInstance;
 	WNDCLASSEX wcex;
 	// Xác lập thuộc tính đối tượng kiểu WNDCLASSEX structure. Các thuộc tính này sẽ tác
 	// động tới cách thể hiện của cửa sổ chương trình
@@ -25,7 +26,7 @@ bool Window::initWindow(HINSTANCE hInstance)
 	wcex.lpfnWndProc = (WNDPROC)WndProc; // xác lập tên hàm gọi lại callback procedure
 	wcex.cbClsExtra = 0; // xác lập số byte cấp phát thêm cho Class
 	wcex.cbWndExtra = 0; // xác lập số byte cấp phát thêm cho mỗi instance của Class
-	wcex.hInstance = hInstance; // con trỏ (handle) trỏ tới instance của ứng dụng
+	wcex.hInstance = hInst; // con trỏ (handle) trỏ tới instance của ứng dụng
 	wcex.hIcon = 0; //loại biểu tượng chương trình
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);// xác lập kiểu con trỏ chuột mặc định
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // màu nền của cửa sổ

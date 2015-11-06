@@ -98,14 +98,14 @@ void Sprite::Render(int X, int Y)
 	srect.bottom = srect.top + _Height - 1;
 
 	D3DXVECTOR3 position((float)X, (float)Y, 0);
-
+	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 	this->_SpriteHandler->Draw(
 		_Image,
 		&srect,
 		NULL,
 		&position,
 		D3DCOLOR_XRGB(255, 255, 255));
-
+	_SpriteHandler->End();
 }
 
 Sprite::~Sprite()

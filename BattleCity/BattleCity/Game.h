@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include "Window.h"
-#include "Input.h"
 
+#include "PlayerTank.h"
+#include "Keyboard.h"
 class Game
 {
 private:
 	Window win;
-	//Input input;
+	//PlayerTank* _player;
+
+	Keyboard* _keyboard;
 public:
 	Game();
 	~Game();
