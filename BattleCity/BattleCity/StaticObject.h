@@ -7,6 +7,7 @@ protected:
 
 public:
 	StaticObject();
+
 	~StaticObject();
 };
 

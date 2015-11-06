@@ -24,9 +24,10 @@ protected:
 
 public:
 	DynamicObject();
-	virtual void Draw() = 0;
+	
 	virtual void Move() = 0;
 	virtual void Shoot() = 0;
+	virtual void Draw() = 0;
 	virtual void Update() = 0;
 	~DynamicObject();
 };
