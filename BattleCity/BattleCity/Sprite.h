@@ -26,6 +26,8 @@ public:
 	void Render(int index, int X, int Y);
 	void Render(int index, D3DXVECTOR3 Location);
 	void Render(int row, int col, D3DXVECTOR3 Location);
+	int getWidth();
+	int getHeight();
 public:
 	~Sprite(void);
 };

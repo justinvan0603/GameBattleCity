@@ -112,3 +112,12 @@ Sprite::~Sprite()
 {
 
 }
+
+int Sprite::getWidth()
+{
+	return this->_Width;
+}
+int Sprite::getHeight()
+{
+	return this->_Height;
+}
