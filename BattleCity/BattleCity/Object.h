@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "GameDefaultConstant.h"
 class Object
 {
 protected:

@@ -1,7 +1,6 @@
 ﻿#include "Game.h"
 
 
-
 Game::Game()
 {
 	
@@ -28,7 +27,8 @@ bool Game::GameInit(HINSTANCE hInstance)
 	if (!_keyboard->InitKeyboard(this->win.get_hInstance(), this->win.get_windowHandler()))
 		return false;
 	_player = new PlayerTank(win.getSpriteHandler());
-	//_bullet = new Bullet(win.getDevice());
+	_map = new Map(win.getSpriteHandler());
+	
 	return true;
 }
 
@@ -39,20 +39,23 @@ bool Game::GameRun()
 
 	DWORD timePerFrame = 100 / FRAME_RATE;
 
-
+			
 			win.getDevice()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+			
 			if (win.getDevice()->BeginScene())
 			{
 				_player->Draw();
 				
 				//_bullet->Draw();
 				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
-
+				_map->Draw();
+				
 				win.getDevice()->EndScene();
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);
 			_player->Update();
-			_keyboard->ProcessKeyboard(this->win.get_windowHandler());
+			_map->Update();
+			_keyboard->ProcessKeyboard(win.get_windowHandler());
 		
 	
 	return true;

@@ -3,13 +3,14 @@
 
 #include "PlayerTank.h"
 #include "Keyboard.h"
+#include "Map.h"
 class Game
 {
 private:
 	Window win;
 	PlayerTank* _player;
 	Keyboard* _keyboard;
-	//Bullet* _bullet;
+	Map* _map;
 public:
 	Game();
 	~Game();

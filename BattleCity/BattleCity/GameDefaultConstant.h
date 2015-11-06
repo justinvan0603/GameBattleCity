@@ -29,7 +29,21 @@
 #define ID_SUPER_HEAVY_TANK 5
 
 //Static Object
-#define ID_BRICK 6
+#define ID_BRICKWALL 6
+#define ID_STEELWALL 7
+#define ID_TREES	 8
+#define ID_WATER	 9
+#define IF_ICE		 10
+
+//Map default value
+#define NUM_ROW_TILE	52
+#define NUM_COLUMN_TILE 52
+#define TILE_WIDTH		8
+#define TILE_HEIGHT		8
+
+//Image paths
+#define MAP_RESOURCE_PATH_BRICKWALL	"Resource\\Map\\Brick\\BrickWall.png"
+#define MAP_RESOURCE_PATH_STEELWALL	"Resource\\Map\\Steel\\SteelWall.png"
 
 //Bullet
 #define BULLET_SPEED_X 3
@@ -40,9 +54,9 @@
 #define BULLET_SPRITE_RIGHT_PATH	"bullet-right.png"
 #define BULLET_WIDTH 7
 #define BULLET_HEIGHT 11
+
 //Object State
 #define STATE_IMMORTAL_NONE 0
 #define SPEED_NO 0
-
 
 #endif // ! __GAME_DEFAULT_CONSTANT__

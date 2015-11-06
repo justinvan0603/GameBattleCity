@@ -63,18 +63,19 @@ void Sprite::Render(int row, int col, D3DXVECTOR3 Location)
 {
 	RECT srect;
 
-	srect.left = col * (_Width)+1;
-	srect.top = row * (_Height)+1;
-	srect.right = srect.left + _Width - 1;
-	srect.bottom = srect.top + _Height - 1;
+	srect.left = col * (_Width);
+	srect.top = row * (_Height);
+	srect.right = srect.left + _Width;
+	srect.bottom = srect.top + _Height;
 
+	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 	this->_SpriteHandler->Draw(
 		_Image,
 		&srect,
 		NULL,
 		&Location,
 		D3DCOLOR_XRGB(255, 255, 255));
-
+	_SpriteHandler->End();
 }
 
 void Sprite::Render(int index, int X, int Y)
