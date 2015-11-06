@@ -35,7 +35,7 @@ bool Keyboard::InitKeyboard(HINSTANCE hInstance, HWND hWnd)
 }
 int Keyboard::IsKeyDown(int KeyCode)
 {
-	return (_keyState[KeyCode] & 0x80) > 0;
+	return (_keyState[KeyCode] & 0x80);
 }
 Keyboard* Keyboard::getInstance()
 {

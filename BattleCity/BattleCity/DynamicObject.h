@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "GameDefaultConstant.h"
+#include "Keyboard.h"
 
 enum MoveDirection
 {
@@ -18,6 +19,7 @@ protected:
 	int _speedY;
 	int _level;
 	Sprite** _listSprite; //Quan ly tat ca cac frame cho tat ca cac huong chuyen dong
+	Sprite* _curSprite;
 	int _hitPoint;
 	MoveDirection _currentDirection;
 

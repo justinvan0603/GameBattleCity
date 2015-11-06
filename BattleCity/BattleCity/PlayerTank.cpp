@@ -19,22 +19,61 @@ PlayerTank::PlayerTank(LPDIRECT3DDEVICE9 device)
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, PLAYER_SPRITE_LEFT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
+	_curSprite = this->_listSprite[UP];
+	
 }
 
 void PlayerTank::Draw()
 {
-	this->_listSprite[UP]->Render(NULL, _positionX, _positionY);
+	this->_spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+
+	_curSprite->Render(_positionX, _positionY);
+
+	this->_spriteHandler->End();
+
 }
 void PlayerTank::Move()
 {
+	if (Keyboard::getInstance()->IsKeyDown(DIK_UP))
+	{
+		this->_speedY = -DEFAULT_PLAYER_SPEED_Y;
+		this->_positionY += this->_speedY;
+		_curSprite = _listSprite[UP];
+		return;
+	}
+	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
+	{
+		this->_speedY = DEFAULT_PLAYER_SPEED_Y;
+		this->_positionY += this->_speedY;
+		_curSprite = _listSprite[DOWN];
+		return;
+	}
+	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
+		_speedY = 0;
+	if (Keyboard::getInstance()->IsKeyDown(DIK_LEFT))
+	{
+		this->_speedX = -DEFAULT_PLAYER_SPEED_X;
+		this->_positionX += this->_speedX;
+		_curSprite = _listSprite[LEFT];
+		return;
+	}
+	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
+	{
+		this->_speedX = DEFAULT_PLAYER_SPEED_X;
+		this->_positionX += this->_speedX;
+		_curSprite = _listSprite[RIGHT];
+		return;
+	}
 
+	if (!Keyboard::getInstance()->IsKeyDown(DIK_LEFT) && !Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
+		_speedX = 0;
 }
 void PlayerTank::Shoot()
 {
 }
 void PlayerTank::Update()
 {
-
+	this->Move();
 }
 PlayerTank::~PlayerTank()
 {

@@ -11,9 +11,9 @@ protected:
 	int _positionY;
 	RECT _size;
 public:
-	Object(){};
+	Object();
 	virtual void Draw() = 0;
 	virtual void Update() = 0;
-	~Object(){};
+	~Object();
 };
 

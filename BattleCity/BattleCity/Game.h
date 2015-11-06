@@ -7,8 +7,7 @@ class Game
 {
 private:
 	Window win;
-	//PlayerTank* _player;
-
+	PlayerTank* _player;
 	Keyboard* _keyboard;
 public:
 	Game();

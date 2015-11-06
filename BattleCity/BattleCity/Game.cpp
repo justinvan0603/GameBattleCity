@@ -14,6 +14,9 @@ Game::~Game()
 
 bool Game::GameInit(HINSTANCE hInstance)
 {
+
+
+
 	// Khởi tạo cửa sổ game
 	if (!this->win.initWindow(hInstance))
 		return false; 
@@ -24,7 +27,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 	_keyboard = Keyboard::getInstance();
 	if (!_keyboard->InitKeyboard(this->win.hInst, this->win.wndHandle))
 		return false;
-	//_player = new PlayerTank(win.getDevice());
+	_player = new PlayerTank(win.getDevice());
 	return true;
 }
 
@@ -39,13 +42,14 @@ bool Game::GameRun()
 			win.getDevice()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 			if (win.getDevice()->BeginScene())
 			{
-				//_player->Draw();
+				_player->Draw();
 				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
 
 				win.getDevice()->EndScene();
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);
-
+			_player->Update();
+			_keyboard->ProcessKeyboard(win.wndHandle);
 		
 	
 	return true;
