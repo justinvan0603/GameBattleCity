@@ -9,6 +9,7 @@ private:
 	Window win;
 	PlayerTank* _player;
 	Keyboard* _keyboard;
+	//Bullet* _bullet;
 public:
 	Game();
 	~Game();

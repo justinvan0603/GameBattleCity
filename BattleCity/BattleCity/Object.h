@@ -12,6 +12,10 @@ protected:
 	RECT _size;
 public:
 	Object();
+	int getPositionX();
+	int getPositionY();
+	void setPositionX(int newX);
+	void setPositionY(int newY);
 	virtual void Draw() = 0;
 	virtual void Update() = 0;
 	~Object();

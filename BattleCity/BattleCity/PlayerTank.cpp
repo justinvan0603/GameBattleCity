@@ -20,16 +20,18 @@ PlayerTank::PlayerTank(LPDIRECT3DDEVICE9 device)
 	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	_curSprite = this->_listSprite[UP];
+	this->_currentDirection = UP;
+	_bullet = new Bullet(device);
 	
 }
 
 void PlayerTank::Draw()
 {
-	this->_spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+	//this->_spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 	_curSprite->Render(_positionX, _positionY);
 
-	this->_spriteHandler->End();
+	//this->_spriteHandler->End();
 
 }
 void PlayerTank::Move()
@@ -39,6 +41,7 @@ void PlayerTank::Move()
 		this->_speedY = -DEFAULT_PLAYER_SPEED_Y;
 		this->_positionY += this->_speedY;
 		_curSprite = _listSprite[UP];
+		_currentDirection = UP;
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
@@ -46,6 +49,7 @@ void PlayerTank::Move()
 		this->_speedY = DEFAULT_PLAYER_SPEED_Y;
 		this->_positionY += this->_speedY;
 		_curSprite = _listSprite[DOWN];
+		_currentDirection = DOWN;
 		return;
 	}
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
@@ -55,6 +59,7 @@ void PlayerTank::Move()
 		this->_speedX = -DEFAULT_PLAYER_SPEED_X;
 		this->_positionX += this->_speedX;
 		_curSprite = _listSprite[LEFT];
+		_currentDirection = LEFT;
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
@@ -62,6 +67,7 @@ void PlayerTank::Move()
 		this->_speedX = DEFAULT_PLAYER_SPEED_X;
 		this->_positionX += this->_speedX;
 		_curSprite = _listSprite[RIGHT];
+		_currentDirection = RIGHT;
 		return;
 	}
 
@@ -70,10 +76,20 @@ void PlayerTank::Move()
 }
 void PlayerTank::Shoot()
 {
+	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
+	{
+		_bullet->setFireDirection(_currentDirection);
+		_bullet->setPositionX(_positionX);
+		_bullet->setPositionY(_positionY);
+
+		return;
+	}
 }
 void PlayerTank::Update()
 {
+	
 	this->Move();
+	this->Shoot();
 }
 PlayerTank::~PlayerTank()
 {

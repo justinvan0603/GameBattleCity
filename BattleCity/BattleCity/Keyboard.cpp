@@ -57,6 +57,8 @@ Keyboard::~Keyboard()
 
 void Keyboard::ProcessKeyboard(HWND hWnd)
 {
+	if (_keyboard->Poll() != DI_OK)
+		_keyboard->Acquire();
 	_keyboard->GetDeviceState(sizeof(_keyState), _keyState);
 	if (IsKeyDown(DIK_ESCAPE))
 	{

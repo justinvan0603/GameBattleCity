@@ -2,7 +2,8 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-
+#include <string>
+using namespace std;
 class Sprite
 {
 protected:
@@ -19,7 +20,6 @@ protected:
 public:
 	Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, int Count, int SpritePerRow);
 	void Next();
-
 	void Render(int X, int Y);
 	void Render(D3DXVECTOR3 Location);
 

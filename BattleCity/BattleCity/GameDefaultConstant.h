@@ -6,8 +6,8 @@
 #define DEFAULT_PLAYER_LIFE 3
 #define DEFAULT_PLAYER_POSITION_X	100
 #define DEFAULT_PLAYER_POSITION_Y	400
-#define DEFAULT_PLAYER_SPEED_X 5
-#define DEFAULT_PLAYER_SPEED_Y 5
+#define DEFAULT_PLAYER_SPEED_X 2
+#define DEFAULT_PLAYER_SPEED_Y 2
 #define DEFAULT_IMMORTAL_TIME 5
 #define DEFAULT_PLAYER_LEVEL 1
 #define DEFAULT_PLAYER_HP 1
@@ -31,6 +31,18 @@
 //Static Object
 #define ID_BRICK 6
 
+//Bullet
+#define BULLET_SPEED_X 3
+#define BULLET_SPEED_Y 3
+#define BULLET_SPRITE_UP_PATH		"bullet-up.png"
+#define BULLET_SPRITE_DOWN_PATH		"bullet-down.png"
+#define BULLET_SPRITE_LEFT_PATH		"bullet-left.png"
+#define BULLET_SPRITE_RIGHT_PATH	"bullet-right.png"
+#define BULLET_WIDTH 7
+#define BULLET_HEIGHT 11
+//Object State
+#define STATE_IMMORTAL_NONE 0
+#define SPEED_NO 0
 
 
 #endif // ! __GAME_DEFAULT_CONSTANT__

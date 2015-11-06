@@ -20,14 +20,15 @@ bool Game::GameInit(HINSTANCE hInstance)
 	// Khởi tạo cửa sổ game
 	if (!this->win.initWindow(hInstance))
 		return false; 
-	// Khởi tạo directX
+	// Khởi tạo directX5
 	if (!this->win.initDirectX())
 		return false;
 
 	_keyboard = Keyboard::getInstance();
-	if (!_keyboard->InitKeyboard(this->win.hInst, this->win.wndHandle))
+	if (!_keyboard->InitKeyboard(this->win.get_hInstance(), this->win.get_windowHandler()))
 		return false;
 	_player = new PlayerTank(win.getDevice());
+	//_bullet = new Bullet(win.getDevice());
 	return true;
 }
 
@@ -43,13 +44,15 @@ bool Game::GameRun()
 			if (win.getDevice()->BeginScene())
 			{
 				_player->Draw();
+				
+				//_bullet->Draw();
 				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
 
 				win.getDevice()->EndScene();
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);
 			_player->Update();
-			_keyboard->ProcessKeyboard(win.wndHandle);
+			_keyboard->ProcessKeyboard(this->win.get_windowHandler());
 		
 	
 	return true;

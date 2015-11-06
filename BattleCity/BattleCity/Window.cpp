@@ -96,8 +96,15 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,
 	// xứ lý tiếp theo
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-
+HINSTANCE Window::get_hInstance()
+{
+	return hInst;
+}
+HWND Window::get_windowHandler()
+{
+	return wndHandle;
+}
 LPDIRECT3DDEVICE9 Window::getDevice()
 {
-	return this->d3ddev;
+	return d3ddev;
 }

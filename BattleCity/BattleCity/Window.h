@@ -6,11 +6,12 @@
 #include "DefaultConstant.h"
 class Window
 {
-public:
+private:
 	HINSTANCE hInst;
 	HWND wndHandle;
 	LPDIRECT3D9 d3d; // Biến tổng cho của toàn bộ thư viện directx
-	LPDIRECT3DDEVICE9 d3ddev; // Đối tượng đại diện cho card đồ họa của máy tính
+    LPDIRECT3DDEVICE9 d3ddev; // Đối tượng đại diện cho card đồ họa của máy tính
+	LPD3DXSPRITE spriteHandler;
 public:
 	Window();
 	~Window();
@@ -18,5 +19,7 @@ public:
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 	bool initDirectX();
 	LPDIRECT3DDEVICE9 getDevice();
+	HINSTANCE get_hInstance();
+	HWND get_windowHandler();
 };
 
