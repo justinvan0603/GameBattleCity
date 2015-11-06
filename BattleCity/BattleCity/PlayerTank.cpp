@@ -1,11 +1,12 @@
 #include "PlayerTank.h"
 
 
-PlayerTank::PlayerTank(LPDIRECT3DDEVICE9 device)
+PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	this->_currentDirection = MoveDirection::UP;
-	this->_device = device;
-	D3DXCreateSprite(_device, &this->_spriteHandler);
+	this->_spriteHandler = spriteHandler;
+	//this->_device = device;
+	//D3DXCreateSprite(_device, &this->_spriteHandler);
 	this->_level = DEFAULT_PLAYER_LEVEL;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
@@ -21,7 +22,7 @@ PlayerTank::PlayerTank(LPDIRECT3DDEVICE9 device)
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	_curSprite = this->_listSprite[UP];
 	this->_currentDirection = UP;
-	_bullet = new Bullet(device);
+	//_bullet = new Bullet(device);
 	
 }
 

@@ -1,10 +1,10 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(LPDIRECT3DDEVICE9 device)
+Bullet::Bullet(LPD3DXSPRITE spriteHandler)
 {
-	_device = device;
-	D3DXCreateSprite(_device, &_spriteHandler);
+	
+	_spriteHandler = spriteHandler;
 	_speedX = BULLET_SPEED_X;
 	_speedY = BULLET_SPEED_Y;
 	_positionX = _positionY = 200;

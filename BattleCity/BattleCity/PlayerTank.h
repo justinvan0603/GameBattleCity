@@ -8,7 +8,7 @@ private:
 	int _immortalTime;
 	Bullet* _bullet;
 public:
-	PlayerTank(LPDIRECT3DDEVICE9 device);
+	PlayerTank(LPD3DXSPRITE);
 	void Draw();
 	void Update();
 	void Move();

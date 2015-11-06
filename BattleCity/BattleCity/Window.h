@@ -18,8 +18,9 @@ public:
 	bool initWindow(HINSTANCE hInstance);
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 	bool initDirectX();
-	LPDIRECT3DDEVICE9 getDevice();
-	HINSTANCE get_hInstance();
-	HWND get_windowHandler();
+	LPD3DXSPRITE& getSpriteHandler();
+	LPDIRECT3DDEVICE9& getDevice();
+	HINSTANCE& get_hInstance();
+	HWND& get_windowHandler();
 };
 

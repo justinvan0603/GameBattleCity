@@ -61,7 +61,7 @@ bool Window::initDirectX()
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!d3d) 
-		return 0;
+		return false;
 
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
@@ -79,8 +79,10 @@ bool Window::initDirectX()
 
 	if (d3ddev == NULL) {
 		MessageBox(NULL, "Failed to create device", "Error", MB_OK);
-		return 0;
+		return false;
 	}
+	D3DXCreateSprite(d3ddev, &spriteHandler);
+	return true;
 }
 LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,
 	WPARAM wParam, LPARAM lParam)
@@ -96,15 +98,19 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,
 	// xứ lý tiếp theo
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-HINSTANCE Window::get_hInstance()
+HINSTANCE& Window::get_hInstance()
 {
 	return hInst;
 }
-HWND Window::get_windowHandler()
+HWND& Window::get_windowHandler()
 {
 	return wndHandle;
 }
-LPDIRECT3DDEVICE9 Window::getDevice()
+LPDIRECT3DDEVICE9& Window::getDevice()
 {
 	return d3ddev;
+}
+LPD3DXSPRITE& Window::getSpriteHandler()
+{
+	return spriteHandler;
 }

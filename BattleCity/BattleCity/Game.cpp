@@ -27,7 +27,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 	_keyboard = Keyboard::getInstance();
 	if (!_keyboard->InitKeyboard(this->win.get_hInstance(), this->win.get_windowHandler()))
 		return false;
-	_player = new PlayerTank(win.getDevice());
+	_player = new PlayerTank(win.getSpriteHandler());
 	//_bullet = new Bullet(win.getDevice());
 	return true;
 }
