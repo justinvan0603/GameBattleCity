@@ -20,11 +20,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 	// Khởi tạo directX
 	if (!this->win.initDirectX())
 		return false;
-	//if (!this->input.Init_DirectInput(this->win.wndHandle) || !this->input.Init_Keyboard(this->win.wndHandle))
-	//	return false;
-	// Khởi tạo bàn phím
-	/*if (!this->input.CreateInput() || !this->input.InitKeyboard(this->win.wndHandle))
-		return false;*/
+
 	_keyboard = Keyboard::getInstance();
 	if (!_keyboard->InitKeyboard(this->win.hInst, this->win.wndHandle))
 		return false;

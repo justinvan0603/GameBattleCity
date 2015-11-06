@@ -27,6 +27,7 @@ void PlayerTank::Draw()
 }
 void PlayerTank::Move()
 {
+
 }
 void PlayerTank::Shoot()
 {

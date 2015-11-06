@@ -1,6 +1,7 @@
 #pragma once
-#include "Sprite.h"
+#include "Object.h"
 #include "GameDefaultConstant.h"
+
 enum MoveDirection
 {
 	UP = 0,
@@ -10,16 +11,9 @@ enum MoveDirection
 	NUM_OF_DIRECTION = 4
 };
 
-class DynamicObject
+class DynamicObject : public Object
 {
 protected:
-	int _id;
-	LPD3DXSPRITE _spriteHandler;
-	LPDIRECT3DDEVICE9 _device;
-	bool _isTerminated;
-	RECT _size;
-	int _positionX;
-	int _positionY;
 	int _speedX;
 	int _speedY;
 	int _level;
