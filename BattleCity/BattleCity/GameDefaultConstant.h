@@ -46,8 +46,8 @@
 #define MAP_RESOURCE_PATH_STEELWALL	"Resource\\Map\\Steel\\SteelWall.png"
 
 //Bullet
-#define BULLET_SPEED_X 3
-#define BULLET_SPEED_Y 3
+#define BULLET_SPEED_X 2
+#define BULLET_SPEED_Y 2
 #define BULLET_SPRITE_UP_PATH		"bullet-up.png"
 #define BULLET_SPRITE_DOWN_PATH		"bullet-down.png"
 #define BULLET_SPRITE_LEFT_PATH		"bullet-left.png"

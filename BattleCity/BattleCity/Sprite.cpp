@@ -42,10 +42,6 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 		NULL,
 		&_Image);
 
-	if (result != D3D_OK)
-	{
-		int i = 10;
-	}
 
 }
 
@@ -105,7 +101,7 @@ void Sprite::Render(int X, int Y)
 		&srect,
 		NULL,
 		&position,
-		D3DCOLOR_XRGB(255, 255, 255));
+		D3DCOLOR_XRGB(255, 255,255 ));
 	_SpriteHandler->End();
 }
 

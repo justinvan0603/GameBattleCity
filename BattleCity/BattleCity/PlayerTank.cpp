@@ -22,17 +22,21 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	_curSprite = this->_listSprite[UP];
 	this->_currentDirection = UP;
-	//_bullet = new Bullet(device);
-	
+	_bullet = new Bullet(_spriteHandler);
+	isShooting = false;
 }
 
 void PlayerTank::Draw()
 {
-	//this->_spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
+	if (isShooting)
+	{
+		this->_bullet->Draw();
+		
+	}
 	_curSprite->Render(_positionX, _positionY);
 
-	//this->_spriteHandler->End();
+
 
 }
 void PlayerTank::Move()
@@ -82,7 +86,8 @@ void PlayerTank::Shoot()
 		_bullet->setFireDirection(_currentDirection);
 		_bullet->setPositionX(_positionX);
 		_bullet->setPositionY(_positionY);
-
+		_bullet->Move();
+		isShooting = true;
 		return;
 	}
 }
@@ -91,6 +96,7 @@ void PlayerTank::Update()
 	
 	this->Move();
 	this->Shoot();
+	this->_bullet->Update();
 }
 PlayerTank::~PlayerTank()
 {

@@ -7,6 +7,7 @@ private:
 	int _life;
 	int _immortalTime;
 	Bullet* _bullet;
+	bool isShooting;
 public:
 	PlayerTank(LPD3DXSPRITE);
 	void Draw();
