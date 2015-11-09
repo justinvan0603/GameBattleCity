@@ -59,4 +59,7 @@
 #define STATE_IMMORTAL_NONE 0
 #define SPEED_NO 0
 
+//Object type
+#define DYNAMIC_OBJECT 100
+#define STATIC_OBJECT 101
 #endif // ! __GAME_DEFAULT_CONSTANT__

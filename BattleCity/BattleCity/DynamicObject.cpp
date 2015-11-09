@@ -3,6 +3,7 @@
 
 DynamicObject::DynamicObject()
 {
+	_objectType = DYNAMIC_OBJECT;
 }
 
 

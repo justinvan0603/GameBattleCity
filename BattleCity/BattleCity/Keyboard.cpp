@@ -16,7 +16,7 @@ bool Keyboard::InitKeyboard(HINSTANCE hInstance, HWND hWnd)
 	if (result != DI_OK)
 		return false;
 	_keyboard->SetDataFormat(&c_dfDIKeyboard);
-	_keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	_keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
 	DIPROPDWORD dipdw;
 	dipdw.diph.dwSize = sizeof(DIPROPDWORD);

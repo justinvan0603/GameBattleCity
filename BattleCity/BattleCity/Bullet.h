@@ -11,7 +11,6 @@ public:
 	void Draw();
 	void Move();
 	void Update();
-	void Shoot(){};
 	void setFireDirection(MoveDirection direction);
 	~Bullet();
 };
