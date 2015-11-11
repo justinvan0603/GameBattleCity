@@ -7,7 +7,6 @@ protected:
 	Sprite* _image;
 public: 
 	StaticObject();	
-	virtual void Draw() = 0;
 	~StaticObject();
 };
 #endif

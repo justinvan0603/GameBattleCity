@@ -20,7 +20,9 @@
 #define SPRITE_HEIGHT 32
 #define NUMB_OF_SPRITE 1
 #define SPRITE_PER_ROW 1
-
+//Static Object default size
+#define DEFAULT_STATIC_WIDTH 8
+#define DEFAULT_STATIC_HEIGHT 8
 //Dynamic Object ID
 #define ID_PLAYER 1
 #define ID_LIGHT_TANK 2

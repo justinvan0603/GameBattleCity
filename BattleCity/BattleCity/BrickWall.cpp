@@ -5,15 +5,15 @@
 BrickWall::BrickWall(Sprite* sprite, int typeBrick, D3DXVECTOR3 pos)
 {
 	this->_typeBrick = typeBrick;
-	this->_positionX = pos.x;
-	this->_positionY = pos.y;
+	this->_left = pos.x;
+	this->_top = pos.y;
 	_image = sprite; //new Sprite(_spriteHandler, MAP_RESOURCE_PATH_BRICKWALL, TILE_WIDTH, TILE_HEIGHT, 1, 1);
-	
 }
 
 void BrickWall::Draw()
 {
-	D3DXVECTOR3 position(this->_positionX, this->_positionY, 0.0f);
+	StaticObject::Draw();
+	D3DXVECTOR3 position(this->_left, this->_top, 0.0f);
 	switch (_typeBrick)
 	{
 	case 1:

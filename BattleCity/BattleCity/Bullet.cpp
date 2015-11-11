@@ -5,23 +5,23 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler)
 {
 	
 	_spriteHandler = spriteHandler;
-	_speedX = BULLET_SPEED_X;
-	_speedY = BULLET_SPEED_Y;
-	//_positionX = _positionY = 200;
+	_vx = BULLET_SPEED_X;
+	_vy = BULLET_SPEED_Y;
 	_listSprite = new Sprite*[NUM_OF_DIRECTION];
 	_listSprite[UP] = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[LEFT] = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[DOWN] = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[RIGHT] = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
-	_currentDirection = DOWN;
-
+	_currentDirection = UP;
+	_width = 6;
+	_height = 10;
 }
 Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, int posY)
 {
 	_spriteHandler = spriteHandler;
 	_listSprite = new Sprite*;
-	this->_positionX = posX;
-	this->_positionY = posY;
+	this->_left = posX;
+	this->_top = posY;
 	_currentDirection = direction;
 	switch (direction)
 	{
@@ -37,50 +37,50 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, in
 		case RIGHT:
 			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 			break;
-
-	default:
-		break;
+		default:
+			break;
 	}
 }
 
 void Bullet::Draw()
 {
-	//_spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+	DynamicObject::Draw();
+
 	if (_currentDirection == MoveDirection::UP)
 	{
-		_listSprite[UP]->Render(_positionX +12, _positionY-59);
+		_listSprite[UP]->Render(_left +12, _top);
 		return;
 	}
 	if (_currentDirection == MoveDirection::LEFT)
 	{
-		_listSprite[LEFT]->Render(_positionX, _positionY + 10);
+		_listSprite[LEFT]->Render(_left, _top + 8);
 		return;
 	}
 	if (_currentDirection == MoveDirection::DOWN)
 	{
-		_listSprite[DOWN]->Render(_positionX +10, _positionY +6);
+		_listSprite[DOWN]->Render(_left +10, _top +6);
 		return;
 	}
 	if (_currentDirection == MoveDirection::RIGHT)
 	{
-		_listSprite[RIGHT]->Render(_positionX +12, _positionY+11);
+		_listSprite[RIGHT]->Render(_left +12, _top+11);
 		return;
 	}
 
-	switch (_currentDirection)
-	{
-	case UP:
-		
-		break;
-	case LEFT:
-		break;
-	case DOWN:
-		break;
-	case RIGHT:
-		break;
-	default:
-		break;
-	}
+	//switch (_currentDirection)
+	//{
+	//case UP:
+	//	
+	//	break;
+	//case LEFT:
+	//	break;
+	//case DOWN:
+	//	break;
+	//case RIGHT:
+	//	break;
+	//default:
+	//	break;
+	//}
 	
 	//_spriteHandler->End();
 }
@@ -89,30 +89,26 @@ void Bullet::Move()
 	
 	if (_currentDirection == MoveDirection::UP)
 	{
-		this->_speedX = SPEED_NO;
-		this->_speedY = -BULLET_SPEED_Y;
-		this->_positionY += this->_speedY;
+		this->_vx = SPEED_NO;
+		this->_vy = -BULLET_SPEED_Y;
 		return;
 	}
 	if (_currentDirection == MoveDirection::DOWN)
 	{
-		this->_speedX = SPEED_NO;
-		this->_speedY = BULLET_SPEED_Y;
-		this->_positionY += this->_speedY;
+		this->_vx = SPEED_NO;
+		this->_vy = BULLET_SPEED_Y;
 		return;
 	}
 	if (_currentDirection == MoveDirection::LEFT)
 	{
-		this->_speedY = SPEED_NO;
-		this->_speedX = -BULLET_SPEED_X;
-		this->_positionX += this->_speedX;
+		this->_vy = SPEED_NO;
+		this->_vx = -BULLET_SPEED_X;
 		return;
 	}
 	if (_currentDirection == MoveDirection:: RIGHT)
 	{
-		this->_speedY = SPEED_NO;
-		this->_speedX = BULLET_SPEED_X;
-		this->_positionX += this->_speedX;
+		this->_vy = SPEED_NO;
+		this->_vx = BULLET_SPEED_X;
 		return;
 	}
 	

@@ -15,8 +15,6 @@ enum MoveDirection
 class DynamicObject : public Object
 {
 protected:
-	int _speedX;
-	int _speedY;
 	int _level;
 	Sprite** _listSprite; //Quan ly tat ca cac frame cho tat ca cac huong chuyen dong
 	Sprite* _curSprite;
@@ -29,7 +27,7 @@ public:
 	
 	virtual void Move() = 0;
 	//virtual void Shoot() = 0;
-	virtual void Draw() = 0;
+
 	virtual void Update() = 0;
 	~DynamicObject();
 };
