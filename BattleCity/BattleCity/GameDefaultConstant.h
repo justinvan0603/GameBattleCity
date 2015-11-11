@@ -36,15 +36,25 @@
 #define IF_ICE		 10
 
 //Map default value
+#define POS_MAP_TOP_LEFT_X 92
+#define POS_MAP_TOP_LEFT_Y 60
 #define NUM_ROW_TILE	52
 #define NUM_COLUMN_TILE 52
 #define TILE_WIDTH		8
 #define TILE_HEIGHT		8
-
-//Image paths
+#define POS_EAGLE_IN_MATRIX_X 48
+#define POS_EAGLE_IN_MATRIX_Y 24
 #define MAP_RESOURCE_PATH_BRICKWALL	"Resource\\Map\\Brick\\BrickWall.png"
 #define MAP_RESOURCE_PATH_STEELWALL	"Resource\\Map\\Steel\\SteelWall.png"
-
+#define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
+#define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
+//Info Right map default value
+#define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540
+#define POS_LIST_ENEMY_ICON_TOP_LEFT_Y 92
+#define RESOURCE_PATH_ENEMY_ICON	"Resource\\Other\\miniarmy.png"
+#define RESOURCE_PATH_TANKLIFE_ICON	"Resource\\Other\\tanklife.png"
+#define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
+#define NUM_ENEMY 20
 //Bullet
 #define BULLET_SPEED_X 2
 #define BULLET_SPEED_Y 2
@@ -62,4 +72,9 @@
 //Object type
 #define DYNAMIC_OBJECT 100
 #define STATIC_OBJECT 101
+
+//GameState default
+#define NUMBER_OF_STATE 3
+#define IMAGE_MAIN_MENU_GAME_PATH "Resource\\Other\\mainmenu.png"
+#define RESOURCE_PATH_NUMBER	"Resource\\Other\\number.png"
 #endif // ! __GAME_DEFAULT_CONSTANT__

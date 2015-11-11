@@ -49,7 +49,6 @@ bool Game::GameRun()
 				//_bullet->Draw();
 				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
 				_map->Draw();
-				
 				win.getDevice()->EndScene();
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);

@@ -7,10 +7,22 @@ class SpriteManager
 public:
 	Sprite* getBrickSprite();
 	Sprite* getSteelSprite();
+	Sprite* getEagleSprite();
+	Sprite* getBackGround();
+	Sprite* getEnemyIcon();
+	Sprite* getTankLifeIcon();
+	Sprite* getFlagIcon();
+	Sprite* getNumber();
 	SpriteManager(LPD3DXSPRITE spriteHandler);
 	~SpriteManager();
 private:
-	Sprite* _Brick;
-	Sprite* _Steel;
+	Sprite* _brick;
+	Sprite* _steel;
+	Sprite* _eagle;
+	Sprite* _backGround;
+	Sprite* _enemyIcon;
+	Sprite* _tankLifeIcon;
+	Sprite* _flagIcon;
+	Sprite* _number;
 };
 #endif

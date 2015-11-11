@@ -1,9 +1,12 @@
 #ifndef __MAP_H__
 #define __MAP_H__
-#include "GameDefaultConstant.h"
 #include <vector>
+#include <fstream>
+#include "GameDefaultConstant.h"
+#include "DefaultConstant.h"
 #include "BrickWall.h"
 #include "SteelWall.h"
+#include "Eagle.h"
 #include "SpriteManager.h"
 using std::vector;
 
@@ -22,15 +25,17 @@ public:
 	void Update();
 	vector<BrickWall*> getlistBrickWallObject();
 	vector<SteelWall*> getlistSteelWallObject();
+	Eagle* getEagleObject();
 	~Map();
 private:
 	int** _mapMatrix;
 	MAPSTATE _mapState;
+	LPDIRECT3DDEVICE9 d3ddev;
 	LPD3DXSPRITE _spriteHandler;
 	SpriteManager* _spriteManager;
 	vector<BrickWall*> _listBrickWallObject;
 	vector<SteelWall*> _listSteelWallObject;
-
+	Eagle* _eagle;
 	D3DXVECTOR3 getPositionFromMapMatrix(int row, int column);
 };
 #endif
