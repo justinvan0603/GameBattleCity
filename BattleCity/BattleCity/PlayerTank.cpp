@@ -3,6 +3,7 @@
 
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
+	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
 	this->_spriteHandler = spriteHandler;
 	this->_level = DEFAULT_PLAYER_LEVEL;
@@ -22,14 +23,14 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	this->_currentDirection = UP;
-	_bullet = new Bullet(_spriteHandler);
+	_bullet = new Bullet(_spriteHandler,ALLY_PLAYER);
 	isShooting = false;
 }
 
 void PlayerTank::Draw()
 {
 	
-	if (isShooting)
+	if (isShooting && _isTerminated == false)
 	{
 		this->_bullet->Draw();
 		
