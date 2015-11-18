@@ -30,9 +30,8 @@ public:
 private:
 	int** _mapMatrix;
 	MAPSTATE _mapState;
-	LPDIRECT3DDEVICE9 d3ddev;
-	LPD3DXSPRITE _spriteHandler;
 	SpriteManager* _spriteManager;
+	LPD3DXSPRITE _spriteHandler;
 	vector<BrickWall*> _listBrickWallObject;
 	vector<SteelWall*> _listSteelWallObject;
 	Eagle* _eagle;

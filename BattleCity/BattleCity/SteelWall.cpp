@@ -9,14 +9,14 @@ SteelWall::SteelWall()
 SteelWall::SteelWall(Sprite* sprite, int typeSteel, D3DXVECTOR3 pos)
 {
 	this->_typeSteel = typeSteel;
-	this->_left = pos.x;
-	this->_top = pos.y;
+	this->_left = (int)pos.x;
+	this->_top = (int)pos.y;
 	_image = sprite; // new Sprite(_spriteHandler, MAP_RESOURCE_PATH_STEELWALL, TILE_WIDTH, TILE_HEIGHT, 1, 1);
 }
 
 void SteelWall::Draw()
 {
-	D3DXVECTOR3 position(this->_left, this->_top, 0.0f);
+	D3DXVECTOR3 position((float)this->_left, (float)this->_top, 0.0f);
 	switch (_typeSteel)
 	{
 	case 17:

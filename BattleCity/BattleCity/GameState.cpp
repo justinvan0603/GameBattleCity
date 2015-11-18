@@ -2,15 +2,16 @@
 
 #pragma region Game State
 
-Keyboard* GameState::_controler = nullptr;
 MainMenu* MainMenu::_instance = nullptr;
 GameState* GameState::_gameState = nullptr;
 PlayerTank* GameState::_player = nullptr;
+LPD3DXSPRITE GameState::_spriteHandler = nullptr;
 
-void GameState::initialize(Keyboard* controler)
+void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
-	_controler = controler;
-	switchState(PlayingState::get());
+	_spriteHandler = spriteHandler;
+	_player = new PlayerTank(_spriteHandler);
+	switchState(StartingState::get());
 }
 
 void GameState::release()
@@ -51,8 +52,12 @@ void GameState::draw()
 #pragma region Main Menu
 MainMenu::MainMenu()
 {
+	_menuImagePosition = IMAGE_MAIN_MENU_GAME_DEFAULT_POS;
+	_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
+	_timeDelayChangeSelectorSprite = SELECTOR_SPEED_CHANGE;
 	//new sprite image main menu
-
+	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
+	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
 	enter();
 }
 
@@ -64,11 +69,51 @@ MainMenu::~MainMenu()
 void MainMenu::update()
 {
 	//Kiem tra xem chon start hay instruction roi change state
+	if(_menuImagePosition.y > 0)
+	{
+		_menuImagePosition.y -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
+	}
+	else
+	{
+		//tao selector chuyen dong
+		_timeDelayChangeSelectorSprite--;
+		if (_timeDelayChangeSelectorSprite <= 0)
+		{
+			_selector->Next();
+			_timeDelayChangeSelectorSprite = SELECTOR_SPEED_CHANGE;
+		}
+		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
+		{
+			_selectorPosition = IMAGE_SELECTOR_POS_INSTRUCTION;
+		}
+		if(Keyboard::getInstance()->IsKeyDown(DIK_UP))
+		{
+			_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
+		}
+		if(Keyboard::getInstance()->IsKeyDown(DIK_RETURN))
+		{
+			if (_selectorPosition == IMAGE_SELECTOR_POS_PLAY)
+			{
+				switchState(StartingState::get());
+			}
+			else
+			{
+				//code instruction
+			}
+		}
+	}
+	
+	
 }
 
 void MainMenu::draw()
 {
 	//ve logo main menu
+	_menuImage->Render(0, 0, _menuImagePosition);
+	if(_menuImagePosition.y <= 0)
+	{
+		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
+	}
 }
 
 MainMenu* MainMenu::get()
@@ -92,9 +137,14 @@ StartingState* StartingState::_instance = nullptr;
 
 StartingState::StartingState()
 {
-	_timeCounter = 0;
-	_numOfState = NUMBER_OF_STATE;
+	_currentLevelState = 1;
+	_spriteHandler->GetDevice(&_d3ddevice);
+	_stateLevelImage = new Sprite(_spriteHandler, IMAGE_STATE_PATH, IMAGE_STATE_WIDTH, IMAGE_STATE_HEIGHT, 1, 1);
+	_numLevel = new Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
+	_bgTop = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
+	_bgBottom = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
 	//init sprite state 1, 2, 3 ....
+	//code here
 }
 
 StartingState::~StartingState()
@@ -102,9 +152,9 @@ StartingState::~StartingState()
 
 }
 
-int StartingState::getCurrentState()
+int StartingState::getCurrentLevelState()
 {
-	return _currentState;
+	return _currentLevelState;
 }
 
 void StartingState::update()
@@ -114,7 +164,11 @@ void StartingState::update()
 
 void StartingState::draw()
 {
-	//Draw 
+	//_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	//_stateLevelImage->Render(IMAGE_STATE_POS);
+	_bgTop->Render(IMAGE_BG_STARTING_TOP_POS);
+
+	//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
 }
 
 void StartingState::enter()
@@ -192,7 +246,6 @@ void DeadScene::enter()
 {
 	
 }
-
 
 DeadScene* DeadScene::get()
 {

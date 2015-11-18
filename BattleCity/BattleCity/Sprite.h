@@ -26,8 +26,11 @@ public:
 	void Render(int index, int X, int Y);
 	void Render(int index, D3DXVECTOR3 Location);
 	void Render(int row, int col, D3DXVECTOR3 Location);
+	void Render(D3DXVECTOR3 Location, D3DCOLOR transcolor);
 	int getWidth();
 	int getHeight();
+	void setWidth(int width);
+	void setHeight(int height);
 public:
 	~Sprite(void);
 };

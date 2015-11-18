@@ -37,7 +37,7 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 		D3DPOOL_DEFAULT,
 		D3DX_DEFAULT,
 		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(88, 1, 0),
+		D3DCOLOR_XRGB(81, 1, 0),
 		&info,
 		NULL,
 		&_Image);
@@ -61,8 +61,8 @@ void Sprite::Render(int row, int col, D3DXVECTOR3 Location)
 
 	srect.left = col * (_Width);
 	srect.top = row * (_Height);
-	srect.right = srect.left + _Width;
-	srect.bottom = srect.top + _Height;
+	srect.right = srect.left + _Width - 1;
+	srect.bottom = srect.top + _Height - 1;
 
 	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 	this->_SpriteHandler->Draw(
@@ -105,6 +105,25 @@ void Sprite::Render(int X, int Y)
 	_SpriteHandler->End();
 }
 
+void Sprite::Render(D3DXVECTOR3 Location, D3DCOLOR transcolor)
+{
+	RECT srect;
+
+	srect.left = (_Index % _SpritePerRow) * (_Width);
+	srect.top = (_Index / _SpritePerRow) * (_Height);
+	srect.right = srect.left + _Width - 1;
+	srect.bottom = srect.top + _Height - 1;
+
+	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+	this->_SpriteHandler->Draw(
+		_Image,
+		&srect,
+		NULL,
+		&Location,
+		D3DCOLOR_XRGB(99, 99, 99));
+	_SpriteHandler->End();
+}
+
 Sprite::~Sprite()
 {
 
@@ -117,4 +136,12 @@ int Sprite::getWidth()
 int Sprite::getHeight()
 {
 	return this->_Height;
+}
+void Sprite::setWidth(int width)
+{
+	_Width = width;
+}
+void Sprite::setHeight(int height)
+{
+	_Height = height;
 }

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Window.h"
-
+#include "GameState.h"
 #include "PlayerTank.h"
 #include "Keyboard.h"
 #include "Map.h"

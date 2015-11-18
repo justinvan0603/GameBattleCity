@@ -15,7 +15,7 @@ public:
 	virtual void draw() = 0;
 	virtual void enter() = 0;
 
-	static void initialize(Keyboard* controler);
+	static void initialize(LPD3DXSPRITE spriteHandler);
 
 	static void release();
 
@@ -26,9 +26,9 @@ public:
 	static void stateDraw();
 
 protected:
-	static Keyboard* _controler;
 	static GameState*	_gameState;
 	static PlayerTank*	_player;
+	static LPD3DXSPRITE _spriteHandler;
 };
 #pragma endregion
 
@@ -52,6 +52,11 @@ private:
 
 private:
 	static MainMenu* _instance;
+	Sprite* _menuImage;
+	Sprite* _selector;
+	D3DXVECTOR3 _menuImagePosition;
+	D3DXVECTOR3 _selectorPosition;
+	int _timeDelayChangeSelectorSprite;
 };
 #pragma endregion
 
@@ -68,7 +73,7 @@ public:
 
 	static StartingState* get();
 
-	int getCurrentState();
+	int getCurrentLevelState();
 
 private:
 	StartingState();
@@ -76,10 +81,15 @@ private:
 
 private:
 	static StartingState* _instance;
-	int _numOfState;
-	int _currentState;
-	DWORD _timeCounter;
-	DWORD _timeCounterToNextState;
+	int _currentLevelState;
+	int _timeToNextLevelState;
+	LPDIRECT3DDEVICE9 _d3ddevice;
+	Sprite* _stateLevelImage;
+	Sprite* _numLevel;
+	Sprite* _bgTop;
+	D3DXVECTOR3 _bgTopPos;
+	Sprite* _bgBottom;
+	D3DXVECTOR3 _bgBottomPos;
 };
 #pragma endregion
 
@@ -137,7 +147,6 @@ public:
 	virtual void draw();
 
 	virtual void enter();
-
 
 	static DeadScene* get();
 

@@ -3,7 +3,6 @@
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
-	_spriteHandler->GetDevice(&d3ddev);
 	_spriteManager = new SpriteManager(_spriteHandler);
 	_mapMatrix = new int*[NUM_ROW_TILE];
 	for (short i = 0; i < NUM_ROW_TILE; i++)
@@ -87,11 +86,11 @@ void Map::changeState(MAPSTATE state)
 void Map::Draw()
 {
 	//ham clear nay nam ngoai state
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	//d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
 	//end
 
 	//Draw khung enemy goc phai
-	int x, y;
+	float x, y;
 	int num_enemy = NUM_ENEMY;
 	for (int i = 0; i < num_enemy; i++)
 	{

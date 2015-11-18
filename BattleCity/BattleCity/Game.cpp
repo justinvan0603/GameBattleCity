@@ -26,11 +26,10 @@ bool Game::GameInit(HINSTANCE hInstance)
 	_keyboard = Keyboard::getInstance();
 	if (!_keyboard->InitKeyboard(this->win.get_hInstance(), this->win.get_windowHandler()))
 		return false;
-	_player = new PlayerTank(win.getSpriteHandler());
+	GameState::initialize(win.getSpriteHandler());
+	
 	_map = new Map(win.getSpriteHandler());
-	_spriteManager = new SpriteManager(win.getSpriteHandler());
-	D3DXVECTOR3* pos = new D3DXVECTOR3(100.0f, 100.0f, 0.0f);
-	_wall = new BrickWall(_spriteManager->getBrickSprite(), 1, *pos);
+	
 	return true;
 }
 
@@ -43,24 +42,16 @@ bool Game::GameRun()
 
 			
 			win.getDevice()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-			
-			_player->Update();
 
-			CollisionManager::CollictionPreventMove(_player, _wall);
-			CollisionManager::CollictionPreventMove(_player->getBullet(), _wall);
 			if (win.getDevice()->BeginScene())
 			{
-				_wall->Draw();
-				_player->Draw();
 				
-				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
+				GameState::stateDraw();
 				//_map->Draw();
 				win.getDevice()->EndScene();
 			}
 			win.getDevice()->Present(NULL, NULL, NULL, NULL);
-
-			
-
+			GameState::stateUpdate();
 			//_map->Update();
 			_keyboard->ProcessKeyboard(win.get_windowHandler());
 		
