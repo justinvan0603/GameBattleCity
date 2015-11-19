@@ -3,7 +3,7 @@
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
-	_spriteManager = new SpriteManager(_spriteHandler);
+	_spriteManager = new SpriteMapItemMagager(_spriteHandler);
 	_mapMatrix = new int*[NUM_ROW_TILE];
 	for (short i = 0; i < NUM_ROW_TILE; i++)
 	{

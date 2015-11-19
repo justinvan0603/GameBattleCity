@@ -11,7 +11,7 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
 	_player = new PlayerTank(_spriteHandler);
-	switchState(StartingState::get());
+	switchState(MainMenu::get());
 }
 
 void GameState::release()
@@ -192,6 +192,11 @@ StartingState* StartingState::get()
 
 PlayingState* PlayingState::_instance = nullptr;
 
+PlayingState::PlayingState()
+{
+
+}
+
 void PlayingState::update()
 {
 	//map, bullet, player update
@@ -205,11 +210,6 @@ void PlayingState::draw()
 void PlayingState::enter()
 {
 	
-}
-
-PlayingState::PlayingState()
-{
-
 }
 
 PlayingState::~PlayingState()

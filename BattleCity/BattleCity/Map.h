@@ -7,7 +7,7 @@
 #include "BrickWall.h"
 #include "SteelWall.h"
 #include "Eagle.h"
-#include "SpriteManager.h"
+#include "SpriteMapItemMagager.h"
 using std::vector;
 
 enum MAPSTATE
@@ -30,7 +30,7 @@ public:
 private:
 	int** _mapMatrix;
 	MAPSTATE _mapState;
-	SpriteManager* _spriteManager;
+	SpriteMapItemMagager* _spriteManager;
 	LPD3DXSPRITE _spriteHandler;
 	vector<BrickWall*> _listBrickWallObject;
 	vector<SteelWall*> _listSteelWallObject;

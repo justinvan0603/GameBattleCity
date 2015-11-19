@@ -106,6 +106,25 @@ HWND& Window::get_windowHandler()
 {
 	return wndHandle;
 }
+
+bool Window::startDraw()
+{
+	if(d3ddev == NULL )
+	{
+		MessageBox(NULL, "Device can't use", "Error", MB_OK);
+		return false;
+	}
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	d3ddev->BeginScene();
+	return true;
+}
+
+void Window::stopDraw()
+{
+	d3ddev->EndScene();
+	d3ddev->Present(NULL, NULL, NULL, NULL);
+}
+
 LPDIRECT3DDEVICE9& Window::getDevice()
 {
 	return d3ddev;

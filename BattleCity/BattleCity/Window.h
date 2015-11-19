@@ -22,5 +22,7 @@ public:
 	LPDIRECT3DDEVICE9& getDevice();
 	HINSTANCE& get_hInstance();
 	HWND& get_windowHandler();
+	bool startDraw();
+	void stopDraw();
 };
 

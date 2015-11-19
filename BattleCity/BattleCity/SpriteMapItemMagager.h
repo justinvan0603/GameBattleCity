@@ -2,7 +2,7 @@
 #define __SPRITE_MANAGER_H__
 #include "Sprite.h"
 #include "GameDefaultConstant.h"
-class SpriteManager
+class SpriteMapItemMagager
 {
 public:
 	Sprite* getBrickSprite();
@@ -13,8 +13,8 @@ public:
 	Sprite* getTankLifeIcon();
 	Sprite* getFlagIcon();
 	Sprite* getNumber();
-	SpriteManager(LPD3DXSPRITE spriteHandler);
-	~SpriteManager();
+	SpriteMapItemMagager(LPD3DXSPRITE spriteHandler);
+	~SpriteMapItemMagager();
 private:
 	Sprite* _brick;
 	Sprite* _steel;

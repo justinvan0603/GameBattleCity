@@ -1,48 +1,48 @@
-#include "SpriteManager.h"
+#include "SpriteMapItemMagager.h"
 
 
 
-Sprite * SpriteManager::getBrickSprite()
+Sprite * SpriteMapItemMagager::getBrickSprite()
 {
 	return _brick;
 }
 
-Sprite * SpriteManager::getSteelSprite()
+Sprite * SpriteMapItemMagager::getSteelSprite()
 {
 	return _steel;
 }
 
-Sprite * SpriteManager::getEagleSprite()
+Sprite * SpriteMapItemMagager::getEagleSprite()
 {
 	return _eagle;
 }
 
-Sprite * SpriteManager::getBackGround()
+Sprite * SpriteMapItemMagager::getBackGround()
 {
 	return _backGround;
 }
 
-Sprite * SpriteManager::getEnemyIcon()
+Sprite * SpriteMapItemMagager::getEnemyIcon()
 {
 	return _enemyIcon;
 }
 
-Sprite * SpriteManager::getTankLifeIcon()
+Sprite * SpriteMapItemMagager::getTankLifeIcon()
 {
 	return _tankLifeIcon;
 }
 
-Sprite * SpriteManager::getFlagIcon()
+Sprite * SpriteMapItemMagager::getFlagIcon()
 {
 	return _flagIcon;
 }
 
-Sprite * SpriteManager::getNumber()
+Sprite * SpriteMapItemMagager::getNumber()
 {
 	return _number;
 }
 
-SpriteManager::SpriteManager(LPD3DXSPRITE spriteHandler)
+SpriteMapItemMagager::SpriteMapItemMagager(LPD3DXSPRITE spriteHandler)
 {
 	_brick = new Sprite(spriteHandler, MAP_RESOURCE_PATH_BRICKWALL, TILE_WIDTH, TILE_HEIGHT, 4, 2);
 	_steel = new Sprite(spriteHandler, MAP_RESOURCE_PATH_STEELWALL, TILE_WIDTH, TILE_HEIGHT, 4, 2);
@@ -55,6 +55,6 @@ SpriteManager::SpriteManager(LPD3DXSPRITE spriteHandler)
 }
 
 
-SpriteManager::~SpriteManager()
+SpriteMapItemMagager::~SpriteMapItemMagager()
 {
 }

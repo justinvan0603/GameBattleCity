@@ -3,7 +3,7 @@
 
 Game::Game()
 {
-	
+	win = new Window();
 }
 
 
@@ -13,70 +13,45 @@ Game::~Game()
 
 bool Game::GameInit(HINSTANCE hInstance)
 {
-
-
-
 	// Khởi tạo cửa sổ game
-	if (!this->win.initWindow(hInstance))
-		return false; 
+	if (!win->initWindow(hInstance))
+	{
+		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_WINDOW);
+		return false;
+	}
 	// Khởi tạo directX
-	if (!this->win.initDirectX())
+	if (!win->initDirectX())
+	{
+		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_D3D);
 		return false;
-
+	}	
+	//Khoi tao keyboard
 	_keyboard = Keyboard::getInstance();
-	if (!_keyboard->InitKeyboard(this->win.get_hInstance(), this->win.get_windowHandler()))
+	if (!_keyboard->InitKeyboard(win->get_hInstance(), win->get_windowHandler()))
+	{
+		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_KEYBOARD);
 		return false;
-	_player = new PlayerTank(win.getSpriteHandler());
-	_map = new Map(win.getSpriteHandler());
-	_spriteManager = new SpriteManager(win.getSpriteHandler());
-	D3DXVECTOR3* pos = new D3DXVECTOR3(100.0f, 100.0f, 0.0f);
-	_wall = new BrickWall(_spriteManager->getBrickSprite(), 1, *pos);
-	_enemy = new LightTank(win.getSpriteHandler());
+	}
+	GameState::initialize(win->getSpriteHandler());
 	return true;
 }
 
-bool Game::GameRun()
+void Game::GameUpdate()
 {
-	MSG msg;
-	ZeroMemory(&msg, sizeof(msg));
+	_keyboard->ProcessKeyboard(win->get_windowHandler());
+	GameState::stateUpdate();
+}
 
-	DWORD timePerFrame = 100 / FRAME_RATE;
+void Game::GameRun()
+{
+	if(win->startDraw())
+	{
+		GameState::stateDraw();
+		win->stopDraw();
+	}	
+}
 
-			
-			win.getDevice()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-			
-			//_player->Update();
-			//_enemy->Update();
-			//CollisionManager::CollisionPreventMove(_player, _wall);
-			//CollisionManager::CollisionPreventMove(_player->getBullet(), _enemy);
-			//if (_enemy != NULL)
-		//	CollisionManager::CollisionBulletWithObject(_player->getBullet(), _enemy);
-			//CollisionManager::CollisionStopMoving(_player,_enemy);
-			if (win.getDevice()->BeginScene())
-			{
-				//_wall->Draw();
-			//	_player->Draw();
-				//if (_enemy != NULL)
-			//	{
-				//	if (_enemy->_isTerminated == false)
-			//			_enemy->Draw();
-			//	}
-				//else
-			//	{
-					//delete _enemy;
-					//_enemy = NULL;
-			//	}
-				//win.getDevice()->ColorFill(_backBuffer, NULL, D3DCOLOR_XRGB(255, 255, 255));
-				_map->Draw();
-				win.getDevice()->EndScene();
-			}
-			win.getDevice()->Present(NULL, NULL, NULL, NULL);
-
-			
-
-			_map->Update();
-			_keyboard->ProcessKeyboard(win.get_windowHandler());
-		
-	
-	return true;
+void Game::GameRelease()
+{
+	//write code here
 }

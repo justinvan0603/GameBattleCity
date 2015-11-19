@@ -9,18 +9,15 @@
 class Game
 {
 private:
-	Window win;
-	PlayerTank* _player;
+	Window* win;
 	Keyboard* _keyboard;
-	BrickWall* _wall;
-	SpriteManager* _spriteManager;
-	Map* _map;
-	LightTank* _enemy;
 public:
 	Game();
 	~Game();
 
 	bool GameInit(HINSTANCE); // Khởi tạo game
-	bool GameRun();
+	void GameUpdate();
+	void GameRun();
+	void GameRelease();
 };
 
