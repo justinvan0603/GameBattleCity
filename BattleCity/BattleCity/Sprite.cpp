@@ -61,8 +61,8 @@ void Sprite::Render(int row, int col, D3DXVECTOR3 Location)
 
 	srect.left = col * (_Width);
 	srect.top = row * (_Height);
-	srect.right = srect.left + _Width - 1;
-	srect.bottom = srect.top + _Height - 1;
+	srect.right = srect.left + _Width;
+	srect.bottom = srect.top + _Height;
 
 	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 	this->_SpriteHandler->Draw(
