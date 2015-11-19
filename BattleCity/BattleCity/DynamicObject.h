@@ -24,10 +24,8 @@ protected:
 
 public:
 	DynamicObject();
-	
+	MoveDirection getCurrentMoveDirection();
 	virtual void Move() = 0;
-	//virtual void Shoot() = 0;
-
 	virtual void Update() = 0;
 	~DynamicObject();
 };

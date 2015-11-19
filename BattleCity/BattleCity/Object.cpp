@@ -12,7 +12,7 @@ int Object::getId()
 {
 	return this->_id;
 }
-short Object::getObjectType()
+int Object::getObjectType()
 {
 	return this->_objectType;
 }

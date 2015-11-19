@@ -7,7 +7,10 @@ DynamicObject::DynamicObject()
 
 }
 
-
+MoveDirection DynamicObject::getCurrentMoveDirection()
+{
+	return this->_currentDirection;
+}
 
 DynamicObject::~DynamicObject()
 {

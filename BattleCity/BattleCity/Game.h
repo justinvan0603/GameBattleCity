@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "GameState.h"
 #include "PlayerTank.h"
+#include "LightTank.h"
 #include "Keyboard.h"
 #include "Map.h"
 #include "CollisionManager.h"
@@ -14,6 +15,7 @@ private:
 	BrickWall* _wall;
 	SpriteManager* _spriteManager;
 	Map* _map;
+	LightTank* _enemy;
 public:
 	Game();
 	~Game();

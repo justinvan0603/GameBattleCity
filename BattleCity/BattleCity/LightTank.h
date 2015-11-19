@@ -1,13 +1,13 @@
 #pragma once
-#include "ShootableObject.h"
-class LightTank: public ShootableObject
+#include "Enemy.h"
+class LightTank: public Enemy
 {
 private:
-	Bullet* _bullet;
+	
 public:
 	LightTank(LPD3DXSPRITE);
 	void Draw();
-	void Shoot(){};
+	void Shoot();
 	void Update();
 	void Move();
 	~LightTank();

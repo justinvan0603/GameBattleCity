@@ -19,7 +19,7 @@ MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 	return MyRectangle(y, x, width, height);
 }
 
-void CollisionManager::CollisionPreventMove(Object* A, Object* B)
+bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 {
 	// A chuyển động B đứng yên
 	MyRectangle broadphase = BroadphaseRect(A);
@@ -28,8 +28,9 @@ void CollisionManager::CollisionPreventMove(Object* A, Object* B)
 
 		A->setVelocityX(SPEED_NO);
 		A->setVelocityY(SPEED_NO);
-
+		return true;
 	}
+	return false;
 }
 void CollisionManager::CollisionStopMoving(Object* A, Object* B)
 {
@@ -44,24 +45,42 @@ void CollisionManager::CollisionStopMoving(Object* A, Object* B)
 
 	}
 }
-void CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
+bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 {
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
 		if (A->getAllyObject() == ALLY_PLAYER)
 		{
-			if (B->getId() == ID_LIGHT_TANK)
+			if (B->getObjectType() == STATIC_OBJECT)
 			{
-				A->_isTerminated = true;
-				B->_isTerminated = true;
+				//A->_isTerminated = true;
+				//B->_isTerminated = true;
+				
 			}
 		}
+		return true;
 	}
+	return false;
 }
-bool CollisionManager::isCollision(MyRectangle* A, MyRectangle* B)
+bool CollisionManager::CollisionWithScreen(Object* A)
 {
-	return CollisionManager::AABBCheck(A, B);
+	MyRectangle collisionRect = BroadphaseRect(A);
+	if (collisionRect.getTop() <= POS_MAP_TOP_LEFT_Y)
+		return true;
+	if (collisionRect.getBottom() >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
+		return true;
+	if (collisionRect.getLeft() <= POS_MAP_TOP_LEFT_X)
+		return true;
+	if (collisionRect.getRight() >= POS_MAP_TOP_LEFT_X + MAP_WIDTH)
+		return true;
+	return false;
+}
+
+bool CollisionManager::isCollision(Object* A, Object* B)
+{
+	MyRectangle collisionRect = BroadphaseRect(A);
+	return CollisionManager::AABBCheck(&collisionRect, B);
 }
 bool CollisionManager::AABBCheck(MyRectangle* A, MyRectangle* B)
 {
@@ -70,6 +89,7 @@ bool CollisionManager::AABBCheck(MyRectangle* A, MyRectangle* B)
 		&& A->getBottom() > B->getTop() 
 		&& A->getTop() < B->getBottom());
 }
+
 
 CollisionManager::~CollisionManager()
 {

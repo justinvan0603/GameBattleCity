@@ -1,8 +1,10 @@
 #include "PlayerTank.h"
-
+#include "CollisionManager.h"
 
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
+	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
+	_startTime = GetTickCount();
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
 	this->_spriteHandler = spriteHandler;
@@ -23,26 +25,30 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	this->_currentDirection = UP;
-	_bullet = new Bullet(_spriteHandler,ALLY_PLAYER);
 	isShooting = false;
 }
 
 void PlayerTank::Draw()
 {
 	
-	if (isShooting && _isTerminated == false)
+	if (_isTerminated == false)
 	{
-		this->_bullet->Draw();
+		int size = _listBullet.size();
 		
+		_curSprite->Render(_left, _top);
+		
+		ShootableObject::Draw();
+		ShootableObject::DrawBullet();
 	}
+
 	
-	_curSprite->Render(_left, _top);
+	
 
-
-	ShootableObject::Draw();
+	
 }
 void PlayerTank::Move()
 {
+
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_LEFT) && !Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 		_vx = 0;
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
@@ -50,7 +56,6 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_UP))
 	{
 		this->_vy = -DEFAULT_PLAYER_SPEED_Y;
-		//_top += _vy;
 		_curSprite = _listSprite[UP];
 		_currentDirection = UP;
 		return;
@@ -58,7 +63,6 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 	{
 		this->_vy = DEFAULT_PLAYER_SPEED_Y;
-		//_top += _vy;
 		_curSprite = _listSprite[DOWN];
 		_currentDirection = DOWN;
 		return;
@@ -67,7 +71,7 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_LEFT))
 	{
 		this->_vx = -DEFAULT_PLAYER_SPEED_X;
-		//_left += _vx;
+
 		_curSprite = _listSprite[LEFT];
 		_currentDirection = LEFT;
 		return;
@@ -75,39 +79,59 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 	{
 		this->_vx = DEFAULT_PLAYER_SPEED_X;
-		//_left += _vx;
+
 		_curSprite = _listSprite[RIGHT];
 		_currentDirection = RIGHT;
 		return;
 	}
+	
 
-
+	
 }
 void PlayerTank::Shoot()
 {
+	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
 	{
-		_bullet->setFireDirection(_currentDirection);
-		_bullet->setPositionX(_left);
-		_bullet->setPositionY(_top);
-		_bullet->Move();
+		if (_listBullet.size() == 0)
+		{
+			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER));
+			_startTime = GetTickCount();
+		}
+		else if (GameTime::RenderFrame(_startTime,2000))
+		{
+			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER));
+
+			isShooting = true;
+			return;
+		}
+		
+		//_bullet = new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER);
 		isShooting = true;
-		return;
 	}
 }
 void PlayerTank::Update()
 {
-	
+
+
 	this->Move();
 	this->Shoot();
-	this->_bullet->Update();
+	//this->_bullet->Update();
+	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
+	{
+
+		(*i)->Update();
+	}
+	if (CollisionManager::CollisionWithScreen(this))
+	{
+		this->_vx = SPEED_NO;
+		this->_vy = SPEED_NO;
+		return;
+	}
 }
 
 
-Bullet* PlayerTank::getBullet()
-{
-	return this->_bullet;
-}
+
 
 PlayerTank::~PlayerTank()
 {
