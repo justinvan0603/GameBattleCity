@@ -69,7 +69,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 	MyRectangle collisionRect = BroadphaseRect(A);
 	if (collisionRect.getTop() <= POS_MAP_TOP_LEFT_Y)
 		return true;
-	if (collisionRect.getBottom() >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
+	if (collisionRect.getBottom()  >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
 		return true;
 	if (collisionRect.getLeft() <= POS_MAP_TOP_LEFT_X)
 		return true;

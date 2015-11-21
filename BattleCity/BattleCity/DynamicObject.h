@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "GameDefaultConstant.h"
 #include "Keyboard.h"
-
+#include "StaticObject.h"
 enum MoveDirection
 {
 	UP = 0,
@@ -25,10 +25,11 @@ protected:
 	int _row;
 	int _column;
 	Object*** _listStaticObject;
+	vector<vector<StaticObject*>>* _listNearByObject;
 public:
 	DynamicObject();
 	MoveDirection getCurrentMoveDirection();
-	void InitMapData(int*** map, int row, int column, Object*** listStaticObject);
+	void InitMapData(int*** map, int row, int column, Object** listStaticObject);
 	void FindNearbyObject();
 	virtual void Move() = 0;
 	virtual void Update();

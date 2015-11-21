@@ -108,7 +108,6 @@ void PlayerTank::Shoot()
 			return;
 		}
 		
-		//_bullet = new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER);
 		isShooting = true;
 	}
 }

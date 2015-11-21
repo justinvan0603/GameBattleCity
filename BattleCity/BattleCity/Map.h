@@ -8,6 +8,9 @@
 #include "SteelWall.h"
 #include "Eagle.h"
 #include "SpriteMapItemMagager.h"
+#include "PlayerTank.h"
+#include "CollisionManager.h"
+#include "LightTank.h"
 using std::vector;
 
 enum MAPSTATE
@@ -27,6 +30,8 @@ public:
 	Eagle* getEagleObject();
 	~Map();
 private:
+	LightTank* _lightTank;
+	PlayerTank* _player;
 	int** _mapMatrix;
 	MAPSTATE _mapState;
 	fstream _mapFile;
