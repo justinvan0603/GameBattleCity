@@ -54,7 +54,7 @@ MainMenu::MainMenu()
 {
 	_menuImagePosition = IMAGE_MAIN_MENU_GAME_DEFAULT_POS;
 	_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
-	_timeDelayChangeSelectorSprite = SELECTOR_SPEED_CHANGE;
+	_startTime = GetTickCount();
 	//new sprite image main menu
 	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
@@ -76,11 +76,10 @@ void MainMenu::update()
 	else
 	{
 		//tao selector chuyen dong
-		_timeDelayChangeSelectorSprite--;
-		if (_timeDelayChangeSelectorSprite <= 0)
+		
+		if (GameTime::RenderFrame(_startTime, SELECTOR_SPEED_CHANGE))
 		{
 			_selector->Next();
-			_timeDelayChangeSelectorSprite = SELECTOR_SPEED_CHANGE;
 		}
 		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 		{
@@ -113,6 +112,7 @@ void MainMenu::draw()
 	if(_menuImagePosition.y <= 0)
 	{
 		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
+
 	}
 }
 
@@ -137,14 +137,13 @@ StartingState* StartingState::_instance = nullptr;
 
 StartingState::StartingState()
 {
+	_startTime = GetTickCount();
 	_currentLevelState = 1;
 	_spriteHandler->GetDevice(&_d3ddevice);
 	_stateLevelImage = new Sprite(_spriteHandler, IMAGE_STATE_PATH, IMAGE_STATE_WIDTH, IMAGE_STATE_HEIGHT, 1, 1);
-	_numLevel = new Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
+	_numberLevel = new Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
 	//_bgTop = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
 	//_bgBottom = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
-	//init sprite state 1, 2, 3 ....
-	//code here
 }
 
 StartingState::~StartingState()
@@ -160,14 +159,17 @@ int StartingState::getCurrentLevelState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
+	SleepEx(DELAY_TIME_TO_START_PLAYING_STATE, false);
+	switchState(PlayingState::get());
 }
 
 void StartingState::draw()
 {
 	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
 	_stateLevelImage->Render(IMAGE_STATE_POS);
+	_numberLevel->Render(_currentLevelState, IMAGE_NUM_LEVEL_POS);
 	//_bgTop->Render(IMAGE_BG_STARTING_TOP_POS);
-		//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
+	//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
 }
 
 void StartingState::enter()
@@ -199,13 +201,17 @@ PlayingState::PlayingState()
 void PlayingState::update()
 {
 	//map, bullet, player update
+	
 	_map->Update();
+	_player->Update();
 }
 
 void PlayingState::draw()
 {
 	//draw all item in screen
+	
 	_map->Draw();
+	_player->Draw();
 }
 
 void PlayingState::enter()

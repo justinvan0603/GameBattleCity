@@ -123,12 +123,14 @@ void Map::Draw()
 	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
 	y += (TILE_HEIGHT * 2) + 64;
 	_spriteItemManager->getTankLifeIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
-		//get so mang va hien thi o day
+	//get so mang va hien thi o day
+	int playerLife = 
+
 	//Draw so thu tu state hien tai
 	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
 	y += + (TILE_HEIGHT * 4) + 64;
 	_spriteItemManager->getFlagIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
-		//get state hien tai roi xuat len mang hinh
+	//get state hien tai roi xuat len mang hinh
 
 
 	

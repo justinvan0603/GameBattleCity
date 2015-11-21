@@ -2,7 +2,6 @@
 #define __GAME_STATE_H__
 
 #include "Keyboard.h"
-#include "GameDefaultConstant.h"
 #include "PlayerTank.h"
 #include "Map.h"
 
@@ -11,6 +10,7 @@
 class GameState
 {
 public:
+	
 	virtual void update() = 0;
 	virtual void draw() = 0;
 	virtual void enter() = 0;
@@ -25,10 +25,15 @@ public:
 
 	static void stateDraw();
 
+	virtual ~GameState()
+	{
+	}
+
 protected:
 	static GameState*	_gameState;
 	static PlayerTank*	_player;
 	static LPD3DXSPRITE _spriteHandler;
+	DWORD _startTime;
 };
 #pragma endregion
 
@@ -56,7 +61,6 @@ private:
 	Sprite* _selector;
 	D3DXVECTOR3 _menuImagePosition;
 	D3DXVECTOR3 _selectorPosition;
-	int _timeDelayChangeSelectorSprite;
 };
 #pragma endregion
 
@@ -85,7 +89,7 @@ private:
 	int _timeToNextLevelState;
 	LPDIRECT3DDEVICE9 _d3ddevice;
 	Sprite* _stateLevelImage;
-	Sprite* _numLevel;
+	Sprite* _numberLevel;
 	Sprite* _bgTop;
 	D3DXVECTOR3 _bgTopPos;
 	Sprite* _bgBottom;
