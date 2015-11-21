@@ -31,13 +31,13 @@ bool Window::initWindow(HINSTANCE hInstance)
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);// xác lập kiểu con trỏ chuột mặc định
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // màu nền của cửa sổ
 	wcex.lpszMenuName = NULL; // con trỏ trỏ tới object dữ liệu thực đơn ứng dụng
-	wcex.lpszClassName = "DirectXExample"; // tên lớp đăng ký với hệ thống
+	wcex.lpszClassName = WINDOWS_NAME; // tên lớp đăng ký với hệ thống
 	wcex.hIconSm = 0; // con trỏ tới dữ liệu biểu tượng cửa sổ ứng dụng
 	RegisterClassEx(&wcex); //gọi hàm đăng ký lớp với hệ thống
 	// Tạo cửa sổ mới
 	wndHandle = CreateWindow(
-		"DirectXExample", //tên lớp sử dụng đã khai báo và đăng ký ở trên
-		"DirectXExample", //tiêu đề của cửa sổ chương trình
+		WINDOWS_NAME, //tên lớp sử dụng đã khai báo và đăng ký ở trên
+		WINDOWS_NAME, //tiêu đề của cửa sổ chương trình
 		WS_OVERLAPPEDWINDOW, //loại của sổ chương trình
 		CW_USEDEFAULT, // toạ độ X của của sổ khi xuất hiện
 		CW_USEDEFAULT, // toạ độ Y của của sổ khi xuất hiện

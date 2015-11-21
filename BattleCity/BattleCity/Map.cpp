@@ -1,96 +1,109 @@
 #include "Map.h"
+#include <complex>
 
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
-	_spriteManager = new SpriteMapItemMagager(_spriteHandler);
+	_spriteHandler->GetDevice(&d3ddev);
+	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
+	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
+	_colisObj = new vector<vector<StaticObject*>>;
 	_mapMatrix = new int*[NUM_ROW_TILE];
 	for (short i = 0; i < NUM_ROW_TILE; i++)
 	{
 		_mapMatrix[i] = new int[NUM_COLUMN_TILE];
 	}
-	_eagle = new Eagle(_spriteManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	changeState(MAPSTATE::STATE_1);	//Init state 1
 }
 
 
 void Map::changeState(MAPSTATE state)
 {
-	fstream mapFile;
 	string stringLine;
-	string mapFilePath = "Resource\\Map\\lv";
-	int i, j;
-	switch (state)
-	{
-		case STATE_1:
-		{
-			mapFilePath = mapFilePath + "1";
-			break;
-		}
-		
-		case STATE_2:
-		{
-			mapFilePath = mapFilePath + "2";
-			break;
-		}
-		case STATE_3:
-		{
-			mapFilePath = mapFilePath + "3";
-			break;
-		}
-		default:
-			break;
-	}
-	mapFile.open(mapFilePath + ".txt", ios::in);
-	if (mapFile.fail())
-	{
-		WARNING_BOX(WARNING_MAP_FILE_NOT_FOUND);
-	}
+	int i, j;	
 	_mapState = state;
+	if (!GetFileMap())
+		return;
+	//read matrix map
 	i = 0;
-	while (!mapFile.eof())
+	while (!_mapFile.eof())
 	{
 		j = 0;
-		getline(mapFile, stringLine);
+		getline(_mapFile, stringLine);
 		stringstream ss(stringLine);
 		string token;
 		while (getline(ss, token, ','))
 		{
 			_mapMatrix[i][j] = std::stoi(token);
-			switch (_mapMatrix[i][j])
-			{
-			case 0:
-			{
-				
-				break;
-			}
-			case 1: case 2: case 9: case 10:
-			{
-				_listBrickWallObject.push_back(new BrickWall(_spriteManager->getBrickSprite(), _mapMatrix[i][j], getPositionFromMapMatrix(i, j)));
-			}
-			case 17: case 18: case 25: case 26:
-			{
-				_listSteelWallObject.push_back(new SteelWall(_spriteManager->getSteelSprite(), _mapMatrix[i][j], getPositionFromMapMatrix(i, j)));
-			}
-			default:
-				break;
-			}
 			j++;
-		}		
+		}
 		i++;
 	}
+	InitColisObject();
+	_mapFile.close();
+}
 
-	mapFile.close();	
+void Map::InitColisObject()
+{
+	vector<StaticObject*> temp[MAP_NUM_OF_TYPE_OBJ];
+	int type;
+	for (short i = 0; i < NUM_ROW_TILE; i++)
+	{
+		for (short j = 0; j < NUM_COLUMN_TILE; j++)
+		{
+			type = _mapMatrix[i][j] % 100;
+			//chua lam water
+			
+			if (type == 0 || type == 1 || type == 10 || type == 11)
+				temp[type].push_back(new BrickWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+			if(type == 2 || type == 3 || type == 12 || type == 13)
+				temp[type].push_back(new SteelWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+		}
+	}
+	for (int i = 0; i < 20;i++)
+		_colisObj->push_back(temp[i]);
+}
+
+bool Map::GetFileMap()
+{
+	string mapFilePath = "Resource\\Map\\lv";
+	switch (_mapState)
+	{
+	case STATE_1:
+	{
+		mapFilePath = mapFilePath + "1";
+		break;
+	}
+
+	case STATE_2:
+	{
+		mapFilePath = mapFilePath + "2";
+		break;
+	}
+	case STATE_3:
+	{
+		mapFilePath = mapFilePath + "3";
+		break;
+	}
+	default:
+		break;
+	}
+	_mapFile.open(mapFilePath + ".txt", ios::in);
+	if (_mapFile.fail())
+	{
+		WARNING_BOX(WARNING_MAP_FILE_NOT_FOUND);
+		return false;
+	}
+	else
+		return true;
 }
 
 void Map::Draw()
 {
-	//ham clear nay nam ngoai state
-	//d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
-	//end
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
 
 	//Draw khung enemy goc phai
-	float x, y;
+	float x, y = 0;
 	int num_enemy = NUM_ENEMY;
 	for (int i = 0; i < num_enemy; i++)
 	{
@@ -103,18 +116,18 @@ void Map::Draw()
 			x = POS_LIST_ENEMY_ICON_TOP_LEFT_X + (TILE_WIDTH * 2);
 		}
 		y = POS_LIST_ENEMY_ICON_TOP_LEFT_Y + (TILE_HEIGHT * 2)*(i / 2);
-		_spriteManager->getEnemyIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
+		_spriteItemManager->getEnemyIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
 	}
 	
 	//Draw dem so mang
 	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
 	y += (TILE_HEIGHT * 2) + 64;
-	_spriteManager->getTankLifeIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
+	_spriteItemManager->getTankLifeIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
 		//get so mang va hien thi o day
 	//Draw so thu tu state hien tai
 	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
 	y += + (TILE_HEIGHT * 4) + 64;
-	_spriteManager->getFlagIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
+	_spriteItemManager->getFlagIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
 		//get state hien tai roi xuat len mang hinh
 
 
@@ -123,21 +136,21 @@ void Map::Draw()
 	{
 		for (short j = 0; j < NUM_COLUMN_TILE; j++)
 		{
-			if (_mapMatrix[i][j] == 0)
+			if (_mapMatrix[i][j] == -1)
 			{
-				_spriteManager->getBackGround()->Render(0, 0, getPositionFromMapMatrix(i, j));
+				_spriteItemManager->getBackGround()->Render(0, 0, getPositionFromMapMatrix(i, j));
 			}
 		}
 	}
-	
-	for (int i = 0; i < _listBrickWallObject.size(); i++)
+
+	for (int i = 0; i < _colisObj->size();i++)
 	{
-		_listBrickWallObject[i]->Draw();
+		for (int j = 0; j < _colisObj->at(i).size();j++)
+		{
+			_colisObj->at(i).at(j)->Draw();
+		}
 	}
-	for (int i = 0; i < _listSteelWallObject.size(); i++)
-	{
-		_listSteelWallObject[i]->Draw();
-	}
+
 	_eagle->Draw();
 }
 
@@ -146,14 +159,9 @@ void Map::Update()
 	//xet va cham va xoa item tren map
 }
 
-vector<BrickWall*> Map::getlistBrickWallObject()
+vector<vector<StaticObject*>>* Map::getColisObject()
 {
-	return _listBrickWallObject;
-}
-
-vector<SteelWall*> Map::getlistSteelWallObject()
-{
-	return _listSteelWallObject;
+	return _colisObj;
 }
 
 Eagle * Map::getEagleObject()

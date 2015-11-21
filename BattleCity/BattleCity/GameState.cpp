@@ -11,7 +11,7 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
 	_player = new PlayerTank(_spriteHandler);
-	switchState(MainMenu::get());
+	switchState(PlayingState::get());
 }
 
 void GameState::release()
@@ -141,8 +141,8 @@ StartingState::StartingState()
 	_spriteHandler->GetDevice(&_d3ddevice);
 	_stateLevelImage = new Sprite(_spriteHandler, IMAGE_STATE_PATH, IMAGE_STATE_WIDTH, IMAGE_STATE_HEIGHT, 1, 1);
 	_numLevel = new Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
-	_bgTop = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
-	_bgBottom = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
+	//_bgTop = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
+	//_bgBottom = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
 	//init sprite state 1, 2, 3 ....
 	//code here
 }
@@ -164,11 +164,10 @@ void StartingState::update()
 
 void StartingState::draw()
 {
-	//_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
-	//_stateLevelImage->Render(IMAGE_STATE_POS);
-	_bgTop->Render(IMAGE_BG_STARTING_TOP_POS);
-
-	//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
+	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	_stateLevelImage->Render(IMAGE_STATE_POS);
+	//_bgTop->Render(IMAGE_BG_STARTING_TOP_POS);
+		//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
 }
 
 void StartingState::enter()
@@ -194,17 +193,19 @@ PlayingState* PlayingState::_instance = nullptr;
 
 PlayingState::PlayingState()
 {
-
+	_map = new Map(_spriteHandler);
 }
 
 void PlayingState::update()
 {
 	//map, bullet, player update
+	_map->Update();
 }
 
 void PlayingState::draw()
 {
 	//draw all item in screen
+	_map->Draw();
 }
 
 void PlayingState::enter()

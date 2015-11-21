@@ -33,6 +33,11 @@ void Eagle::Draw()
 		
 }
 
+void Eagle::Init(Sprite* sprite, int type, D3DXVECTOR3 pos)
+{
+
+}
+
 void Eagle::setEagleStatus(EAGLE_STATUS status)
 {
 	_status = status;

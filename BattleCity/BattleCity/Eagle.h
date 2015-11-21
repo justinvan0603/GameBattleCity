@@ -13,6 +13,7 @@ public:
 	Eagle(Sprite* sprite, D3DXVECTOR3 position);
 	void Update();
 	void Draw();
+	void Init(Sprite* sprite, int type, D3DXVECTOR3 pos);
 	void setEagleStatus(EAGLE_STATUS status);
 	~Eagle();
 private:

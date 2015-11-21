@@ -52,10 +52,10 @@
 #define MAP_HEIGHT 450
 #define POS_EAGLE_IN_MATRIX_X 48
 #define POS_EAGLE_IN_MATRIX_Y 24
-#define MAP_RESOURCE_PATH_BRICKWALL	"Resource\\Map\\Brick\\BrickWall.png"
-#define MAP_RESOURCE_PATH_STEELWALL	"Resource\\Map\\Steel\\SteelWall.png"
+#define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
 #define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
 #define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
+#define MAP_NUM_OF_TYPE_OBJ 20
 
 //Info Right map default value
 #define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540

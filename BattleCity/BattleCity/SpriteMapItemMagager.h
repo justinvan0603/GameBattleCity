@@ -5,8 +5,7 @@
 class SpriteMapItemMagager
 {
 public:
-	Sprite* getBrickSprite();
-	Sprite* getSteelSprite();
+	Sprite* getEnvironment();
 	Sprite* getEagleSprite();
 	Sprite* getBackGround();
 	Sprite* getEnemyIcon();
@@ -16,8 +15,7 @@ public:
 	SpriteMapItemMagager(LPD3DXSPRITE spriteHandler);
 	~SpriteMapItemMagager();
 private:
-	Sprite* _brick;
-	Sprite* _steel;
+	Sprite* _environment;
 	Sprite* _eagle;
 	Sprite* _backGround;
 	Sprite* _enemyIcon;

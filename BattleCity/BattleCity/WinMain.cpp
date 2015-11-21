@@ -17,8 +17,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		game->GameUpdate();
 		game->GameRun();
+		game->GameUpdate();
 	}
 	//Game.Release();
 	return 0;

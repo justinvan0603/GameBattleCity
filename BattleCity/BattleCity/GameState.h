@@ -111,7 +111,7 @@ private:
 
 private:
 	static PlayingState* _instance;
-
+	Map* _map;
 };
 #pragma endregion
 

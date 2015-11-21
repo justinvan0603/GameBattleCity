@@ -91,8 +91,8 @@ void Sprite::Render(int X, int Y)
 
 	srect.left = (_Index % _SpritePerRow) * (_Width);
 	srect.top = (_Index / _SpritePerRow) * (_Height);
-	srect.right = srect.left + _Width - 1;
-	srect.bottom = srect.top + _Height - 1;
+	srect.right = srect.left + _Width;
+	srect.bottom = srect.top + _Height;
 
 	D3DXVECTOR3 position((float)X, (float)Y, 0);
 	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);

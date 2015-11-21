@@ -19,22 +19,24 @@ enum MAPSTATE
 class Map
 {
 public:
-	Map(LPD3DXSPRITE spriteHandler);
+	Map(LPD3DXSPRITE spriteHandler);	
 	void changeState(MAPSTATE state);
 	void Draw();
 	void Update();
-	vector<BrickWall*> getlistBrickWallObject();
-	vector<SteelWall*> getlistSteelWallObject();
+	vector<vector<StaticObject*>>* getColisObject();
 	Eagle* getEagleObject();
 	~Map();
 private:
 	int** _mapMatrix;
 	MAPSTATE _mapState;
-	SpriteMapItemMagager* _spriteManager;
-	LPD3DXSPRITE _spriteHandler;
-	vector<BrickWall*> _listBrickWallObject;
-	vector<SteelWall*> _listSteelWallObject;
+	fstream _mapFile;
+	SpriteMapItemMagager* _spriteItemManager;
 	Eagle* _eagle;
+	LPD3DXSPRITE _spriteHandler;
+	LPDIRECT3DDEVICE9 d3ddev;
 	D3DXVECTOR3 getPositionFromMapMatrix(int row, int column);
+	bool GetFileMap();
+	void InitColisObject();
+	vector<vector<StaticObject*>>* _colisObj;
 };
 #endif
