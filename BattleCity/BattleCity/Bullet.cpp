@@ -1,5 +1,5 @@
 #include "Bullet.h"
-
+#include "EffectManager.h"
 
 Bullet::Bullet(LPD3DXSPRITE spriteHandler, int ally)
 {
@@ -24,8 +24,8 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, in
 	_listSprite = new Sprite*;
 	this->_left = posX;
 	this->_top = posY;
-	_width = 6;
-	_height = 10;
+	_width = 7;
+	_height = 11;
 	_vx = BULLET_SPEED_X;
 	_vy = BULLET_SPEED_Y;
 	_isTerminated = false;
@@ -69,24 +69,29 @@ void Bullet::Draw()
 		if (_currentDirection == MoveDirection::UP)
 		{
 			
-			(*_listSprite)->Render(_left + SPRITE_WIDTH / 2 - BULLET_WIDTH / 2, _top);
+			(*_listSprite)->Render(_left, _top);
 			return;
 		}
 		if (_currentDirection == MoveDirection::LEFT)
 		{
-			(*_listSprite)->Render(_left, _top + SPRITE_HEIGHT / 2 - BULLET_HEIGHT / 2);
+			(*_listSprite)->Render(_left, _top);
 			return;
 		}
 		if (_currentDirection == MoveDirection::DOWN)
 		{
-			(*_listSprite)->Render(_left + SPRITE_WIDTH / 2 - BULLET_WIDTH / 2, _top + SPRITE_HEIGHT);
+			(*_listSprite)->Render(_left, _top);
 			return;
 		}
 		if (_currentDirection == MoveDirection::RIGHT)
 		{
-			(*_listSprite)->Render(_left + SPRITE_WIDTH, _top + SPRITE_HEIGHT / 2 - BULLET_HEIGHT / 2);
+			(*_listSprite)->Render(_left, _top);
 			return;
 		}
+	}
+	else
+	{
+		EffectManager::getInstance(0)->RenderEffect(ID_EFFECT_SHIELD, _left, _top);
+		return;
 	}
 	
 

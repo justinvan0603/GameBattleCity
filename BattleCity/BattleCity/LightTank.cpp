@@ -6,10 +6,10 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler)
 	this->_id = ID_LIGHT_TANK;
 	this->_spriteHandler = spriteHandler;
 	//this->_currentDirection = DOWN;
-	this->_left = 90; //DEFAULT_TOP_LEFT.x;
-	this->_top = 50;// DEFAULT_TOP_LEFT.y;
-	this->_vx = LIGHT_TANK_SPEED_X;
-	this->_vy = LIGHT_TANK_SPEED_Y;
+	this->_left = 101; //DEFAULT_TOP_LEFT.x;
+	this->_top = 55;// DEFAULT_TOP_LEFT.y;
+	this->_vx = 0; //LIGHT_TANK_SPEED_X;
+	this->_vy = 0; //LIGHT_TANK_SPEED_Y;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
 	this->_listSprite[UP] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
@@ -68,7 +68,7 @@ void LightTank::Shoot()
 void LightTank::Update()
 {
 	
-	Enemy::MoveWithCollision();
+	
 	this->Move();
 	//this->Shoot();
 	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
@@ -76,12 +76,13 @@ void LightTank::Update()
 
 		(*i)->Update();
 	}
-	//if (CollisionManager::CollisionWithScreen(this))
-	//{
-	//	this->_vx = SPEED_NO;
-	//	this->_vy = SPEED_NO;
-	//	return;
-	//}
+	if (CollisionManager::CollisionWithScreen(this))
+	{
+		this->_vx = SPEED_NO;
+		this->_vy = SPEED_NO;
+		this->_isCollied = true;
+	}
+	Enemy::MoveWithCollision();
 }
 
 LightTank::~LightTank()

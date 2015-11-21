@@ -20,13 +20,19 @@ protected:
 	Sprite* _curSprite;
 	int _hitPoint;
 	MoveDirection _currentDirection;
-
-
+	vector<Object*> _listCollisionObject;
+	int*** _map;
+	int _row;
+	int _column;
+	Object*** _listStaticObject;
 public:
 	DynamicObject();
 	MoveDirection getCurrentMoveDirection();
+	void InitMapData(int*** map, int row, int column, Object*** listStaticObject);
+	void FindNearbyObject();
 	virtual void Move() = 0;
-	virtual void Update() = 0;
+	virtual void Update();
 	~DynamicObject();
 };
+
 

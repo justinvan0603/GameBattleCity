@@ -23,10 +23,12 @@ void Enemy::MoveWithCollision()
 }
 void Enemy::Shoot()
 {
+	D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top,_currentDirection);
+
 	if (_listBullet.size() == 0)
-		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_ENEMY));
+		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition.x, bulletPosition.y, ALLY_ENEMY));
 	else if (GameTime::RenderFrame(_startTime,1000))
-		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top,ALLY_ENEMY));
+		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition.x, bulletPosition.y,ALLY_ENEMY));
 }
 
 Enemy::~Enemy()

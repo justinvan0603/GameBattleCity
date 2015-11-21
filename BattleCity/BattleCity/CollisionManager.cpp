@@ -1,5 +1,5 @@
 ﻿#include "CollisionManager.h"
-
+#include "EffectManager.h"
 
 CollisionManager::CollisionManager()
 {
@@ -54,7 +54,8 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 		{
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
-				//A->_isTerminated = true;
+				A->_isTerminated = true;
+				//EffectManager::getInstance(0)->RenderEffect(ID_EFFECT_SHIELD, A->getLeft(), A->getTop());
 				//B->_isTerminated = true;
 				
 			}
@@ -86,7 +87,7 @@ bool CollisionManager::AABBCheck(MyRectangle* A, MyRectangle* B)
 {
 	return (A->getLeft() < B->getRight() 
 		&& A->getRight() > B->getLeft() 
-		&& A->getBottom() > B->getTop() 
+		&& A->getBottom() > B->getTop()
 		&& A->getTop() < B->getBottom());
 }
 

@@ -14,6 +14,7 @@ public:
 	void Shoot();
 	void Update() = 0;
 	MoveDirection RandomDirection();
+	void RandomShoot();
 	~Enemy();
 };
 

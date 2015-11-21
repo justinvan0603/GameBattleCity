@@ -5,8 +5,8 @@
 #include "DefaultConstant.h"
 //player default value
 #define DEFAULT_PLAYER_LIFE 3
-#define DEFAULT_PLAYER_POSITION_X	200
-#define DEFAULT_PLAYER_POSITION_Y	450
+#define DEFAULT_PLAYER_POSITION_X	230
+#define DEFAULT_PLAYER_POSITION_Y	400
 #define DEFAULT_PLAYER_SPEED_X 3
 #define DEFAULT_PLAYER_SPEED_Y 3
 #define DEFAULT_IMMORTAL_TIME 5
@@ -42,20 +42,21 @@
 #define IF_ICE		 10
 
 //Map default value
-#define POS_MAP_TOP_LEFT_X 92
-#define POS_MAP_TOP_LEFT_Y 60
+#define POS_MAP_TOP_LEFT_X 100
+#define POS_MAP_TOP_LEFT_Y 51
 #define NUM_ROW_TILE	52
 #define NUM_COLUMN_TILE 52
 #define TILE_WIDTH		8
 #define TILE_HEIGHT		8
-#define MAP_WIDTH 450
-#define MAP_HEIGHT 450
+#define MAP_WIDTH 417
+#define MAP_HEIGHT 417
 #define POS_EAGLE_IN_MATRIX_X 48
 #define POS_EAGLE_IN_MATRIX_Y 24
 #define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
 #define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
 #define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
 #define MAP_NUM_OF_TYPE_OBJ 20
+
 
 //Info Right map default value
 #define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540
@@ -155,4 +156,37 @@
 //Ally Bullet
 #define ALLY_PLAYER 1
 #define ALLY_ENEMY 2
+
+//Resource sound path
+#define SOUND_START_GAME ""
+#define SOUND_FIRE ""
+#define SOUND_BULLET_EXPLODE ""
+#define SOUND_TANK_EXPLODE ""
+#define SOUND_EAGLE_DESTROY ""
+#define SOUND_TANK_HIT ""
+
+#define ID_SOUND_START_GAME 1
+#define ID_SOUND_FIRE 2
+#define ID_SOUND_BULLET_EXPLODE 3
+#define ID_SOUND_TANK_EXPLODE 4
+#define ID_SOUND_EAGLE_DESTROY 5
+#define ID_SOUND_TANK_HIT 6
+
+//20/11/2015
+//------------game effect ID--------------------
+//PATH
+#define EFFECT_SHIELD "effect.png"
+#define EFFECT_RESPAWN ""
+#define EFFECT_SMALL_EXPLODE ""
+#define EFFECT_SPECIAL_EXPLODE ""
+//ID
+#define ID_EFFECT_SHIELD 1
+#define ID_EFFECT_RESPAWN 2
+#define ID_EFFECT_SMALL_EXPLODE 3
+#define ID_EFFECT_SPECIAL_EXPLODE 4
+//numb of sprite
+#define NUMB_OF_SPRITE_SHIELD 2
+#define NUMB_OF_SPRITE_RESPAWN 6
+#define NUMB_OF_SPRITE_SMALL_EXPLODE 6
+#define NUMB_OF_SPRITE_SPECIAL_EXPLODE 7
 #endif // ! __GAME_DEFAULT_CONSTANT__
