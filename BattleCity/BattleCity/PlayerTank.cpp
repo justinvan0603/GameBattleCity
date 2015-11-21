@@ -93,14 +93,16 @@ void PlayerTank::Shoot()
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
 	{
+		D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top,_currentDirection);
 		if (_listBullet.size() == 0)
 		{
-			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER));
+
+			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition.x, bulletPosition.y, ALLY_PLAYER));
 			_startTime = GetTickCount();
 		}
 		else if (GameTime::RenderFrame(_startTime,2000))
 		{
-			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, _left, _top, ALLY_PLAYER));
+			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition.x, bulletPosition.y, ALLY_PLAYER));
 
 			isShooting = true;
 			return;
@@ -113,12 +115,14 @@ void PlayerTank::Shoot()
 void PlayerTank::Update()
 {
 
-
+	//FindNearbyObject();
 	this->Move();
 	this->Shoot();
 	//this->_bullet->Update();
+	
 	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
 	{
+
 
 		(*i)->Update();
 	}
@@ -128,6 +132,7 @@ void PlayerTank::Update()
 		this->_vy = SPEED_NO;
 		return;
 	}
+	DynamicObject::Update();
 }
 
 

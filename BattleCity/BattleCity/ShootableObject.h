@@ -13,6 +13,7 @@ public:
 	virtual void Shoot() = 0;
 	virtual void Move() = 0;
 	virtual void Update() = 0;
+	D3DXVECTOR2 CalculateBulletPosition(int left, int top, MoveDirection currentDirection);
 	vector<Bullet*> getListBullet();
 	void DrawBullet();
 	~ShootableObject();
