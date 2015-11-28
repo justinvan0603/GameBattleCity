@@ -48,8 +48,15 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 void Sprite::Next()
 {
 	this->_Index = (this->_Index + 1) % this->_Count;
+	if (_Index >= _Count)
+		_Index = 0;
 }
-
+void Sprite::Next(bool &isCompleted)
+{
+	this->_Index = (this->_Index + 1) % this->_Count;
+	if (_Index >= _Count)
+		isCompleted = true;
+}
 void Sprite::Render(int index, D3DXVECTOR3 Location)
 {
 	this->Render(index, Location.x, Location.y);
@@ -103,6 +110,7 @@ void Sprite::Render(int X, int Y)
 		&position,
 		D3DCOLOR_XRGB(255, 255,255 ));
 	_SpriteHandler->End();
+
 }
 
 void Sprite::Render(D3DXVECTOR3 Location, D3DCOLOR transcolor)

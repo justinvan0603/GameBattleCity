@@ -13,7 +13,7 @@ bool GameTime::CanCreateFrame()
 	_deltaTime = _now - _startTime;
 	if (_deltaTime >= _timePerFrame)
 	{
-		_startTime = _now;
+		_startTime += _now;
 		return true;
 	}
 	return false;

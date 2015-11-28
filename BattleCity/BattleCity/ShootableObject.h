@@ -8,6 +8,7 @@ protected:
 	bool isShooting;
 	vector<Bullet*> _listBullet;
 	DWORD _startTime;
+
 public:
 	ShootableObject();
 	virtual void Shoot() = 0;
@@ -16,6 +17,7 @@ public:
 	D3DXVECTOR2 CalculateBulletPosition(int left, int top, MoveDirection currentDirection);
 	vector<Bullet*> getListBullet();
 	void DrawBullet();
+	void CleanBulletList();
 	~ShootableObject();
 };
 

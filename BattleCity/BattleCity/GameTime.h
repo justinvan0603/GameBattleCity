@@ -13,6 +13,7 @@ private:
 public:
 	GameTime(float fps);
 	static bool RenderFrame(DWORD& startTime, float delayTime);
+	
 	bool CanCreateFrame();
 	DWORD GetTimePerFrame();
 	~GameTime();

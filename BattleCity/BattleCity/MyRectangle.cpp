@@ -3,6 +3,13 @@
 
 MyRectangle::MyRectangle()
 {
+	this->_top = 0;
+	this->_left = 0;
+	this->_width = 0;
+	this->_height = 0;
+
+	this->_vx = 0;
+	this->_vy = 0;
 }
 MyRectangle::MyRectangle(int top, int left, int width, int height, int vx, int vy)
 {

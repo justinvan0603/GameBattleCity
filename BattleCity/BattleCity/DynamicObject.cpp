@@ -12,97 +12,190 @@ MoveDirection DynamicObject::getCurrentMoveDirection()
 	return this->_currentDirection;
 }
 
+void DynamicObject::setCurrentMoveDirection(MoveDirection direction)
+{
+	this->_currentDirection = direction;
+	int vx, vy;
+
+	if (this->_id == ID_LIGHT_TANK)
+	{
+		vx = DYNAMIC_OBJECT_HIGH_SPEED.x;
+		vy = DYNAMIC_OBJECT_HIGH_SPEED.y;
+	}
+	else
+	{
+		vx = DYNAMIC_OBJECT_LOW_SPEED.x;
+		vy = DYNAMIC_OBJECT_LOW_SPEED.y;
+	}
+	switch (_currentDirection)
+	{
+	case UP:
+	{
+		_vx = 0;
+		_vy = -vy;
+		break;
+	}
+	case LEFT:
+	{
+		_vy = 0;
+		_vx = -vx;
+		break;
+	}
+	case DOWN:
+	{
+		_vx = 0;
+		_vy = vy;
+		break;
+	}
+	case RIGHT:
+	{
+		_vy = 0;
+		_vx = vx;
+		break;
+	}
+	default:
+		break;
+	}
+}
+int DynamicObject::GetLevel()
+{
+	return this->_level;
+}
 void DynamicObject::FindNearbyObject()
 {
-//	int currentObjectColumn = (_left -    / TILE_WIDTH;
-	int currentObjectRow = _top / TILE_HEIGHT;
+	int currentObjectColumn = (_left - POS_MAP_TOP_LEFT_X)/ TILE_WIDTH;
+	int currentObjectRow = (_top - POS_MAP_TOP_LEFT_Y) /TILE_HEIGHT;
 	int nearbyObjectCountWidth;
 	int nearbyObjectCountHeight;
-	if (_left % TILE_WIDTH == 0)
+	if (this->_id != ID_BULLET)
 	{
-		nearbyObjectCountWidth = 4;
+		if ((_left - POS_MAP_TOP_LEFT_X) % TILE_WIDTH == 0)
+		{
+			nearbyObjectCountWidth = 4;
+		}
+		else
+		{
+			nearbyObjectCountWidth = 5;
+		}
+
+		if ((_top - POS_MAP_TOP_LEFT_Y) % TILE_HEIGHT == 0)
+		{
+			nearbyObjectCountHeight = 4;
+		}
+		else
+		{
+			nearbyObjectCountHeight = 5;
+		}
 	}
 	else
 	{
-		nearbyObjectCountWidth = 5;
+		nearbyObjectCountHeight = nearbyObjectCountWidth = 1;
 	}
-	if (_top % TILE_HEIGHT == 0)
+
+	for (int i = currentObjectColumn - 1; i <= currentObjectColumn + nearbyObjectCountWidth; i++)
 	{
-		nearbyObjectCountHeight = 4;
+		int value;
+		if (i >= 0 && i < 52)
+		{
+			if (currentObjectRow - 1 >= 0)
+			{
+				value = _map[currentObjectRow-1][i];
+				if (value != -1)
+				{
+					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+				}
+			}
+
+			if (currentObjectRow + nearbyObjectCountHeight < 52)
+			{
+				value = _map[currentObjectRow + nearbyObjectCountHeight][i];
+				if (value != -1)
+				{
+					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+				}
+			} 
+		}
 	}
-	else
+
+	for (int i = currentObjectRow; i < currentObjectRow + nearbyObjectCountHeight; i++)
 	{
-		nearbyObjectCountHeight = 5;
+		int value;
+		if (i >= 0 && i < 52)
+		{
+			if (currentObjectColumn - 1 >= 0)
+			{
+				value = _map[i][currentObjectColumn - 1];
+				if (value != -1)
+				{
+					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+				}
+			}
+
+			if (currentObjectColumn + nearbyObjectCountWidth < 52)
+			{
+				value = _map[i][currentObjectColumn + nearbyObjectCountWidth];
+				if (value != -1)
+				{
+					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+				}
+			}
+		}
 	}
-	//for (int i = currentObjectColumn; i < currentObjectColumn + nearbyObjectCountWidth; i++)
-	//{
-
-	//	int value = (*_map)[currentObjectRow - 1][i];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listStaticObject[value % 100][value / 100]);
-	//	}
-	//	value = (*_map)[currentObjectRow + nearbyObjectCountHeight][i];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listStaticObject[value % 100][value / 100]);
-	//	}
-	//}
-
-	//for (int i = currentObjectRow; i < currentObjectRow + nearbyObjectCountHeight; i++)
-	//{
-	//	int value = (*_map)[i][currentObjectColumn - 1];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listStaticObject[value % 100][value / 100]);
-	//	}
-	//	value = (*_map)[i][currentObjectColumn + nearbyObjectCountWidth];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listStaticObject[value % 100][value / 100]);
-	//	}
-	//}
-
-	//for (int i = currentObjectColumn; i < currentObjectColumn + nearbyObjectCountWidth; i++)
-	//{
-	//	int value = (*_map)[currentObjectRow - 1][i];
-	//	if (value != -1 )
-	//	{
-	//		_listCollisionObject.push_back(_listNearByObject->at(value%100).at(value/100));
-	//	}
-	//	value = (*_map)[currentObjectRow + nearbyObjectCountHeight][i];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listNearByObject->at(value%100).at(value/100));
-	//	}
-	//}
-
-	//for (int i = currentObjectRow; i < currentObjectRow + nearbyObjectCountHeight; i++)
-	//{
-	//	int value = (*_map)[i][currentObjectColumn - 1];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listNearByObject->at(value % 100).at(value / 100));
-	//	}
-	//	value = (*_map)[i][currentObjectColumn + nearbyObjectCountWidth];
-	//	if (value != -1)
-	//	{
-	//		_listCollisionObject.push_back(_listNearByObject->at(value % 100).at(value / 100));
-	//	}
-	//}
-
+	
 }
 void DynamicObject::Update()
 {
 	_listCollisionObject.clear();
 }
 
-void DynamicObject::InitMapData(int*** map, int row, int column, Object** listStaticObject)
+void DynamicObject::InitMapData(int** map, vector<vector<StaticObject*>>* listNearByObject)
 {
 	_map = map;
-	_row = row;
-	_column = column;
-	*_listStaticObject = listStaticObject;
+	_listNearByObject = listNearByObject;
+}
+
+void DynamicObject::InvertDirection()
+{
+	switch (_currentDirection)
+	{
+		case UP:
+		{
+			setCurrentMoveDirection(DOWN);
+			break;
+		}
+		case LEFT:
+		{
+			setCurrentMoveDirection(RIGHT);
+			break;
+		}
+		case DOWN:
+		{
+			setCurrentMoveDirection(UP);
+			break;
+		}
+		case RIGHT:
+		{
+			setCurrentMoveDirection(LEFT);
+			break;
+		}
+	}
+}
+MoveDirection DynamicObject::RandomDirection()
+{
+	srand(time(0));
+	return static_cast<MoveDirection>(rand() % NUM_OF_DIRECTION);
+}
+void DynamicObject::RandomChangeDirection()
+{
+	MoveDirection newDirection = _currentDirection;
+	srand(time(0));
+	while (newDirection == _currentDirection)
+	{
+		
+		newDirection = static_cast<MoveDirection>(rand() % NUM_OF_DIRECTION);
+	}
+	_currentDirection = newDirection;
+	//setCurrentMoveDirection(newDirection);
 }
 DynamicObject::~DynamicObject()
 {

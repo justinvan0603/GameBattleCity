@@ -5,37 +5,44 @@ Effect::Effect(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 	:Sprite(SpriteHandler,Path,Width, Height,Count,SpritePerRow)
 {
 
-	_animationCount = 0;
-	_animationDelay = ANIMATION_DELAY_TIME;
 }
-
+Effect::Effect(LPD3DXSPRITE SpriteHandler,
+	char* Path,
+	int Width,
+	int Height,
+	int Count,
+	int SpritePerRow,
+	D3DXVECTOR2 position) : Sprite(SpriteHandler, Path, Width, Height, Count, SpritePerRow)
+{
+	_isCompleted = false;
+	_position = position;
+}
+void Effect::Render()
+{
+	//if (GameTime::RenderFrame(_startTime, 1000))
+	//{
+	//	this->Next();
+	//}
+	//else
+	this->Render((int)_position.x, (int)_position.y);
+	
+}
 void Effect::Render(int X, int Y)
 {
 	
-	if (++_animationCount > _animationDelay)
+	Sprite::Render(X, Y);
+
+}
+void Effect::Render(int X, int Y, DWORD starttime, int delaytime)
+{
+	if (GameTime::RenderFrame(starttime, delaytime))
 	{
-		_animationCount = 0;
-		if (++_Index > _SpritePerRow)
-			Reset();
+		Sprite::Render(X, Y);
 	}
-	Sprite::Render(_Index, X, Y);
-
-	//while (_Index < _SpritePerRow)
-	//{
-	//	if (++_animationCount > _animationDelay)
-	//	{
-	//		_animationCount = 0;
-
-	//		_Index++;
-	//	}
-	//	Sprite::Render(_Index, X, Y);
-	//}
-	//Reset();
-
 }
 void Effect::Reset()
 {
-	_animationDelay = 0;
+
 	_Index = 0;
 }
 Effect::~Effect()

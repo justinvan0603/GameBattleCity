@@ -5,10 +5,8 @@
 class EffectManager
 {
 private:
-	Effect* _shieldEffect;
-	Effect* _respawnEffect;
-	Effect* _smallExplodeEffect;
-	Effect* _specialExplodeEffect;
+	LPD3DXSPRITE _spriteHandler;
+	vector<Effect*> _listEffect;
 private: //Singletton Pattern
 	static EffectManager* _instance;
 	EffectManager(LPD3DXSPRITE);
@@ -16,9 +14,8 @@ private: //Singletton Pattern
 public:
 	static EffectManager* getInstance(LPD3DXSPRITE);
 public:
+	void AddBulletEffect(D3DXVECTOR2 position);
 	
-	void RenderEffect(int id, int X, int Y);
-	void RenderShield(Object*);
 	
 };
 

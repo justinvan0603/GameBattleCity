@@ -21,16 +21,21 @@ protected:
 	int _hitPoint;
 	MoveDirection _currentDirection;
 	vector<Object*> _listCollisionObject;
-	int*** _map;
-	int _row;
-	int _column;
-	Object*** _listStaticObject;
+	int** _map;
+
+	//Object*** _listStaticObject;
 	vector<vector<StaticObject*>>* _listNearByObject;
 public:
+	
 	DynamicObject();
 	MoveDirection getCurrentMoveDirection();
-	void InitMapData(int*** map, int row, int column, Object** listStaticObject);
+	void setCurrentMoveDirection(MoveDirection direction);
+	void InitMapData(int** map, vector<vector<StaticObject*>>* listNearByObject);
 	void FindNearbyObject();
+	MoveDirection RandomDirection();
+	void RandomChangeDirection();
+	void InvertDirection();
+	int GetLevel();
 	virtual void Move() = 0;
 	virtual void Update();
 	~DynamicObject();

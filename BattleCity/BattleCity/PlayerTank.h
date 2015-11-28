@@ -2,25 +2,28 @@
 #include "ShootableObject.h"
 
 #include"GameTime.h"
-
+#include "Effect.h"
 class PlayerTank: public ShootableObject
 {
 private:
 	int _life;
 	int _immortalTime;
 	GameTime *_bulletDelay;
-	bool isCollide = false;
-	
-	bool isShooting;
+	GameTime *_shieldDelay;
+	Effect* _shieldEffect;
+	//DWORD _shieldRoundTime;
+	//time_t _shieldRoundTime;
+	bool _isActiveShield;
 public:
-
-	Bullet * _bullet;
+	
+	//Bullet * _bullet;
 	PlayerTank(LPD3DXSPRITE);
 	void Draw();
 	void Update();
 	void Move();
 	void Shoot();
-	void update();
+	void PlayerPromoted();
+	void ActivateShield();
 	
 	~PlayerTank();
 };

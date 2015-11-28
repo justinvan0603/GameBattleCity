@@ -14,6 +14,8 @@ public:
 	static void CollisionStopMoving(Object* A, Object* B);
 	static bool CollisionBulletWithObject(Bullet* A, Object* B);
 	static bool CollisionWithScreen(Object* A);
+	static bool CollisionChangeDirection(DynamicObject *A, DynamicObject *B);
+	static bool CollisionEnemy(DynamicObject* A, DynamicObject* B);
 	//static void CalculateSpeedAfterCollision(Object* A, Object* B);
 	~CollisionManager();
 };

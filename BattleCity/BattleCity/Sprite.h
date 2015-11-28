@@ -20,9 +20,10 @@ protected:
 public:
 	Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, int Count, int SpritePerRow);
 	void Next();
+	void Next(bool &isCompleted);
 	void Render(int X, int Y);
 	void Render(D3DXVECTOR3 Location);
-
+	
 	void Render(int index, int X, int Y);
 	void Render(int index, D3DXVECTOR3 Location);
 	void Render(int row, int col, D3DXVECTOR3 Location);

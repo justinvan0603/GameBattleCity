@@ -6,10 +6,12 @@
 //player default value
 #define DEFAULT_PLAYER_LIFE 3
 #define DEFAULT_PLAYER_POSITION_X	236
-#define DEFAULT_PLAYER_POSITION_Y	430
-#define DEFAULT_PLAYER_SPEED_X 3
-#define DEFAULT_PLAYER_SPEED_Y 3
-#define DEFAULT_IMMORTAL_TIME 5
+#define DEFAULT_PLAYER_POSITION_Y	410
+#define DEFAULT_PLAYER_SPEED_X 4
+#define DEFAULT_PLAYER_SPEED_Y 4
+#define PLAYER_SPEED_PROMOTED_X 4
+#define PLAYER_SPEED_PROMOTED_Y 4
+#define DEFAULT_IMMORTAL_TIME 5000
 #define DEFAULT_PLAYER_LEVEL 1
 #define DEFAULT_PLAYER_HP 1
 #define PLAYER_SPRITE_UP_PATH    "Resource\\Player\\0.png"
@@ -33,13 +35,18 @@
 #define ID_MEDIUM_TANK 3
 #define ID_HEAVY_TANK 4
 #define ID_SUPER_HEAVY_TANK 5
+#define ID_BONUS_TANK 6
+
+//// DYNAMIC OBJECT SPEED------------------------25/11/2015
+#define DYNAMIC_OBJECT_LOW_SPEED D3DXVECTOR2(2.0f,2.0f)
+#define DYNAMIC_OBJECT_HIGH_SPEED D3DXVECTOR2(4.0f,4.0f)
 
 //Static Object
-#define ID_BRICKWALL 6
-#define ID_STEELWALL 7
-#define ID_TREES	 8
-#define ID_WATER	 9
-#define IF_ICE		 10
+#define ID_BRICKWALL 7
+#define ID_STEELWALL 8
+#define ID_TREES	 9
+#define ID_WATER	 10
+#define IF_ICE		 11
 
 //Map default value
 #define POS_MAP_TOP_LEFT_X 100
@@ -66,14 +73,17 @@
 #define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
 #define NUM_ENEMY 20
 //Bullet
-#define BULLET_SPEED_X 3
-#define BULLET_SPEED_Y 3
+#define ID_BULLET 20
+#define DEFAULT_BULLET_SPEED_X 6
+#define DEFAULT_BULLET_SPEED_Y 6
+#define BULLET_PROMOTED_SPEED_X 7
+#define BULLET_PROMOTED_SPEED_Y 7
 #define BULLET_SPRITE_UP_PATH		"bullet-up.png"
 #define BULLET_SPRITE_DOWN_PATH		"bullet-down.png"
 #define BULLET_SPRITE_LEFT_PATH		"bullet-left.png"
 #define BULLET_SPRITE_RIGHT_PATH	"bullet-right.png"
-#define BULLET_WIDTH 7
-#define BULLET_HEIGHT 11
+#define BULLET_WIDTH 8
+#define BULLET_HEIGHT 8
 
 //Object State
 #define STATE_IMMORTAL_NONE 0
@@ -121,41 +131,50 @@
 #define DEFAULT_TOP_RIGHT D3DXVECTOR2(Win_WIDTH - SPRITE_WIDTH,0.0f)
 
 //Default Light Tank Value
-#define  LIGHT_TANK_SPEED_X 1
-#define	 LIGHT_TANK_SPEED_Y 1
-#define  LIGHT_TANK_BULLET_SPEED_X 2
-#define  LIGHT_TANK_BULLET_SPEED_Y 2
-#define  LIGHT_TANK_RESOURCE_DOWN	"down-light.png"
-#define  LIGHT_TANK_RESOURCE_UP		"up-light.png"
-#define	 LIGHT_TANK_RESOURCE_LEFT	"left-light.png"
-#define  LIGHT_TANK_RESOURCE_RIGHT	"right-light.png"
+#define  LIGHT_TANK_SPEED_X 4
+#define	 LIGHT_TANK_SPEED_Y 4
+#define  LIGHT_TANK_BULLET_SPEED_X 6
+#define  LIGHT_TANK_BULLET_SPEED_Y 6
+#define  LIGHT_TANK_RESOURCE_DOWN	/*/"Resource\\Enemy\\LightTank\\*/"down-light.png"
+#define  LIGHT_TANK_RESOURCE_UP		/*"Resource\\Enemy\\LightTank\\*/"up-light.png"
+#define	 LIGHT_TANK_RESOURCE_LEFT	/*"Resource\\Enemy\\LightTank\\*/"left-light.png"
+#define  LIGHT_TANK_RESOURCE_RIGHT	/*"Resource\\Enemy\\LightTank\\*/"right-light.png"
 //Default Medium Tank Value
 #define  MEDIUM_TANK_SPEED_X 2
 #define	 MEDIUM_TANK_SPEED_Y 2
-#define  MEDIUM_TANK_BULLET_SPEED_X 2
-#define  MEDIUM_TANK_BULLET_SPEED_Y 2
-#define  MEDIUM_TANK_RESOURCE_DOWN "down-medium.png"
-#define  MEDIUM_TANK_RESOURCE_UP "up-medium.png"
-#define	 MEDIUM_TANK_RESOURCE_LEFT "left-medium.png"
-#define  MEDIUM_TANK_RESOURCE_RIGHT "right-medium.png"
+#define  MEDIUM_TANK_BULLET_SPEED_X 4
+#define  MEDIUM_TANK_BULLET_SPEED_Y 4
+#define  MEDIUM_TANK_RESOURCE_DOWN "Resource\\Enemy\\MediumTank\\down-medium.png"
+#define  MEDIUM_TANK_RESOURCE_UP "Resource\\Enemy\\MediumTank\\up-medium.png"
+#define	 MEDIUM_TANK_RESOURCE_LEFT "Resource\\Enemy\\MediumTank\\left-medium.png"
+#define  MEDIUM_TANK_RESOURCE_RIGHT "Resource\\Enemy\\MediumTank\\right-medium.png"
 //Default Heavy Tank Value
 #define  HEAVY_TANK_SPEED_X 2
 #define	 HEAVY_TANK_SPEED_Y 2
-#define  HEAVY_TANK_BULLET_SPEED_X 3
-#define  HEAVY_TANK_BULLET_SPEED_Y 3
-#define  HEAVY_TANK_RESOURCE_DOWN "down-heavy.png"
-#define  HEAVY_TANK_RESOURCE_UP "up-heavy.png"
-#define	 HEAVY_TANK_RESOURCE_LEFT "left-heavy.png"
-#define  HEAVY_TANK_RESOURCE_RIGHT "right-heavy.png"
+#define  HEAVY_TANK_BULLET_SPEED_X 6
+#define  HEAVY_TANK_BULLET_SPEED_Y 6
+#define  HEAVY_TANK_RESOURCE_DOWN "Resource\\Enemy\\HeavyTank\\down-heavy.png"
+#define  HEAVY_TANK_RESOURCE_UP "Resource\\Enemy\\HeavyTank\\up-heavy.png"
+#define	 HEAVY_TANK_RESOURCE_LEFT "Resource\\Enemy\\HeavyTank\\left-heavy.png"
+#define  HEAVY_TANK_RESOURCE_RIGHT "Resource\\Enemy\\HeavyTank\\right-heavy.png"
 //Default Super Heavy Tank Value
 #define  SUPER_HEAVY_TANK_SPEED_X 2
 #define	 SUPER_HEAVY_TANK_SPEED_Y 2
-#define  SUPER_HEAVY_TANK_BULLET_SPEED_X 2
-#define  SUPER_HEAVY_TANK_BULLET_SPEED_Y 2
-#define  SUPER_HEAVY_TANK_RESOURCE_DOWN "down-super.png"
-#define  SUPER_HEAVY_TANK_RESOURCE_UP "up-super.png"
-#define	 SUPER_HEAVY_TANK_RESOURCE_LEFT "left-super.png"
-#define  SUPER_HEAVY_TANK_RESOURCE_RIGHT "right-super.png"
+#define  SUPER_HEAVY_TANK_BULLET_SPEED_X 4
+#define  SUPER_HEAVY_TANK_BULLET_SPEED_Y 4
+#define  SUPER_HEAVY_TANK_RESOURCE_DOWN "Resource\\Enemy\\SuperHeavyTank\\down-super.png"
+#define  SUPER_HEAVY_TANK_RESOURCE_UP "Resource\\Enemy\\SuperHeavyTank\\up-super.png"
+#define	 SUPER_HEAVY_TANK_RESOURCE_LEFT "Resource\\Enemy\\SuperHeavyTank\\left-super.png"
+#define  SUPER_HEAVY_TANK_RESOURCE_RIGHT "Resource\\Enemy\\SuperHeavyTank\\right-super.png"
+//Default Bonus Tank Value
+#define BONUS_TANK_SPEED_X 2
+#define BONUS_TANK_SPEED_Y 2
+#define BONUS_TANK_BULLET_SPEED_X 4
+#define BONUS_TANK_BULLET_SPEED_Y 4
+#define BONUS_TANK_RESOURCE_UP    "Resource\\Enemy\\BonusTank\\up-bonus.png"
+#define BONUS_TANK_RESOURCE_LEFT  "Resource\\Enemy\\BonusTank\\left-bonus.png"
+#define BONUS_TANK_RESOURCE_DOWN  "Resource\\Enemy\\BonusTank\\down-bonus.png"
+#define BONUS_TANK_RESOURCE_RIGHT "Resource\\Enemy\\BonusTank\\right-bonus.png"
 //Ally Bullet
 #define ALLY_PLAYER 1
 #define ALLY_ENEMY 2
@@ -178,7 +197,7 @@
 //20/11/2015
 //------------game effect ID--------------------
 //PATH
-#define EFFECT_SHIELD "effect.png"
+#define EFFECT_SHIELD "Resource\\Other\\shield.png"
 #define EFFECT_RESPAWN ""
 #define EFFECT_SMALL_EXPLODE ""
 #define EFFECT_SPECIAL_EXPLODE ""
@@ -192,4 +211,9 @@
 #define NUMB_OF_SPRITE_RESPAWN 6
 #define NUMB_OF_SPRITE_SMALL_EXPLODE 6
 #define NUMB_OF_SPRITE_SPECIAL_EXPLODE 7
+
+
+//OBJECT TYPE
+#define ENEMY_OBJECT_TYPE 1
+
 #endif // ! __GAME_DEFAULT_CONSTANT__

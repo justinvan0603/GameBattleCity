@@ -1,35 +1,35 @@
 #include "Bullet.h"
 #include "EffectManager.h"
-
+#include "CollisionManager.h"
 Bullet::Bullet(LPD3DXSPRITE spriteHandler, int ally)
 {
 	_allyObject = ally;
 	_spriteHandler = spriteHandler;
-	_vx = BULLET_SPEED_X;
-	_vy = BULLET_SPEED_Y;
 	_listSprite = new Sprite*[NUM_OF_DIRECTION];
 	_listSprite[UP] = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[LEFT] = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[DOWN] = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_listSprite[RIGHT] = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_currentDirection = UP;
-	_width = 7;
-	_height = 11;
+	_width = 8;
+	_height = 8;
 	_isTerminated = false;
 }
-Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, int posY, int ally)
+Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, int posY, int ally,int level, int** map, vector<vector<StaticObject*>>* listNearByObject)
 {
 	_spriteHandler = spriteHandler;
 	_allyObject = ally;
 	_listSprite = new Sprite*;
 	this->_left = posX;
 	this->_top = posY;
-	_width = 7;
-	_height = 11;
-	_vx = BULLET_SPEED_X;
-	_vy = BULLET_SPEED_Y;
+	_width = BULLET_WIDTH;
+	_height = BULLET_HEIGHT;
+	_level = level;
 	_isTerminated = false;
 	_currentDirection = direction;
+	_map = map;
+	_listNearByObject = listNearByObject;
+	this->_id = ID_BULLET;
 	switch (direction)
 	{
 		case UP:
@@ -60,15 +60,60 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, in
 			break;
 	}
 }
-
+Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction,D3DXVECTOR2 position, int ally, int level , int ** map, vector<vector<StaticObject*>>* listNearbyObject)
+{
+	_spriteHandler = spriteHandler;
+	_allyObject = ally;
+	_listSprite = new Sprite*;
+	this->_left = (int)position.x;
+	this->_top = (int)position.y;
+	_width = BULLET_WIDTH;
+	_height = BULLET_HEIGHT;
+	_level = level;
+	_isTerminated = false;
+	_currentDirection = direction;
+	_map = map;
+	_listNearByObject = listNearbyObject;
+	this->_id = ID_BULLET;
+	switch (direction)
+	{
+	case UP:
+	{
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		_currentDirection = direction;
+		break;
+	}
+	case LEFT:
+	{
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		_currentDirection = direction;
+		break;
+	}
+	case DOWN:
+	{
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		_currentDirection = direction;
+		break;
+	}
+	case RIGHT:
+	{
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		_currentDirection = direction;
+		break;
+	}
+	default:
+		break;
+	}
+}
 void Bullet::Draw()
 {
-	DynamicObject::Draw();
-	if (!_isTerminated)
+	
+	if (_isTerminated == false)
 	{
+		DynamicObject::Draw();
 		if (_currentDirection == MoveDirection::UP)
 		{
-			
+
 			(*_listSprite)->Render(_left, _top);
 			return;
 		}
@@ -88,14 +133,7 @@ void Bullet::Draw()
 			return;
 		}
 	}
-	else
-	{
-		EffectManager::getInstance(0)->RenderEffect(ID_EFFECT_SHIELD, _left, _top);
-		return;
-	}
 	
-
-
 }
 void Bullet::Move()
 {
@@ -103,32 +141,72 @@ void Bullet::Move()
 	if (_currentDirection == MoveDirection::UP)
 	{
 		this->_vx = SPEED_NO;
-		this->_vy = -BULLET_SPEED_Y;
+		
+		if (_level == 1)
+		{
+			this->_vy = -DEFAULT_BULLET_SPEED_Y;
+		}
+		else
+			this->_vy = -BULLET_PROMOTED_SPEED_Y;
 		return;
 	}
 	if (_currentDirection == MoveDirection::DOWN)
 	{
 		this->_vx = SPEED_NO;
-		this->_vy = BULLET_SPEED_Y;
+		if (_level == 1)
+			this->_vy = DEFAULT_BULLET_SPEED_Y;
+		else
+			this->_vy = BULLET_PROMOTED_SPEED_Y;
 		return;
 	}
 	if (_currentDirection == MoveDirection::LEFT)
 	{
 		this->_vy = SPEED_NO;
-		this->_vx = -BULLET_SPEED_X;
+		if (_level == 1)
+			this->_vx = -DEFAULT_BULLET_SPEED_X;
+		else
+			this->_vx = -BULLET_PROMOTED_SPEED_X;
 		return;
 	}
 	if (_currentDirection == MoveDirection:: RIGHT)
 	{
 		this->_vy = SPEED_NO;
-		this->_vx = BULLET_SPEED_X;
+		if (_level == 1)
+			this->_vx = DEFAULT_BULLET_SPEED_X;
+		else
+			this->_vx = BULLET_PROMOTED_SPEED_X;
 		return;
 	}
 	
 }
 void Bullet::Update()
 {
+	FindNearbyObject();
 	this->Move();
+	
+	D3DXVECTOR2 posInMap;
+	bool flag = false;
+	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end();i++)
+	{
+		if (!(*i)->_isTerminated)
+			flag = CollisionManager::CollisionBulletWithObject(this, *i);
+		if (flag)
+		{
+			posInMap = Object::getPositionObjectInMap((*i)->getLeft(),(*i)->getTop());
+			int value = _map[(int)posInMap.y][(int)posInMap.x];
+			_map[(int)posInMap.y][(int)posInMap.x] = -1;
+			if (value != -1)
+			{
+				delete _listNearByObject->at(value % 100).at(value / 100);
+				_listNearByObject->at(value % 100).at(value / 100) = NULL;
+			}		
+		}
+
+	}
+
+	CollisionManager::CollisionWithScreen(this);
+	DynamicObject::Update();
+	
 }
 int Bullet::getAllyObject()
 {

@@ -16,10 +16,11 @@ protected:
 	
 public:
 	bool _isTerminated;
+	bool _isImmortal;
 	Object();
 	int getId();
 	int getObjectType();
-	
+	D3DXVECTOR2 getPositionObjectInMap(int,int);
 	virtual void Draw();
 	virtual void Update() = 0;
 	~Object();
