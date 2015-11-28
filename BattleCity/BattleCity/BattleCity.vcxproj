@@ -16,6 +16,8 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
     <ClCompile Include="Eagle.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -28,12 +30,16 @@
     <ClCompile Include="MyRectangle.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PlayerTank.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ShootableObject.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteMapItemMagager.cpp" />
+    <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="SteelWall.cpp" />
     <ClCompile Include="SuperHeavyTank.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -44,6 +50,8 @@
     <ClInclude Include="DefaultConstant.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="Eagle.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDefaultConstant.h" />
@@ -57,12 +65,16 @@
     <ClInclude Include="MyRectangle.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlayerTank.h" />
+    <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ShootableObject.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteMapItemMagager.h" />
+    <ClInclude Include="StageManager.h" />
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="SteelWall.h" />
     <ClInclude Include="SuperHeavyTank.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -22,6 +22,10 @@ public:
 	void Update();
 	void Move();
 	void Shoot();
+	int getLife();
+	void addLife();
+	void update();
+	
 	void PlayerPromoted();
 	void ActivateShield();
 	

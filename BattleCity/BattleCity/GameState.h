@@ -2,8 +2,9 @@
 #define __GAME_STATE_H__
 
 #include "Keyboard.h"
-#include "PlayerTank.h"
 #include "Map.h"
+#include "Text.h"
+#include "StageManager.h"
 
 #pragma region Game State
 
@@ -31,9 +32,10 @@ public:
 
 protected:
 	static GameState*	_gameState;
-	static PlayerTank*	_player;
 	static LPD3DXSPRITE _spriteHandler;
-	DWORD _startTime;
+	static Text* _text;
+	static DWORD _startTime;
+
 };
 #pragma endregion
 
@@ -77,19 +79,13 @@ public:
 
 	static StartingState* get();
 
-	int getCurrentLevelState();
-
 private:
 	StartingState();
 	~StartingState();
 
 private:
 	static StartingState* _instance;
-	int _currentLevelState;
-	int _timeToNextLevelState;
 	LPDIRECT3DDEVICE9 _d3ddevice;
-	Sprite* _stateLevelImage;
-	Sprite* _numberLevel;
 	Sprite* _bgTop;
 	D3DXVECTOR3 _bgTopPos;
 	Sprite* _bgBottom;
@@ -130,8 +126,15 @@ public:
 	virtual void enter();
 
 	static ScoreState* get();
+	void setEndAfter(bool isEnd);
+
+	void addResultState(int numtank[4]);
 
 private:
+	bool _isEnd;
+	int _numTank[4];
+	int _totalScore;
+	Sprite* _iconTankScore;
 	ScoreState();
 	~ScoreState();
 
@@ -143,7 +146,7 @@ private:
 
 #pragma region Dead State
 
-class DeadScene : public GameState
+class EndState : public GameState
 {
 public:
 	virtual void update();
@@ -152,15 +155,15 @@ public:
 
 	virtual void enter();
 
-	static DeadScene* get();
+	static EndState* get();
 
 private:
-	DeadScene();
-	~DeadScene();
+	EndState();
+	~EndState();
 
 private:
-	static DeadScene* _instance;
-
+	static EndState* _instance;
+	Sprite* _endImage;
 	DWORD _timeCounter;
 };
 #pragma endregion

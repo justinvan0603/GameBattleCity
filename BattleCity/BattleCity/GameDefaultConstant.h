@@ -48,30 +48,6 @@
 #define ID_WATER	 10
 #define IF_ICE		 11
 
-//Map default value
-#define POS_MAP_TOP_LEFT_X 100
-#define POS_MAP_TOP_LEFT_Y 51
-#define NUM_ROW_TILE	52
-#define NUM_COLUMN_TILE 52
-#define TILE_WIDTH		8
-#define TILE_HEIGHT		8
-#define MAP_WIDTH 417
-#define MAP_HEIGHT 417
-#define POS_EAGLE_IN_MATRIX_X 48
-#define POS_EAGLE_IN_MATRIX_Y 24
-#define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
-#define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
-#define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
-#define MAP_NUM_OF_TYPE_OBJ 20
-
-
-//Info Right map default value
-#define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540
-#define POS_LIST_ENEMY_ICON_TOP_LEFT_Y 92
-#define RESOURCE_PATH_ENEMY_ICON	"Resource\\Other\\miniarmy.png"
-#define RESOURCE_PATH_TANKLIFE_ICON	"Resource\\Other\\tanklife.png"
-#define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
-#define NUM_ENEMY 20
 //Bullet
 #define ID_BULLET 20
 #define DEFAULT_BULLET_SPEED_X 6
@@ -98,6 +74,10 @@
 #define RESOURCE_PATH_NUMBER	"Resource\\Other\\number.png"
 #define IMAGE_NUMBER_WIDTH 16
 #define IMAGE_NUMBER_HEIGHT 16
+#define COLOR_BLACK D3DCOLOR_XRGB(0,0,0)
+#define COLOR_WHITE D3DCOLOR_XRGB(255,255,255)
+#define COLOR_HIGHSCORE_TEXT D3DCOLOR_XRGB(184,9,9)
+#define COLOR_SCORE_TEXT D3DCOLOR_XRGB(197,161,9)
 	//Mainmenu
 #define IMAGE_MAIN_MENU_GAME_PATH "Resource\\Other\\mainmenu.png"
 #define IMAGE_MAIN_MENU_GAME_WIDTH 670
@@ -111,11 +91,7 @@
 #define IMAGE_SELECTOR_POS_PLAY D3DXVECTOR3(200.0f,300.0f,0.0f)
 #define IMAGE_SELECTOR_POS_INSTRUCTION D3DXVECTOR3(200.0f,335.0f,0.0f)
 	//Starting
-#define IMAGE_STATE_PATH "Resource\\Other\\state.png"
-#define IMAGE_STATE_WIDTH 80
-#define IMAGE_STATE_HEIGHT 16
 #define IMAGE_STATE_POS D3DXVECTOR3(250.0f,252.0f,0.0f)
-#define IMAGE_NUM_LEVEL_POS D3DXVECTOR3 (346.f,253.0f,0.0f)
 #define DELAY_TIME_TO_START_PLAYING_STATE 2000
 //#define IMAGE_BG_STARTING_STATE_PATH "Resource\\Other\\bgstartingstate.png"
 //#define IMAGE_BG_STARTING_WIDTH 670
@@ -124,6 +100,34 @@
 //#define IMAGE_BG_STARTING_TOP_POS D3DXVECTOR3(0.0f,0.0f,0.0f)
 //#define IMAGE_BG_STARTING_BOTTOM_POS D3DXVECTOR3(0.0f,284.0f,0.0f)
 
+
+	//Playing State
+#define POS_MAP_TOP_LEFT_X 100
+#define POS_MAP_TOP_LEFT_Y 51
+#define NUM_ROW_TILE	52
+#define NUM_COLUMN_TILE 52
+#define TILE_WIDTH		8
+#define TILE_HEIGHT		8
+#define MAP_WIDTH 417
+#define MAP_HEIGHT 417
+#define POS_EAGLE_IN_MATRIX_X 48
+#define POS_EAGLE_IN_MATRIX_Y 24
+#define MAP_PATH "Resource\\Map\\Level\\lv"
+#define MAP_FILE_EXTENSION ".txt"
+#define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
+#define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
+#define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
+#define MAP_RESOURCE_PATH_POWERUP "Resource\\Map\\powerup.png"
+#define MAP_NUM_OF_TYPE_OBJ 20
+#define NUM_ENEMY 20
+//Info Right map default value
+#define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540
+#define POS_LIST_ENEMY_ICON_TOP_LEFT_Y 92
+#define RESOURCE_PATH_ENEMY_ICON	"Resource\\Other\\miniarmy.png"
+#define RESOURCE_PATH_TANKLIFE_ICON	"Resource\\Other\\tanklife.png"
+#define POS_NUM_LIFE D3DXVECTOR3(556.0f,332.0f,0.0f)
+#define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
+#define POS_NUM_LEVEL D3DXVECTOR3(556.0f,444.0f,0.0f)
 
 //Default enemy position
 #define DEFAULT_TOP_LEFT D3DXVECTOR2(0.0f,200.0f)
@@ -179,6 +183,31 @@
 #define ALLY_PLAYER 1
 #define ALLY_ENEMY 2
 
+//Define Score State
+#define TEXT_SIZE_SCORE_STATE 20
+#define POS_HIGHSCORE D3DXVECTOR3(200.0f,200.0f,0.0f)
+#define ICON_TANK_SCORE_PATH "Resource\\Other\\IconTankScore.png"
+#define POS_HI_SCORE D3DXVECTOR3(170.0f, 50.0f, 0.0f)
+#define POS_HI_SCORE_VALUE D3DXVECTOR3(370.0f, 50.0f, 0.0f)
+#define POS_STAGE_TEXT D3DXVECTOR3(240.0f, 90.0f, 0.0f)
+#define POS_STAGE_VALUE D3DXVECTOR3(370.0f, 90.0f, 0.0f)
+#define POS_PLAYER_TEXT D3DXVECTOR3(250.0f, 130.0f, 0.0f)
+#define POS_PLAYER_VALUE D3DXVECTOR3(250.0f, 160.0f, 0.0f)
+#define POS_ICON_TANK_SCRORE_STATE D3DXVECTOR3(410.0f, 230.0f, 0.0f)
+#define POS_LINE D3DXVECTOR3(360.0f, 400.0f, 0.0f)
+#define POS_TOTAL_TEXT D3DXVECTOR3(245.0f, 430.0f, 0.0f)
+#define POS_TOTAL_VALUE D3DXVECTOR3(370.0f, 430.0f, 0.0f)
+#define DISTANCE_LINE 47.0f
+#define BEGIN_X 240.0f
+#define SCORE_POS_X 170.0f
+#define PTS_POS_X 280.0f
+#define NUM_TANK_POS_X 370.0f
+
+
+//Dèine End State
+#define ICON_END_GAME_PATH "Resource\\Other\\gameover.png"
+#define POS_ICON_END D3DXVECTOR3(170.0f, 170.0f,0.0f)
+
 //Resource sound path
 #define SOUND_START_GAME ""
 #define SOUND_FIRE ""
@@ -213,7 +242,18 @@
 #define NUMB_OF_SPRITE_SPECIAL_EXPLODE 7
 
 
+//define font
+#define DEFAULT_FONT_COLOR 0xFFBCBCBC
+#define DEFAULT_FONTSIZE 14
+#define DEFAULT_FONTFACE "Press Start"
+#define DEFAULT_FONTPATH "Resource\\Other\\prstart.ttf"
+//define stage
+#define DEFAULT_START_STAGE 1
+#define DEFAULT_MAX_STAGE 3
+
+
 //OBJECT TYPE
 #define ENEMY_OBJECT_TYPE 1
 
 #endif // ! __GAME_DEFAULT_CONSTANT__
+

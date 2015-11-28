@@ -12,6 +12,7 @@ public:
 	Sprite* getTankLifeIcon();
 	Sprite* getFlagIcon();
 	Sprite* getNumber();
+	Sprite* getPowerUpItem();
 	SpriteMapItemMagager(LPD3DXSPRITE spriteHandler);
 	~SpriteMapItemMagager();
 private:
@@ -22,5 +23,6 @@ private:
 	Sprite* _tankLifeIcon;
 	Sprite* _flagIcon;
 	Sprite* _number;
+	Sprite* _powerUpItem;
 };
 #endif

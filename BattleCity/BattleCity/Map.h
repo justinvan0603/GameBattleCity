@@ -11,37 +11,38 @@
 #include "PlayerTank.h"
 #include "CollisionManager.h"
 #include "LightTank.h"
+#include "PowerUp.h"
 using std::vector;
 
-enum MAPSTATE
-{
-	STATE_1 = 1,
-	STATE_2,
-	STATE_3
-};
 class Map
 {
 public:
-	Map(LPD3DXSPRITE spriteHandler);	
-	void changeState(MAPSTATE state);
+	Map(LPD3DXSPRITE spriteHandler);
+	void changeStage();
 	void Draw();
 	void Update();
 	vector<vector<StaticObject*>>* getColisObject();
 	Eagle* getEagleObject();
 	~Map();
 private:
-	LightTank* _lightTank;
-	PlayerTank* _player;
+	PlayerTank*	_player;
+	int _numTankDie[4];
 	int** _mapMatrix;
-	MAPSTATE _mapState;
+	int _numEnemy;
+	bool _steelBoundEagle;
+	bool _canUpdateEnemy;
+	int _lastIndexofSteel;
+	DWORD _startTime;
 	fstream _mapFile;
 	SpriteMapItemMagager* _spriteItemManager;
 	Eagle* _eagle;
+	PowerUp* _powerUpItem;
 	LPD3DXSPRITE _spriteHandler;
 	LPDIRECT3DDEVICE9 d3ddev;
 	D3DXVECTOR3 getPositionFromMapMatrix(int row, int column);
 	bool GetFileMap();
 	void InitColisObject();
+	void updateMaxtrix();
 	vector<vector<StaticObject*>>* _colisObj;
 };
 #endif

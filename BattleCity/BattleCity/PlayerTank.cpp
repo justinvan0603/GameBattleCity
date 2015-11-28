@@ -159,13 +159,23 @@ void PlayerTank::PlayerPromoted()
 	if (_level < 4)
 	{
 		_level++;
-
 	}
 }
+
+int PlayerTank::getLife()
+{
+	return _life;
+}
+
 void PlayerTank::ActivateShield()
 {
 	this->_isActiveShield = true;
 	this->_isImmortal = true;
+}
+
+void PlayerTank::addLife()
+{
+	_life++;
 }
 
 PlayerTank::~PlayerTank()
