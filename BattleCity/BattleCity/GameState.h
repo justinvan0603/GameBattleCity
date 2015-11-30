@@ -3,8 +3,12 @@
 
 #include "Keyboard.h"
 #include "Map.h"
+
+#include "LightTank.h"
+
 #include "Text.h"
 #include "StageManager.h"
+
 
 #pragma region Game State
 
@@ -32,6 +36,7 @@ public:
 
 protected:
 	static GameState*	_gameState;
+	static LightTank* _enemy;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;
 	static DWORD _startTime;

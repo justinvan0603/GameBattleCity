@@ -161,14 +161,39 @@ void Map::Draw()
 		}
 	}
 
-	for (int i = 0; i < _colisObj->size();i++)
+	for (int i = 0; i < _colisObj->size(); i++)
 	{
-		for (int j = 0; j < _colisObj->at(i).size();j++)
+		for (int j = 0; j < _colisObj->at(i).size(); j++)
 		{
+			if (_colisObj->at(i).at(j) != NULL)
 			_colisObj->at(i).at(j)->Draw();
 		}
 	}
 
+	//D3DXVECTOR2 objectMapIndex;
+	//for (int i = 0; i < _colisObj->size();)
+	//{
+	//	for (int j = 0; j < _colisObj->at(i).size();)
+	//	{
+
+	//		if (_colisObj->at(i).at(j)->_isTerminated)
+	//		{
+	//			objectMapIndex = getPositionObjectInMapMatrix(_colisObj->at(i).at(j)->getLeft(), _colisObj->at(i).at(j)->getTop());
+	//			_mapMatrix[(int)objectMapIndex.x][(int)objectMapIndex.y] = -1;
+	//			delete _colisObj->at(i).at(j);
+	//			_colisObj->at(i).at(j) = NULL;
+	//			_colisObj->at(i).at(j) = *_colisObj->at(i).erase(_colisObj->at(i).begin() + j);
+	//		}
+	//		else
+	//		{
+	//			_colisObj->at(i).at(j)->Draw();
+	//			j++;
+	//		}
+
+	//	}
+	//	
+	//	i++;
+	//}
 	_eagle->Draw();
 	if(_powerUpItem->IsEnable())
 	{
@@ -187,6 +212,12 @@ void Map::Draw()
 
 void Map::Update()
 {
+
+
+	//xet va cham va xoa item tren map
+
+	//xet va cham va xoa item tren map
+
 	if(Keyboard::getInstance()->IsKeyDown(DIK_1))
 	{
 		_powerUpItem->enablePowerUp();
@@ -263,6 +294,7 @@ void Map::Update()
 	}
 
 
+
 }
 
 vector<vector<StaticObject*>>* Map::getColisObject()
@@ -278,7 +310,10 @@ Eagle * Map::getEagleObject()
 Map::~Map()
 {
 }
-
+int** Map::getMapMatrix()
+{
+	return this->_mapMatrix;
+}
 D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 {
 	D3DXVECTOR3 vector;
@@ -288,3 +323,10 @@ D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 	return vector;
 }
 
+D3DXVECTOR2 Map::getPositionObjectInMapMatrix(int x, int y)
+{
+	D3DXVECTOR2 position;
+	position.x = (x - POS_MAP_TOP_LEFT_X) / TILE_WIDTH;
+	position.y = (y - POS_MAP_TOP_LEFT_Y) / TILE_HEIGHT;
+	return position;
+}

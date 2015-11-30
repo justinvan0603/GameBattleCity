@@ -51,10 +51,10 @@ void Sprite::Next()
 	if (_Index >= _Count)
 		_Index = 0;
 }
-void Sprite::Next(bool &isCompleted)
+void Sprite::Next(bool& isCompleted)
 {
 	this->_Index = (this->_Index + 1) % this->_Count;
-	if (_Index >= _Count)
+	if (_Index == _Count -1)
 		isCompleted = true;
 }
 void Sprite::Render(int index, D3DXVECTOR3 Location)

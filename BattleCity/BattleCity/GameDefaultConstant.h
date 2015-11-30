@@ -228,7 +228,7 @@
 //PATH
 #define EFFECT_SHIELD "Resource\\Other\\shield.png"
 #define EFFECT_RESPAWN ""
-#define EFFECT_SMALL_EXPLODE ""
+#define EFFECT_SMALL_EXPLODE "Resource\\Other\\explode.png"
 #define EFFECT_SPECIAL_EXPLODE ""
 //ID
 #define ID_EFFECT_SHIELD 1

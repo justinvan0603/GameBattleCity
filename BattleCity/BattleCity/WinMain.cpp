@@ -9,7 +9,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return false;
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
-
+	GameTime *gt = new GameTime(120);
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -17,8 +17,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		game->GameRun();
-		game->GameUpdate();
+		if (gt->CanCreateFrame())
+		{
+			game->GameUpdate();
+			game->GameRun();
+			
+		}
+		else
+			Sleep(gt->GetTimePerFrame());
 	}
 	//Game.Release();
 	return 0;

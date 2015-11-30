@@ -33,10 +33,10 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	this->_vx = (int)DYNAMIC_OBJECT_LOW_SPEED.x;
 	this->_vy = (int)DYNAMIC_OBJECT_LOW_SPEED.y;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
-	this->_listSprite[UP] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[LEFT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[DOWN] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
+	this->_listSprite[UP] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
+	this->_listSprite[LEFT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
+	this->_listSprite[DOWN] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, 3,3);
+	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
 	_curSprite = _listSprite[RIGHT];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
@@ -48,7 +48,7 @@ void SuperHeavyTank::Draw()
 	if (!_isTerminated)
 	{
 		ShootableObject::Draw();
-		_curSprite->Render(_left, _top);
+		_curSprite->Render(_hitPoint-1,_left, _top);
 
 	}
 	ShootableObject::DrawBullet();

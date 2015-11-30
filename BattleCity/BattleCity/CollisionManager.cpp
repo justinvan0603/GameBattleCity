@@ -1,6 +1,7 @@
 ﻿#include "CollisionManager.h"
 #include "EffectManager.h"
 #include "PlayerTank.h"
+#include "EffectManager.h"
 CollisionManager::CollisionManager()
 {
 }
@@ -28,6 +29,10 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 	{
 		A->setVelocityX(SPEED_NO);
 		A->setVelocityY(SPEED_NO);
+		D3DXVECTOR2 pos;
+		pos.x = A->getLeft();
+		pos.y = A->getTop();
+		EffectManager::getInstance(0)->AddBulletEffect(pos);
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
@@ -89,6 +94,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				{
 					if (A->GetLevel() == 4)
 						B->_isTerminated = true;
+
 				}
 				else
 					B->_isTerminated = true;
@@ -113,6 +119,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					}
 				}
 			}
+			D3DXVECTOR2 position;
+			position.x = B->getLeft();
+			position.y = B->getTop();
+			EffectManager::getInstance(0)->AddBulletEffect(position);
 		return true;
 	}
 	return false;

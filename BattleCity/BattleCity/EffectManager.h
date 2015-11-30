@@ -7,6 +7,7 @@ class EffectManager
 private:
 	LPD3DXSPRITE _spriteHandler;
 	vector<Effect*> _listEffect;
+	DWORD _startTime;
 private: //Singletton Pattern
 	static EffectManager* _instance;
 	EffectManager(LPD3DXSPRITE);
@@ -15,7 +16,7 @@ public:
 	static EffectManager* getInstance(LPD3DXSPRITE);
 public:
 	void AddBulletEffect(D3DXVECTOR2 position);
-	
+	void Draw();
 	
 };
 

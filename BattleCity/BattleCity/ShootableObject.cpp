@@ -22,7 +22,7 @@ void ShootableObject::CleanBulletList()
 			delete *i;
 			*i = NULL;
 			i = _listBullet.erase(i);
-
+			
 		}
 		else
 			i++;

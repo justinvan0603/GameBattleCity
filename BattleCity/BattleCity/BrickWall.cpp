@@ -7,7 +7,7 @@ BrickWall::BrickWall(Sprite* sprite, int typeBrick, D3DXVECTOR3 pos)
 	this->_typeBrick = typeBrick;
 	this->_left = (int)pos.x;
 	this->_top = (int)pos.y;
-	this->_id = 100;
+	this->_id = STATIC_OBJECT;
 	_isTerminated = false;
 	_image = sprite; //new Sprite(_spriteHandler, MAP_RESOURCE_PATH_BRICKWALL, TILE_WIDTH, TILE_HEIGHT, 1, 1);
 }

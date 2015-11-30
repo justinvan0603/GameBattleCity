@@ -1,19 +1,32 @@
 #include "GameState.h"
+
+#include "CollisionManager.h"
+#include "EffectManager.h"
+
+
+
 #include "ScoreManager.h"
+
 
 #pragma region Game State
 
 MainMenu* MainMenu::_instance = nullptr;
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
+
+LightTank* GameState::_enemy = nullptr;
+
 Text* GameState::_text = nullptr;
 DWORD GameState::_startTime = 0;
+
 
 void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
 	_startTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
+	_enemy = new LightTank(_spriteHandler);
+	EffectManager::getInstance(_spriteHandler);
 	switchState(PlayingState::get());
 }
 
@@ -189,6 +202,8 @@ PlayingState* PlayingState::_instance = nullptr;
 PlayingState::PlayingState()
 {
 	_map = new Map(_spriteHandler);
+	_player->InitMapData(_map->getMapMatrix(), _map->getColisObject());
+	_enemy->InitMapData(_map->getMapMatrix(), _map->getColisObject());
 }
 
 void PlayingState::update()
@@ -197,6 +212,9 @@ void PlayingState::update()
 	
 	_map->Update();
 	//switchState(ScoreState::get());
+	_enemy->Update();
+	
+	CollisionManager::CollisionChangeDirection(_player, _enemy);
 }
 
 void PlayingState::draw()
@@ -204,6 +222,9 @@ void PlayingState::draw()
 	//draw all item in screen
 	
 	_map->Draw();
+	_enemy->Draw();
+	EffectManager::getInstance(0)->Draw();
+
 }
 
 void PlayingState::enter()

@@ -12,8 +12,8 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_level = DEFAULT_PLAYER_LEVEL;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
-	this->_left = 350;//DEFAULT_PLAYER_POSITION_X;
-	this->_top = 100;//DEFAULT_PLAYER_POSITION_Y;
+	this->_left = 235;//DEFAULT_PLAYER_POSITION_X;
+	this->_top = 423;//DEFAULT_PLAYER_POSITION_Y;
 	this->_vx = DEFAULT_PLAYER_SPEED_X;
 	this->_vy = DEFAULT_PLAYER_SPEED_Y;
 	this->_hitPoint = DEFAULT_PLAYER_HP;

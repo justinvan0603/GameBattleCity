@@ -23,6 +23,7 @@ public:
 	void Update();
 	vector<vector<StaticObject*>>* getColisObject();
 	Eagle* getEagleObject();
+	int** getMapMatrix();
 	~Map();
 private:
 	PlayerTank*	_player;
@@ -40,6 +41,7 @@ private:
 	LPD3DXSPRITE _spriteHandler;
 	LPDIRECT3DDEVICE9 d3ddev;
 	D3DXVECTOR3 getPositionFromMapMatrix(int row, int column);
+	D3DXVECTOR2 getPositionObjectInMapMatrix(int x, int y);
 	bool GetFileMap();
 	void InitColisObject();
 	void updateMaxtrix();

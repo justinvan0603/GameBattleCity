@@ -14,7 +14,7 @@ private:
 	LPD3DXSPRITE spriteHandler;
 public:
 	Window();
-	~Window();
+	~Window();	
 	bool initWindow(HINSTANCE hInstance);
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 	bool initDirectX();

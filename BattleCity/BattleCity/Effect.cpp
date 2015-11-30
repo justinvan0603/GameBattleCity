@@ -14,7 +14,7 @@ Effect::Effect(LPD3DXSPRITE SpriteHandler,
 	int SpritePerRow,
 	D3DXVECTOR2 position) : Sprite(SpriteHandler, Path, Width, Height, Count, SpritePerRow)
 {
-	_isCompleted = false;
+	_completed = false;
 	_position = position;
 }
 void Effect::Render()
