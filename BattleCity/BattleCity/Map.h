@@ -44,7 +44,18 @@ private:
 	D3DXVECTOR2 getPositionObjectInMapMatrix(int x, int y);
 	bool GetFileMap();
 	void InitColisObject();
+	void InitListEnemy();
 	void updateMaxtrix();
+	void checkEndGame();
+	void updateEnemy();
+	void updatePowerItem();
+	void drawMap();
+	void drawPowerUp();
+	void drawEnemy();
+	void drawRightMenu();
 	vector<vector<StaticObject*>>* _colisObj;
+	vector<Enemy*>* _listEnemy;
+	vector<Enemy*>* _listEnemyOnMap;
+	int delaytimeReSpanw;
 };
 #endif

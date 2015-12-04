@@ -13,6 +13,7 @@ public:
 	Sprite* getFlagIcon();
 	Sprite* getNumber();
 	Sprite* getPowerUpItem();
+	Sprite* getRespawnSprite();
 	SpriteMapItemMagager(LPD3DXSPRITE spriteHandler);
 	~SpriteMapItemMagager();
 private:
@@ -24,5 +25,6 @@ private:
 	Sprite* _flagIcon;
 	Sprite* _number;
 	Sprite* _powerUpItem;
+	Sprite* _respawnEffect;
 };
 #endif

@@ -42,6 +42,11 @@ Sprite* SpriteMapItemMagager::getPowerUpItem()
 	return _powerUpItem;
 }
 
+Sprite* SpriteMapItemMagager::getRespawnSprite()
+{
+	return _respawnEffect;
+}
+
 SpriteMapItemMagager::SpriteMapItemMagager(LPD3DXSPRITE spriteHandler)
 {
 	_environment = new Sprite(spriteHandler, MAP_RESOURCE_PATH_ENVIRONMENT, TILE_WIDTH , TILE_HEIGHT , 20, 10);
@@ -52,6 +57,7 @@ SpriteMapItemMagager::SpriteMapItemMagager(LPD3DXSPRITE spriteHandler)
 	_flagIcon = new Sprite(spriteHandler, RESOURCE_PATH_FLAG_LEVEL_ICON, TILE_WIDTH * 4, TILE_HEIGHT * 4, 1, 1);
 	_number = new Sprite(spriteHandler, RESOURCE_PATH_NUMBER, TILE_WIDTH * 2, TILE_HEIGHT * 2, 10, 5);
 	_powerUpItem = new Sprite(spriteHandler, MAP_RESOURCE_PATH_POWERUP, TILE_WIDTH * 4, TILE_HEIGHT * 4, 6, 6);
+	_respawnEffect = new Sprite(spriteHandler, RESPAWN_SPRITE_PATH, TILE_WIDTH * 4, TILE_HEIGHT * 4, 10, 10);
 }
 
 

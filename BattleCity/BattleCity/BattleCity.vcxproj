@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BonusTank.cpp" />
     <ClCompile Include="BrickWall.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameSound.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="HeavyTank.cpp" />
@@ -33,6 +35,7 @@
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ShootableObject.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteMapItemMagager.cpp" />
     <ClCompile Include="StageManager.cpp" />
@@ -44,6 +47,7 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BonusTank.h" />
     <ClInclude Include="BrickWall.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -55,6 +59,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDefaultConstant.h" />
+    <ClInclude Include="GameSound.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="HeavyTank.h" />
@@ -68,6 +73,7 @@
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ShootableObject.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteMapItemMagager.h" />
     <ClInclude Include="StageManager.h" />

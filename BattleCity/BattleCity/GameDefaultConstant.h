@@ -117,17 +117,36 @@
 #define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
 #define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
 #define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
-#define MAP_RESOURCE_PATH_POWERUP "Resource\\Map\\powerup.png"
 #define MAP_NUM_OF_TYPE_OBJ 20
-#define NUM_ENEMY 20
+#define MAX_ENEMY 20
+#define MAX_ENEMY_ONE_TIME 4
+#define NUM_TYPE_ENEMY 4
+#define DELAY_TIME_RESPAWN 4000
+#define POS_RESPAWN_X 100.0f
+#define POS_RESPAWN_Y 51.0f
+#define DISTANCE_RESPAWN_POS_X 192.0f
+#define MAX_RESPAWN_POS_X 384.0f
+#define RESPAWN_SPRITE_PATH "Resource\\Other\\respawn.png"
+
 //Info Right map default value
 #define POS_LIST_ENEMY_ICON_TOP_LEFT_X 540
 #define POS_LIST_ENEMY_ICON_TOP_LEFT_Y 92
 #define RESOURCE_PATH_ENEMY_ICON	"Resource\\Other\\miniarmy.png"
 #define RESOURCE_PATH_TANKLIFE_ICON	"Resource\\Other\\tanklife.png"
+#define POS_LIFE_IMAGE D3DXVECTOR3(540.0f,316.0f,0.0f)
 #define POS_NUM_LIFE D3DXVECTOR3(556.0f,332.0f,0.0f)
 #define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
+#define POS_FLAG_LIFE_IMAGE  D3DXVECTOR3(540.0f,412.0f,0.0f)
 #define POS_NUM_LEVEL D3DXVECTOR3(556.0f,444.0f,0.0f)
+
+//ID power up 
+#define MAP_RESOURCE_PATH_POWERUP "Resource\\Other\\powerup.png"
+#define ID_POWER_BOMB 0
+#define ID_POWER_SHEILD 1 
+#define ID_POWER_FREEZE_TIME 2 
+#define ID_POWER_STEELWALL_EAGLE 3
+#define ID_POWER_EXTRA_LIFE 4
+#define ID_POWER_STAR 5
 
 //Default enemy position
 #define DEFAULT_TOP_LEFT D3DXVECTOR2(0.0f,200.0f)
@@ -139,10 +158,10 @@
 #define	 LIGHT_TANK_SPEED_Y 4
 #define  LIGHT_TANK_BULLET_SPEED_X 6
 #define  LIGHT_TANK_BULLET_SPEED_Y 6
-#define  LIGHT_TANK_RESOURCE_DOWN	/*/"Resource\\Enemy\\LightTank\\*/"down-light.png"
-#define  LIGHT_TANK_RESOURCE_UP		/*"Resource\\Enemy\\LightTank\\*/"up-light.png"
-#define	 LIGHT_TANK_RESOURCE_LEFT	/*"Resource\\Enemy\\LightTank\\*/"left-light.png"
-#define  LIGHT_TANK_RESOURCE_RIGHT	/*"Resource\\Enemy\\LightTank\\*/"right-light.png"
+#define  LIGHT_TANK_RESOURCE_DOWN	"Resource\\Enemy\\LightTank\\down-light.png"
+#define  LIGHT_TANK_RESOURCE_UP		"Resource\\Enemy\\LightTank\\up-light.png"
+#define	 LIGHT_TANK_RESOURCE_LEFT	"Resource\\Enemy\\LightTank\\left-light.png"
+#define  LIGHT_TANK_RESOURCE_RIGHT	"Resource\\Enemy\\LightTank\\right-light.png"
 //Default Medium Tank Value
 #define  MEDIUM_TANK_SPEED_X 2
 #define	 MEDIUM_TANK_SPEED_Y 2
@@ -204,7 +223,7 @@
 #define NUM_TANK_POS_X 370.0f
 
 
-//Dèine End State
+//Define End State
 #define ICON_END_GAME_PATH "Resource\\Other\\gameover.png"
 #define POS_ICON_END D3DXVECTOR3(170.0f, 170.0f,0.0f)
 

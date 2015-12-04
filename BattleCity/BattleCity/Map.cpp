@@ -1,22 +1,32 @@
 #include "Map.h"
 #include <complex>
 #include "GameState.h"
+#include "MediumTank.h"
+#include "HeavyTank.h"
+#include "SuperHeavyTank.h"
 
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
+	delaytimeReSpanw = 0;
+	isPrepareRespawn = false;
+	//
 	_startTime = GetTickCount();
+	_mapMatrix = new int*[NUM_ROW_TILE];
 	_steelBoundEagle = false;
 	_canUpdateEnemy = true;
-	_numEnemy = NUM_ENEMY;
+	_numEnemy = 0;
 	_numTankDie[0] = _numTankDie[1] = _numTankDie[2] = _numTankDie[3] = 0;
 	_spriteHandler = spriteHandler;
-	_player = new PlayerTank(_spriteHandler);
 	_spriteHandler->GetDevice(&d3ddev);
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
+	_respawnEffect = _spriteItemManager->getRespawnSprite();
+	_player = new PlayerTank(_spriteHandler);
+	_listEnemy = new vector<Enemy*>;
+	_listEnemyOnMap = new vector<Enemy*>;
 	_colisObj = new vector<vector<StaticObject*>>;
-	_mapMatrix = new int*[NUM_ROW_TILE];
+
 	for (short i = 0; i < NUM_ROW_TILE; i++)
 	{
 		_mapMatrix[i] = new int[NUM_COLUMN_TILE];
@@ -48,6 +58,9 @@ void Map::changeStage()
 	}
 	InitColisObject();
 	_mapFile.close();
+	_player->InitMapData(_mapMatrix, _colisObj);
+	InitListEnemy();
+	 
 }
 
 void Map::InitColisObject()
@@ -85,6 +98,131 @@ void Map::InitColisObject()
 		_colisObj->push_back(temp[i]);
 }
 
+void Map::InitListEnemy()
+{
+	//a[] & order 
+	//0 - medium tank
+	//1 - light tank
+	//2 - heavy  tank
+	//3 - super heavy tank
+	int a[4] = { 7,6,4,3 };
+	//Thu tu xuat hien cac loai tank 
+	string order = "0123"; //Neu thay yeu cau random thi viet them ham random
+	float distance = 0.0f;
+	int num = 1;
+	vector<MediumTank*>* listMedium = new vector<MediumTank*>;
+	vector<LightTank*>* listLight = new vector<LightTank*>;
+	vector<HeavyTank*>* listHeavy = new vector<HeavyTank*>;
+	vector<SuperHeavyTank*>* listSuper = new vector<SuperHeavyTank*>;
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		if (distance > MAX_RESPAWN_POS_X)
+			distance = 0.0f;
+		if(a[0] > 0)
+		{
+			MediumTank* temp;
+			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			a[0] -= 1;
+			if(num == 4 || num == 11 || num == 18)
+			{
+				//set tank has powerup
+			}
+			temp->InitMapData(_mapMatrix, _colisObj);
+			listMedium->push_back(temp);
+			distance += DISTANCE_RESPAWN_POS_X;
+			continue;
+		}
+		if(a[1] > 0)
+		{
+			LightTank* temp;
+			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			a[1] -= 1;
+			if (num == 4 || num == 11 || num == 18)
+			{
+				//set tank has powerup
+			}
+			temp->InitMapData(_mapMatrix, _colisObj);
+			listLight->push_back(temp);
+			distance += DISTANCE_RESPAWN_POS_X;
+			continue;
+		}
+		if (a[2] > 0)
+		{
+			HeavyTank* temp;
+			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			a[2] -= 1;
+			if (num == 4 || num == 11 || num == 18)
+			{
+				//set tank has powerup
+			}
+			temp->InitMapData(_mapMatrix, _colisObj);
+			listHeavy->push_back(temp);
+			distance += DISTANCE_RESPAWN_POS_X;
+			continue;
+		}
+		if (a[3] > 0)
+		{
+			SuperHeavyTank* temp;
+			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			a[3] -= 1;
+			if (num == 4 || num == 11 || num == 18)
+			{
+				//set tank has powerup
+			}
+			temp->InitMapData(_mapMatrix, _colisObj);
+			listSuper->push_back(temp);
+			distance += DISTANCE_RESPAWN_POS_X;
+		}
+	}
+	int i = 0;
+	while(i<NUM_TYPE_ENEMY)
+	{
+		switch (order[i] - '0')
+		{
+			case 0:
+			{
+				int n = listMedium->size();
+				for (int j = 0; j < n;j++)
+				{
+					_listEnemy->push_back(listMedium->at(j));
+				}				
+				break;
+			}
+			case 1:
+			{
+				int n = listLight->size();
+				for (int j = 0; j < n; j++)
+				{
+					_listEnemy->push_back(listLight->at(j));
+				}
+				break;
+			}
+			case 2:
+			{
+				int n = listHeavy->size();
+				for (int j = 0; j < n; j++)
+				{
+					_listEnemy->push_back(listHeavy->at(j));
+				}
+				break;
+			}
+			case 3:
+			{
+				int n = listSuper->size();
+				for (int j = 0; j < n; j++)
+				{
+					_listEnemy->push_back(listSuper->at(j));
+				}
+				break;
+			}
+		}
+		i++;
+	}
+	
+
+}
+
+
 void Map::updateMaxtrix()
 {
 	//muon cho gach nam phia duoi ngang bang dai bang thi hay luu index cua steel truoc dong 46 cot 22
@@ -115,10 +253,67 @@ bool Map::GetFileMap()
 void Map::Draw()
 {
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	drawRightMenu();
+	drawMap();
+	_player->Draw();
+	//drawPowerUp();
+	drawEnemy();
+}
 
-	//Draw khung enemy goc phai
+void Map::drawMap()
+{
+	//ve map
+	for (short i = 0; i < NUM_ROW_TILE; i++)
+	{
+		for (short j = 0; j < NUM_COLUMN_TILE; j++)
+		{
+			if (_mapMatrix[i][j] == -1)
+			{
+				_spriteItemManager->getBackGround()->Render(0, 0, getPositionFromMapMatrix(i, j));
+			}
+		}
+	}
+	int n = _colisObj->size();
+	for (int i = 0; i < n; i++)
+	{
+		int m = _colisObj->at(i).size();
+		for (int j = 0; j < m; j++)
+		{
+			_colisObj->at(i).at(j)->Draw();
+		}
+	}
+	_eagle->Draw();
+}
+
+void Map::drawPowerUp()
+{
+	if (_powerUpItem->IsEnable())
+	{
+		if (_powerUpItem->IsEaten() == false)
+		{
+			if (GameTime::RenderFrame(_startTime, 300))
+			{
+				_powerUpItem->Draw();
+			}
+		}
+		//ve tuong thep, 
+	}
+}
+
+void Map::drawEnemy()
+{
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		_listEnemyOnMap->at(i)->Draw();
+	}
+}
+
+void Map::drawRightMenu()
+{
+	///////////Draw khung enemy goc phai
 	float x, y = 0;
-	int num_enemy = NUM_ENEMY;
+	int num_enemy = MAX_ENEMY - _numEnemy;
 	for (int i = 0; i < num_enemy; i++)
 	{
 		if (i % 2 == 0)
@@ -132,92 +327,19 @@ void Map::Draw()
 		y = POS_LIST_ENEMY_ICON_TOP_LEFT_Y + (TILE_HEIGHT * 2)*(i / 2);
 		_spriteItemManager->getEnemyIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
 	}
-	
-	//Draw dem so mang
-	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
-	y += (TILE_HEIGHT * 2) + 64;
-	_spriteItemManager->getTankLifeIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
 
+	//Draw dem so mang
+	_spriteItemManager->getTankLifeIcon()->Render(0, 0, POS_LIFE_IMAGE);
 	//Draw so thu tu state hien tai
-	x = POS_LIST_ENEMY_ICON_TOP_LEFT_X;
-	y += + (TILE_HEIGHT * 4) + 64;
-	_spriteItemManager->getFlagIcon()->Render(0, 0, D3DXVECTOR3(x, y, 0.0f));
-	//get state hien tai roi xuat len mang hinh
+	_spriteItemManager->getFlagIcon()->Render(0, 0, POS_FLAG_LIFE_IMAGE);
+	//Ve so
 	static Sprite num = Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
 	num.Render(StageManager::getInstance()->getStage(), POS_NUM_LEVEL);
 	num.Render(_player->getLife(), POS_NUM_LIFE);
-
-	//ve map
-
-	
-	for (short i = 0; i < NUM_ROW_TILE; i++)
-	{
-		for (short j = 0; j < NUM_COLUMN_TILE; j++)
-		{
-			if (_mapMatrix[i][j] == -1)
-			{
-				_spriteItemManager->getBackGround()->Render(0, 0, getPositionFromMapMatrix(i, j));
-			}
-		}
-	}
-
-	for (int i = 0; i < _colisObj->size(); i++)
-	{
-		for (int j = 0; j < _colisObj->at(i).size(); j++)
-		{
-			if (_colisObj->at(i).at(j) != NULL)
-			_colisObj->at(i).at(j)->Draw();
-		}
-	}
-
-	//D3DXVECTOR2 objectMapIndex;
-	//for (int i = 0; i < _colisObj->size();)
-	//{
-	//	for (int j = 0; j < _colisObj->at(i).size();)
-	//	{
-
-	//		if (_colisObj->at(i).at(j)->_isTerminated)
-	//		{
-	//			objectMapIndex = getPositionObjectInMapMatrix(_colisObj->at(i).at(j)->getLeft(), _colisObj->at(i).at(j)->getTop());
-	//			_mapMatrix[(int)objectMapIndex.x][(int)objectMapIndex.y] = -1;
-	//			delete _colisObj->at(i).at(j);
-	//			_colisObj->at(i).at(j) = NULL;
-	//			_colisObj->at(i).at(j) = *_colisObj->at(i).erase(_colisObj->at(i).begin() + j);
-	//		}
-	//		else
-	//		{
-	//			_colisObj->at(i).at(j)->Draw();
-	//			j++;
-	//		}
-
-	//	}
-	//	
-	//	i++;
-	//}
-	_eagle->Draw();
-	if(_powerUpItem->IsEnable())
-	{
-		if(_powerUpItem->IsEaten() == false)
-		{
-			if (GameTime::RenderFrame(_startTime, 300))
-			{
-				_powerUpItem->Draw();
-			}
-		}
-		//ve tuong thep, 
-	}
-	
-	
 }
 
 void Map::Update()
 {
-
-
-	//xet va cham va xoa item tren map
-
-	//xet va cham va xoa item tren map
-
 	if(Keyboard::getInstance()->IsKeyDown(DIK_1))
 	{
 		_powerUpItem->enablePowerUp();
@@ -226,13 +348,63 @@ void Map::Update()
 	{
 		_powerUpItem->setEaten();
 	}
+	
+	//updatePowerItem();
+	_player->Update();
+	
+	updateEnemy();
+	//checkEndGame();
+
+}
+
+void Map::updateEnemy()
+{
+	if(_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME)
+	{
+		if(_numEnemy == 0)
+		{
+			_listEnemyOnMap->push_back(_listEnemy->front());
+			_listEnemy->erase(_listEnemy->begin());
+			_numEnemy++;
+		}
+		else
+		{
+			delaytimeReSpanw += 50;
+			if (delaytimeReSpanw >= 7000 /*DELAY_TIME_RESPAWN*/)
+			{
+				delaytimeReSpanw = 0;
+				_listEnemyOnMap->push_back(_listEnemy->front());
+				_listEnemy->erase(_listEnemy->begin());
+				_numEnemy++;
+			}
+		}
+	}
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		_listEnemyOnMap->at(i)->Update();
+	}
+}
+
+void Map::updatePowerItem()
+{
+	if(Keyboard::getInstance()->IsKeyDown(DIK_1))
+	{
+		_powerUpItem->enablePowerUp();
+	}
+	if (Keyboard::getInstance()->IsKeyDown(DIK_2))
+	{
+		_powerUpItem->setEaten();
+	}
+	//xet va cham va xoa item tren map
+
 	if (_powerUpItem->IsEnable())
 	{
 		if (_powerUpItem->IsEaten())
 		{
-			if (_powerUpItem->getType() == 2 || _powerUpItem->getType() == 3)
+			if (_powerUpItem->getType() == ID_POWER_FREEZE_TIME || _powerUpItem->getType() == ID_POWER_STEELWALL_EAGLE)
 			{
-				if(_powerUpItem->getType() == 2)
+				if (_powerUpItem->getType() == ID_POWER_FREEZE_TIME)
 				{
 					_canUpdateEnemy = false;
 				}
@@ -243,35 +415,30 @@ void Map::Update()
 			}
 			else
 			{
-				if (_powerUpItem->getType() == 0)
+				if (_powerUpItem->getType() == ID_POWER_BOMB)
 				{
 					//cho quai no
 				}
-				if (_powerUpItem->getType() == 1)
+				if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
 				{
-					//set sheil player
+					_player->ActivateShield();
 				}
-				if (_powerUpItem->getType() == 4)
+				if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
 				{
 					_player->addLife();
 				}
-				if (_powerUpItem->getType() == 5)
+				if (_powerUpItem->getType() == ID_POWER_STAR)
 				{
-					//tac dong len player
+					_player->PlayerPromoted();
 				}
 				_powerUpItem->disablePowerUp();
 			}
 		}
 	}
+}
 
-	_player->Update();
-
-	if(_canUpdateEnemy)
-	{
-		//_enemy->Update();
-	}
-
-
+void Map::checkEndGame()
+{
 	if (_player->getLife() == 0)
 	{
 		ScoreState::get()->addResultState(&_numTankDie[4]);
@@ -293,8 +460,6 @@ void Map::Update()
 		GameState::switchState(ScoreState::get());
 	}
 
-
-
 }
 
 vector<vector<StaticObject*>>* Map::getColisObject()
@@ -310,10 +475,12 @@ Eagle * Map::getEagleObject()
 Map::~Map()
 {
 }
+
 int** Map::getMapMatrix()
 {
 	return this->_mapMatrix;
 }
+
 D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 {
 	D3DXVECTOR3 vector;
@@ -322,6 +489,7 @@ D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 	vector.z = 0.0f;
 	return vector;
 }
+
 
 D3DXVECTOR2 Map::getPositionObjectInMapMatrix(int x, int y)
 {

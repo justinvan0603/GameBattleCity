@@ -9,7 +9,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return false;
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
-	GameTime *gt = new GameTime(120);
+
+	DWORD frame_start = GetTickCount();;
+	DWORD tick_per_frame = 100 / 60;
+
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -17,14 +20,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		if (gt->CanCreateFrame())
+		
+		DWORD now = GetTickCount();
+		DWORD DeltaTime = now - frame_start;
+		if (DeltaTime >= tick_per_frame)
 		{
+			frame_start = now;
 			game->GameUpdate();
 			game->GameRun();
-			
 		}
-		else
-			Sleep(gt->GetTimePerFrame());
+
+		
+	
 	}
 	//Game.Release();
 	return 0;
