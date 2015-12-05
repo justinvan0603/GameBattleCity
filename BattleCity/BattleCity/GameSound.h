@@ -8,7 +8,8 @@ private:
 	Sound _startGame;
 	Sound _fire;
 	Sound _bulletExplode;
-	Sound _objectExplode;
+	Sound _enemyExplode;
+	Sound _allyExplode;
 	Sound _tankEngine;
 	Sound _tankMove;
 	Sound _tankHit;

@@ -33,6 +33,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 		return false;
 	}
 	GameState::initialize(win->getSpriteHandler());
+	
 	return true;
 }
 

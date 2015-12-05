@@ -240,8 +240,13 @@
 #define SOUND_FIRE ""
 #define SOUND_BULLET_EXPLODE ""
 #define SOUND_TANK_EXPLODE ""
-#define SOUND_EAGLE_DESTROY ""
 #define SOUND_TANK_HIT ""
+#define SOUND_TANK_ENGINE ""
+#define SOUND_TANK_MOVE ""
+#define SOUND_ALLY_EXPLODE ""
+#define SOUND_ITEM_APPEAR ""
+#define SOUND_ITEM_EAT ""
+#define SOUND_LIFE_UP ""
 
 #define ID_SOUND_START_GAME 1
 #define ID_SOUND_FIRE 2
@@ -250,6 +255,10 @@
 #define ID_SOUND_TANK_ENGINE 5
 #define ID_SOUND_TANK_HIT 6
 #define ID_SOUND_TANK_MOVE 7
+#define ID_SOUND_ALLY_EXPLODE 8
+#define ID_SOUND_ITEM_APPEAR 9
+#define ID_SOUND_ITEM_EAT 10
+#define ID_SOUND_LIFE_UP 11
 
 //20/11/2015
 //------------game effect ID--------------------
