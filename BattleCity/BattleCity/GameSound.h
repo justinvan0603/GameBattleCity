@@ -8,9 +8,13 @@ private:
 	Sound _startGame;
 	Sound _fire;
 	Sound _bulletExplode;
-	Sound _tankExplode;
-	Sound _eagleDestroy;
+	Sound _objectExplode;
+	Sound _tankEngine;
+	Sound _tankMove;
 	Sound _tankHit;
+	Sound _powerAppear;
+	Sound _eatPower;
+	Sound _lifeUp;
 private:
 	GameSound(DSound* dsound);
 	~GameSound();
@@ -18,5 +22,6 @@ private:
 public:
 	static GameSound* getInstance(DSound* dsound);
 	void Play(int id);
+	void PlayRepeat(int id);
 };
 

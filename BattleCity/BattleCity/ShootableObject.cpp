@@ -6,7 +6,7 @@ ShootableObject::ShootableObject()
 }
 void ShootableObject::DrawBullet()
 {
-	int size = _listBullet.size();
+	//int size = _listBullet.size();
 	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
 	{
 			

@@ -1,13 +1,34 @@
 ﻿#include "CollisionManager.h"
 #include "EffectManager.h"
 #include "PlayerTank.h"
+#include "SuperHeavyTank.h"
 #include "EffectManager.h"
+
 CollisionManager::CollisionManager()
 {
+}
+MyRectangle CollisionManager::BroadphaseRectWithRelativeSpeed(Object *A, Object* B)
+{
+	int vxA, vyA;
+	vxA = A->getVelocityX() - B->getVelocityX();
+	vyA = A->getVelocityY() - B->getVelocityY();
+	int x, y, width, height;
+	x = A->getPositionX();
+	if (A->getVelocityX() < 0)
+		x = A->getPositionX() + vxA;
+	y = A->getPositionY();
+	if (A->getVelocityY() < 0)
+		y = A->getPositionY() + vyA;
+	width = A->getWidth() + abs(vxA);
+	height = A->getHeight() + abs(vyA);
+	//width = vxA > 0 ? vxA + A->getWidth() : A->getWidth() - vxA;
+	//height = vyA > 0 ? vyA + A->getHeight() : A->getHeight() - vyA;
+	return MyRectangle(y, x, width, height);
 }
 
 MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 {
+	//Ham tao broadphase co van toc tuong doi
 	int x, y, width, height;
 	x = A->getPositionX();
 	if (A->getVelocityX() < 0)
@@ -17,24 +38,33 @@ MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 		y = A->getPositionY() +A->getVelocityY();
 	width = A->getWidth()+ abs(A->getVelocityX());
 	height = A->getHeight() + abs(A->getVelocityY());
+
 	return MyRectangle(y, x, width, height);
 }
 
 bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 {
 	// A chuyển động B đứng yên
+
+	float v2x, v2y;
+	v2x = B->getVelocityX();
+	v2y = B->getVelocityY();
+	A->setVelocityX(A->getVelocityX() - v2x);
+	A->setVelocityY(A->getVelocityY() - v2y);
+
 	
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
-		A->setVelocityX(SPEED_NO);
-		A->setVelocityY(SPEED_NO);
-		D3DXVECTOR2 pos;
-		pos.x = A->getLeft();
-		pos.y = A->getTop();
-		EffectManager::getInstance(0)->AddBulletEffect(pos);
+		
+		B->setVelocityX(0);
+		B->setVelocityY(0);
+		A->setVelocityX(0);
+		A->setVelocityY(0);
+
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
+			//A->setVelocityX(0);
 			if (A->getLeft() < B->getLeft())
 			{
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
@@ -47,10 +77,13 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 
 				return true;
 			}
+			
+
 		}
 
 		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
 		{
+			//A->setVelocityY(0);
 			if (A->getTop() < B->getTop())
 			{
 				A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
@@ -63,10 +96,13 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 
 				return true;
 			}
+			
 		}
 		
 		return true;
 	}
+	A->setVelocityX(A->getVelocityX() + v2x);
+	A->setVelocityY(A->getVelocityY() + v2y);
 	return false;
 }
 void CollisionManager::CollisionStopMoving(Object* A, Object* B)
@@ -88,16 +124,35 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 	if (AABBCheck(&broadphase, B))
 	{
 			A->_isTerminated = true;
+			if (B->getId() == ID_BULLET)
+			{
+				B->_isTerminated = true;
+				return true;
+			}
+			D3DXVECTOR2 position;
+			position.x = A->getLeft() - SPRITE_WIDTH/2;
+			position.y = A->getTop() - SPRITE_HEIGHT/2;
+			EffectManager::getInstance(0)->AddBulletEffect(position);
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
+
 				if (B->getId() == ID_STEELWALL)
 				{
 					if (A->GetLevel() == 4)
 						B->_isTerminated = true;
+					return true;
 
 				}
-				else
+				if (B->getId() == ID_WATER)
+				{
+					A->_isTerminated = false;
+					return true;
+				}
+				if (B->getId() == ID_BRICKWALL);
+				{
 					B->_isTerminated = true;
+					return true;
+				}
 			}
 			else
 			{
@@ -105,7 +160,21 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				{
 					if (B->getObjectType() == ENEMY_OBJECT_TYPE)
 					{
-						B->_isTerminated = true;
+						//B->_isTerminated = true;
+						if (B->getId() != ID_SUPER_HEAVY_TANK)
+						{
+							B->_isTerminated = true;
+						}
+						else
+						{
+							SuperHeavyTank* superHeavy = dynamic_cast<SuperHeavyTank*>(B);
+							if (superHeavy != NULL)
+							{
+								superHeavy->lostHitPoint();
+								if (superHeavy->getHitPoint() == 0)
+									B->_isTerminated = true;							
+							}
+						}
 					}
 				}
 				else
@@ -119,16 +188,14 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					}
 				}
 			}
-			D3DXVECTOR2 position;
-			position.x = B->getLeft();
-			position.y = B->getTop();
-			EffectManager::getInstance(0)->AddBulletEffect(position);
+
 		return true;
 	}
 	return false;
 }
 bool CollisionManager::CollisionWithScreen(Object* A)
 {
+	
 	MyRectangle collisionRect = BroadphaseRect(A);
 	if (collisionRect.getTop() < POS_MAP_TOP_LEFT_Y)
 	{
@@ -171,8 +238,10 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 }
 bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject *B)
 {
+
 	MyRectangle broadphaseA = BroadphaseRect(A);
 	MyRectangle broadphaseB = BroadphaseRect(B);
+	//X
 	if (AABBCheck(&broadphaseA, &broadphaseB))
 	{
 		A->setVelocityX(SPEED_NO);
@@ -206,6 +275,10 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 			{
 				A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
 			}
+		}
+		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+		{
+			return true;
 		}
 		B->RandomChangeDirection();
 		return true;
@@ -251,73 +324,142 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 				A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
 			}
 		}
-
-		if (A->getCurrentMoveDirection() == RIGHT && B->getCurrentMoveDirection() == LEFT ||
-			A->getCurrentMoveDirection() == LEFT && B->getCurrentMoveDirection() == RIGHT ||
-			A->getCurrentMoveDirection() == UP  && B->getCurrentMoveDirection() == DOWN ||
-			A->getCurrentMoveDirection() == DOWN && B->getCurrentMoveDirection() == UP)
+		if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
 		{
 			A->InvertDirection();
 			B->InvertDirection();
 			return true;
 		}
-		if (A->getCurrentMoveDirection() == DOWN &&
-			(B->getCurrentMoveDirection() == LEFT ||
-			B->getCurrentMoveDirection() == RIGHT ||
-			B->getCurrentMoveDirection() == DOWN))
+		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
 		{
-			if (A->getBottom() < B->getTop())
+			if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
 				A->InvertDirection();
-			else if (A->getTop() > B->getBottom())
+			else
 				B->InvertDirection();
 			return true;
 		}
-		if (A->getCurrentMoveDirection() == LEFT &&
-			(B->getCurrentMoveDirection() == LEFT ||
-			B->getCurrentMoveDirection() == UP ||
-			B->getCurrentMoveDirection() == DOWN))
-		{
-			if (A->getLeft() > B->getRight())
-			{
-				A->InvertDirection();
-			}
-			else if (A->getRight() < B->getLeft())
-			{
-				B->InvertDirection();
-			}
-			return true;
-		}
-		if (A->getCurrentMoveDirection() == RIGHT &&
-			(B->getCurrentMoveDirection() == RIGHT ||
-			B->getCurrentMoveDirection() == UP ||
-			B->getCurrentMoveDirection() == DOWN))
-		{
-			if (A->getLeft() > B->getRight())
-			{
-				A->InvertDirection();
-			}
-			else if (A->getRight() < B->getLeft())
-			{
-				B->InvertDirection();
-			}
-			return true;
-		}
-		if (A->getCurrentMoveDirection() == UP &&
-			(B->getCurrentMoveDirection() == RIGHT ||
-			B->getCurrentMoveDirection() == UP ||
-			B->getCurrentMoveDirection() == LEFT))
-		{
-			if (A->getTop() > B->getBottom())
-			{
-				A->InvertDirection();
-			}
-			else if (A->getBottom() < B->getTop())
-			{
-				B->InvertDirection();
-			}
-			return true;
-		}
+		//if (B->getCurrentMoveDirection() == DOWN &&
+		//	(A->getCurrentMoveDirection() == LEFT ||
+		//	A->getCurrentMoveDirection() == RIGHT ||
+		//	A->getCurrentMoveDirection() == DOWN))
+		//{
+		//	if (B->getBottom() < A->getTop())
+		//		B->InvertDirection();
+		//	return true;
+		//}
+		//if (A->getCurrentMoveDirection() == RIGHT &&
+		//	(B->getCurrentMoveDirection() == UP ||
+		//	B->getCurrentMoveDirection() == DOWN ||
+		//	B->getCurrentMoveDirection() == RIGHT))
+		//{
+		//	if (A->getRight() < B->getBottom())
+		//	{
+		//		A->InvertDirection();
+		//		B->InvertDirection();
+		//		return true;
+		//	}
+		//}
+		//if (A->getCurrentMoveDirection() == RIGHT && B->getCurrentMoveDirection() == LEFT ||
+		//	A->getCurrentMoveDirection() == LEFT && B->getCurrentMoveDirection() == RIGHT ||
+		//	A->getCurrentMoveDirection() == UP  && B->getCurrentMoveDirection() == DOWN ||
+		//	A->getCurrentMoveDirection() == DOWN && B->getCurrentMoveDirection() == UP)
+		//{
+		//	A->InvertDirection();
+		//	B->InvertDirection();
+		//	return true;
+		//}
+		//else
+		//{
+		//	A->InvertDirection();
+		//}
+		//if (A->getCurrentMoveDirection() == DOWN &&
+		//	(B->getCurrentMoveDirection() == LEFT ||
+		//	B->getCurrentMoveDirection() == RIGHT ||
+		//	B->getCurrentMoveDirection() == DOWN))
+		//{
+		//	if (A->getBottom() < B->getTop())
+		//		A->InvertDirection();
+		//	else if (A->getTop() > B->getBottom())
+		//		B->InvertDirection();
+		//	return true;
+		//}
+		//if (A->getCurrentMoveDirection() == LEFT &&
+		//	(B->getCurrentMoveDirection() == LEFT ||
+		//	B->getCurrentMoveDirection() == UP ||
+		//	B->getCurrentMoveDirection() == DOWN))
+		//{
+		//	if (A->getLeft() > B->getRight())
+		//	{
+		//		A->InvertDirection();
+		//	}
+		//	else if (A->getRight() < B->getLeft())
+		//	{
+		//		B->InvertDirection();
+		//	}
+		//	return true;
+		//}
+		//if (A->getCurrentMoveDirection() == RIGHT &&
+		//	(B->getCurrentMoveDirection() == RIGHT ||
+		//	B->getCurrentMoveDirection() == UP ||
+		//	B->getCurrentMoveDirection() == DOWN))
+		//{
+		//	if (A->getLeft() > B->getRight())
+		//	{
+		//		A->InvertDirection();
+		//	}
+		//	else if (A->getRight() < B->getLeft())
+		//	{
+		//		A->InvertDirection();
+		//	}
+		//	return true;
+		//}
+		//if (A->getCurrentMoveDirection() == UP &&
+		//	(B->getCurrentMoveDirection() == RIGHT ||
+		//	B->getCurrentMoveDirection() == UP ||
+		//	B->getCurrentMoveDirection() == LEFT))
+		//{
+		//	if (A->getTop() > B->getBottom())
+		//	{
+		//		A->InvertDirection();
+		//	}
+		//	else if (A->getBottom() < B->getTop())
+		//	{
+		//		B->InvertDirection();
+		//	}
+		//	return true;
+		//}
 		
+	}
+	return false;
+}
+bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
+{
+	MyRectangle broadphaseRectA = BroadphaseRect(A);
+	if (AABBCheck(&broadphaseRectA, B))
+	{
+		if (B->getType() == 1) //Star
+		{
+			A->PlayerPromoted();
+			B->setEaten();
+			return true;
+		}
+		if (B->getType() == 2) //Shield
+		{
+			A->ActivateShield();
+			B->setEaten();
+			return true;
+		}
+		if (B->getType() == 3) //Bomb
+		{
+			B->setEaten();
+			return true;
+		}
+		if (B->getType() == 4) //Freeze
+		{
+			B->setEaten();
+			return true;
+		}
+
 	}
 	return false;
 }

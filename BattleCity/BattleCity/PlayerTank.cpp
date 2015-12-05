@@ -1,15 +1,15 @@
 #include "PlayerTank.h"
 #include "CollisionManager.h"
-
+#include "BulletManager.h"
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
 	_startTime = GetTickCount();
-	
+	this->_objectType = DYNAMIC_OBJECT;
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
 	this->_spriteHandler = spriteHandler;
-	this->_level = DEFAULT_PLAYER_LEVEL;
+	this->_level = LEVEL_ONE;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
 	this->_left = 235;//DEFAULT_PLAYER_POSITION_X;
@@ -50,9 +50,31 @@ void PlayerTank::Draw()
 	if (_isTerminated == false)
 	{
 		int size = _listBullet.size();
-		
+
+			//if (_vx > 0)
+			//{
+			//	_currentDirection = RIGHT;
+			//	_curSprite = _listSprite[RIGHT];
+			//}
+			//if (_vx < 0)
+			//{
+			//	_currentDirection = LEFT;
+			//	_curSprite = _listSprite[LEFT];
+			//}
+			//if (_vy < 0)
+			//{
+			//	_currentDirection = UP;
+			//	_curSprite = _listSprite[UP];
+			//}
+			//if (_vy > 0)
+			//{
+			//	_currentDirection = DOWN;
+			//	_curSprite = _listSprite[DOWN];
+			//}
 		_curSprite->Render(_left, _top);
-		
+
+		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
+				//_curSprite->Render(_level - 1, _left, _top);//
 		ShootableObject::Draw();
 		ShootableObject::DrawBullet();
 	}
@@ -108,16 +130,22 @@ void PlayerTank::Shoot()
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
 	{
+		int _delayTime;
+		if (_level < LEVEL_THREE)
+			_delayTime = PLAYER_DEFAULT_BULLET_RELOAD_TIME;
+		else
+			_delayTime = PLAYER_PROMOTED_BULLET_RELOAD_TIME;
 		D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top,_currentDirection);
-		if (_listBullet.size() == 0)
+		if (BulletManager::getInstance()->getPlayerBulletSize() == 0)
 		{
-			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
+			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
+			//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
 			_startTime = GetTickCount();
 		}
-		else if (GameTime::RenderFrame(_startTime,2000))
+		 if (GameTime::RenderFrame(_startTime,_delayTime))
 		{
-			_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
-
+			//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
+			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 			isShooting = true;
 			return;
 		}
@@ -142,21 +170,34 @@ void PlayerTank::Update()
 	}
 
 	
-	//for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	//{
+	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
+	{
 
-	//	(*i)->Update();
-	//}
-	//
+		(*i)->Update();
+	}
+	
 	CollisionManager::CollisionWithScreen(this);
-
 	ShootableObject::CleanBulletList();
 	DynamicObject::Update();
 }
-
+void PlayerTank::Respawn()
+{
+	if (_isTerminated == true)
+	{
+		if (_life > 0)
+		{
+			_life--;
+			setPositionX(DEFAULT_PLAYER_POSITION_X);
+			setPositionY(DEFAULT_PLAYER_POSITION_Y);
+			_level = LEVEL_ONE;
+			_isTerminated = false;
+			ActivateShield();
+		}
+	}
+}
 void PlayerTank::PlayerPromoted()
 {
-	if (_level < 4)
+	if (_level < LEVEL_FOUR)
 	{
 		_level++;
 	}

@@ -20,6 +20,8 @@ public:
 	Map(LPD3DXSPRITE spriteHandler);
 	void changeStage();
 	void Draw();
+
+
 	void Update();
 	vector<vector<StaticObject*>>* getColisObject();
 	Eagle* getEagleObject();
@@ -53,6 +55,10 @@ private:
 	void drawPowerUp();
 	void drawEnemy();
 	void drawRightMenu();
+
+	//Xoa enemy da bi ban ra khoi list (JT)
+	void ClearDestroyedEnemy();
+
 	vector<vector<StaticObject*>>* _colisObj;
 	vector<Enemy*>* _listEnemy;
 	vector<Enemy*>* _listEnemyOnMap;

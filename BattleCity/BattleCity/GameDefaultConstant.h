@@ -19,6 +19,9 @@
 #define PLAYER_SPRITE_DOWN_PATH  "Resource\\Player\\2.png"
 #define PLAYER_SPRITE_RIGHT_PATH "Resource\\Player\\3.png"
 #define BULLET_DELAY_FPS 0.5
+#define PLAYER_DEFAULT_BULLET_RELOAD_TIME 2000
+#define PLAYER_PROMOTED_BULLET_RELOAD_TIME 1000
+
 //Sprite
 #define SPRITE_WIDTH 32
 #define SPRITE_HEIGHT 32
@@ -40,6 +43,11 @@
 //// DYNAMIC OBJECT SPEED------------------------25/11/2015
 #define DYNAMIC_OBJECT_LOW_SPEED D3DXVECTOR2(2.0f,2.0f)
 #define DYNAMIC_OBJECT_HIGH_SPEED D3DXVECTOR2(4.0f,4.0f)
+//// DYNAMIC OBJECT LEVEL
+#define LEVEL_ONE 1
+#define LEVEL_TWO 2
+#define LEVEL_THREE 3
+#define LEVEL_FOUR 4
 
 //Static Object
 #define ID_BRICKWALL 7
@@ -228,7 +236,7 @@
 #define POS_ICON_END D3DXVECTOR3(170.0f, 170.0f,0.0f)
 
 //Resource sound path
-#define SOUND_START_GAME ""
+#define SOUND_START_GAME "Resource\\sounds\\demo.wav"
 #define SOUND_FIRE ""
 #define SOUND_BULLET_EXPLODE ""
 #define SOUND_TANK_EXPLODE ""
@@ -239,8 +247,9 @@
 #define ID_SOUND_FIRE 2
 #define ID_SOUND_BULLET_EXPLODE 3
 #define ID_SOUND_TANK_EXPLODE 4
-#define ID_SOUND_EAGLE_DESTROY 5
+#define ID_SOUND_TANK_ENGINE 5
 #define ID_SOUND_TANK_HIT 6
+#define ID_SOUND_TANK_MOVE 7
 
 //20/11/2015
 //------------game effect ID--------------------

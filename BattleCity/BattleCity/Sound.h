@@ -17,7 +17,7 @@ public:
 	Sound(const Sound& base);
 	const Sound& operator= (const Sound& source);
 	void Play(int attenuation = DSBVOLUME_MAX);
-	void PlayeRepeat(int attenuation = DSBVOLUME_MAX);
+	void PlayRepeat(int attenuation = DSBVOLUME_MAX);
 	void Stop();
 	~Sound();
 };

@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+#include "BulletManager.h"
 
 Enemy::Enemy()
 {
@@ -23,14 +23,17 @@ void Enemy::Shoot()
 {
 	D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top, _currentDirection);
 
-	if (_listBullet.size() == 0)
+	//if (_listBullet.size() == 0)
+	if (BulletManager::getInstance()->getEnemyBulletSize() == 0)
 	{
-		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
-
+		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
+		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
+		_startTime = GetTickCount();
 	}
-	else if (GameTime::RenderFrame(_startTime, 1000))
+	else if (GameTime::RenderFrame(_startTime, 2000))
 	{
-		_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
+		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
+		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
 
 
 	}

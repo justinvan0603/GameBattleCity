@@ -190,7 +190,7 @@ void Bullet::Update()
 	{
 		if (!(*i)->_isTerminated)
 			flag = CollisionManager::CollisionBulletWithObject(this, *i);
-		if (flag)
+		if (flag && (*i)->_isTerminated)
 		{
 			posInMap = Object::getPositionObjectInMap((*i)->getLeft(),(*i)->getTop());
 			int value = _map[(int)posInMap.y][(int)posInMap.x];

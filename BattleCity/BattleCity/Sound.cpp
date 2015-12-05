@@ -165,7 +165,7 @@ void Sound::Play(int attenuation)
 	_buffer->Play(0, 0, 0);
 }
 
-void Sound::PlayeRepeat(int attenuation)
+void Sound::PlayRepeat(int attenuation)
 {
 	attenuation = max(attenuation, DSBVOLUME_MIN);
 	HRESULT result;

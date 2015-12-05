@@ -18,6 +18,10 @@ void EffectManager::AddBulletEffect(D3DXVECTOR2 position)
 {
 	this->_listEffect.push_back(new Effect(_spriteHandler, EFFECT_SMALL_EXPLODE, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3,position));
 }
+void EffectManager::AddDestroyEffect(D3DXVECTOR2 position)
+{
+
+}
 void EffectManager::Draw()
 {
 	for (vector<Effect*>::iterator i = _listEffect.begin(); i != _listEffect.end();)

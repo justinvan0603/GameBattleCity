@@ -4,11 +4,12 @@
 #include "MediumTank.h"
 #include "HeavyTank.h"
 #include "SuperHeavyTank.h"
-
+#include "BulletManager.h"
+#include "EffectManager.h"
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	delaytimeReSpanw = 0;
-	isPrepareRespawn = false;
+//	isPrepareRespawn = false;
 	//
 	_startTime = GetTickCount();
 	_mapMatrix = new int*[NUM_ROW_TILE];
@@ -21,7 +22,7 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
-	_respawnEffect = _spriteItemManager->getRespawnSprite();
+	//_respawnEffect = _spriteItemManager->getRespawnSprite();
 	_player = new PlayerTank(_spriteHandler);
 	_listEnemy = new vector<Enemy*>;
 	_listEnemyOnMap = new vector<Enemy*>;
@@ -258,6 +259,8 @@ void Map::Draw()
 	_player->Draw();
 	//drawPowerUp();
 	drawEnemy();
+	BulletManager::getInstance()->Draw();
+	EffectManager::getInstance(0)->Draw();
 }
 
 void Map::drawMap()
@@ -279,7 +282,8 @@ void Map::drawMap()
 		int m = _colisObj->at(i).size();
 		for (int j = 0; j < m; j++)
 		{
-			_colisObj->at(i).at(j)->Draw();
+			if (_colisObj->at(i).at(j) != NULL)
+				_colisObj->at(i).at(j)->Draw();
 		}
 	}
 	_eagle->Draw();
@@ -351,8 +355,28 @@ void Map::Update()
 	
 	//updatePowerItem();
 	_player->Update();
-	
 	updateEnemy();
+	BulletManager::getInstance()->Update();
+	
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n-1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			CollisionManager::CollisionEnemy(_listEnemyOnMap->at(i), _listEnemyOnMap->at(j));
+		}
+	}
+	for (int i = 0; i < n; i++)
+	{
+		CollisionManager::CollisionChangeDirection(_player, _listEnemyOnMap->at(i));
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i));
+	}
+
+	ClearDestroyedEnemy();
 	//checkEndGame();
 
 }
@@ -497,4 +521,21 @@ D3DXVECTOR2 Map::getPositionObjectInMapMatrix(int x, int y)
 	position.x = (x - POS_MAP_TOP_LEFT_X) / TILE_WIDTH;
 	position.y = (y - POS_MAP_TOP_LEFT_Y) / TILE_HEIGHT;
 	return position;
+}
+
+void Map::ClearDestroyedEnemy()
+{
+	for (vector<Enemy*>::iterator i = _listEnemyOnMap->begin(); i != _listEnemyOnMap->end();)
+	{
+		if ((*i)->_isTerminated)
+		{
+			delete *i;
+			*i = NULL;
+			i = _listEnemyOnMap->erase(i);
+		}
+		else
+		{
+			i++;
+		}
+	}
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include "ShootableObject.h"
-
 #include"GameTime.h"
 #include "Effect.h"
 class PlayerTank: public ShootableObject
@@ -16,7 +15,6 @@ private:
 	bool _isActiveShield;
 public:
 	
-	//Bullet * _bullet;
 	PlayerTank(LPD3DXSPRITE);
 	void Draw();
 	void Update();
@@ -26,6 +24,7 @@ public:
 	void addLife();
 	void update();
 	
+	void Respawn();
 	void PlayerPromoted();
 	void ActivateShield();
 	

@@ -3,6 +3,7 @@
 
 #include "Keyboard.h"
 #include "Map.h"
+#include "GameSound.h"
 #include "LightTank.h"
 #include "Text.h"
 #include "StageManager.h"
@@ -33,6 +34,7 @@ public:
 
 protected:
 	static GameState*	_gameState;
+	//static PlayerTank* _player;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;
 	static DWORD _startTime;

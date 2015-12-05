@@ -2,7 +2,7 @@
 
 #include "CollisionManager.h"
 #include "EffectManager.h"
-
+#include "BulletManager.h"
 
 
 #include "ScoreManager.h"
@@ -13,6 +13,9 @@
 MainMenu* MainMenu::_instance = nullptr;
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
+
+//LightTank* GameState::_enemy = nullptr;
+//PlayerTank* GameState::_player = nullptr;
 Text* GameState::_text = nullptr;
 DWORD GameState::_startTime = 0;
 
@@ -22,6 +25,8 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 	_startTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
+	//_player = new PlayerTank(_spriteHandler);
+	BulletManager::getInstance();
 	EffectManager::getInstance(_spriteHandler);
 	switchState(PlayingState::get());
 }
@@ -198,6 +203,8 @@ PlayingState* PlayingState::_instance = nullptr;
 PlayingState::PlayingState()
 {
 	_map = new Map(_spriteHandler);
+	GameSound::getInstance(0)->PlayRepeat(1);
+	
 }
 
 void PlayingState::update()
@@ -205,7 +212,19 @@ void PlayingState::update()
 	//map, bullet, player update
 	
 	_map->Update();
-
+	
+	//_player->Update();
+	//switchState(ScoreState::get());
+	//_enemy->Update();
+	//CollisionManager::CollisionChangeDirection(_player, _enemy);
+	
+	//vector<Bullet*> listBullet = _player->getListBullet();
+	//for (vector<Bullet*>::iterator i = listBullet.begin(); i != listBullet.end(); i++)
+	//{
+	//	bool flag = CollisionManager::CollisionBulletWithObject(*i, _enemy);
+	//}
+	
+	
 }
 
 void PlayingState::draw()
@@ -213,6 +232,9 @@ void PlayingState::draw()
 	//draw all item in screen
 	
 	_map->Draw();
+	//_enemy->Draw();
+	//_player->Draw();
+	
 
 }
 

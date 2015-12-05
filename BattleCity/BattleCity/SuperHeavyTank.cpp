@@ -88,7 +88,7 @@ void SuperHeavyTank::Move()
 		_vy = 0;
 	if (_currentDirection == UP)
 	{
-		this->_vy = (int)DYNAMIC_OBJECT_LOW_SPEED.y;
+		this->_vy = -(int)DYNAMIC_OBJECT_LOW_SPEED.y;
 		_curSprite = _listSprite[UP];
 		return;
 	}
@@ -101,7 +101,7 @@ void SuperHeavyTank::Move()
 
 	if (_currentDirection == LEFT)
 	{
-		this->_vx = (int)DYNAMIC_OBJECT_LOW_SPEED.x;
+		this->_vx = -(int)DYNAMIC_OBJECT_LOW_SPEED.x;
 		_curSprite = _listSprite[LEFT];
 		return;
 	}
@@ -111,6 +111,14 @@ void SuperHeavyTank::Move()
 		_curSprite = _listSprite[RIGHT];
 		return;
 	}
+}
+int SuperHeavyTank::getHitPoint()
+{
+	return _hitPoint;
+}
+void SuperHeavyTank::lostHitPoint()
+{
+	_hitPoint--;
 }
 SuperHeavyTank::~SuperHeavyTank()
 {

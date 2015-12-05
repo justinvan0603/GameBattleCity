@@ -2,6 +2,7 @@
 #include "DynamicObject.h"
 #include "Bullet.h"
 #include "GameTime.h"
+
 class ShootableObject : public DynamicObject
 {
 protected:

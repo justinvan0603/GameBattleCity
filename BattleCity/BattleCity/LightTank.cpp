@@ -95,7 +95,7 @@ void LightTank::Update()
 	
 	FindNearbyObject();
 	this->Move();
-	//this->Shoot();
+	this->Shoot();
 	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
 	{
 		_isCollied = CollisionManager::CollisionPreventMove(this, *i);

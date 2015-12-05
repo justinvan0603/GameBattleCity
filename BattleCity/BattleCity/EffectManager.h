@@ -16,6 +16,7 @@ public:
 	static EffectManager* getInstance(LPD3DXSPRITE);
 public:
 	void AddBulletEffect(D3DXVECTOR2 position);
+	void AddDestroyEffect(D3DXVECTOR2 position);
 	void Draw();
 	
 };

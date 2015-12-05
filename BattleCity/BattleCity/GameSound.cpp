@@ -3,12 +3,11 @@
 GameSound* GameSound::_instance = NULL;
 GameSound::GameSound(DSound* dsound)
 {
-	_bulletExplode = dsound->CreateSound(SOUND_BULLET_EXPLODE);
-	_eagleDestroy = dsound->CreateSound(SOUND_EAGLE_DESTROY);
-	_fire = dsound->CreateSound(SOUND_FIRE);
 	_startGame = dsound->CreateSound(SOUND_START_GAME);
-	_tankExplode = dsound->CreateSound(SOUND_TANK_EXPLODE);
-	_tankExplode = dsound->CreateSound(SOUND_TANK_HIT);
+	//_objectExplode = dsound->CreateSound(SOUND_TANK_EXPLODE);
+	//_bulletExplode = dsound->CreateSound(SOUND_BULLET_EXPLODE);
+	//_fire = dsound->CreateSound()
+
 }
 GameSound* GameSound::getInstance(DSound* dsound)
 {
@@ -37,13 +36,17 @@ void GameSound::Play(int id)
 	}
 	case ID_SOUND_TANK_EXPLODE:
 	{
-		_tankExplode.Play();
+		_objectExplode.Play();
 		break;
 	}
-	case ID_SOUND_EAGLE_DESTROY:
+	case ID_SOUND_TANK_ENGINE:
 	{
-		_eagleDestroy.Play();
+		_tankEngine.Play();
 		break;
+	}
+	case ID_SOUND_TANK_MOVE:
+	{
+		_tankMove.Play();
 	}
 	case ID_SOUND_TANK_HIT:
 	{
@@ -54,7 +57,48 @@ void GameSound::Play(int id)
 		break;
 	}
 }
-
+void GameSound::PlayRepeat(int id)
+{
+	switch (id)
+	{
+	case ID_SOUND_START_GAME:
+	{
+		_startGame.PlayRepeat();
+		break;
+	}
+	case ID_SOUND_FIRE:
+	{
+		_fire.PlayRepeat();
+		break;
+	}
+	case ID_SOUND_BULLET_EXPLODE:
+	{
+		_bulletExplode.PlayRepeat();
+		break;
+	}
+	case ID_SOUND_TANK_EXPLODE:
+	{
+		_objectExplode.PlayRepeat();
+		break;
+	}
+	case ID_SOUND_TANK_ENGINE:
+	{
+		_tankEngine.PlayRepeat();
+		break;
+	}
+	case ID_SOUND_TANK_MOVE:
+	{
+		_tankMove.PlayRepeat();
+	}
+	case ID_SOUND_TANK_HIT:
+	{
+		_tankHit.PlayRepeat();
+		break;
+	}
+	default:
+		break;
+	}
+}
 GameSound::~GameSound()
 {
 }
