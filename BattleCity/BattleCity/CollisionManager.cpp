@@ -139,7 +139,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				if (B->getId() == ID_STEELWALL)
 				{
 					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
-					if (A->GetLevel() == 4)
+					if (A->GetLevel() == LEVEL_FOUR)
 						B->_isTerminated = true;
 					return true;
 
@@ -174,13 +174,17 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 							SuperHeavyTank* superHeavy = dynamic_cast<SuperHeavyTank*>(B);
 							if (superHeavy != NULL)
 							{
-								superHeavy->lostHitPoint();
-								//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
 								if (superHeavy->getHitPoint() == 0)
 								{
 									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
 									B->_isTerminated = true;
 								}
+								else
+								{
+									superHeavy->lostHitPoint();
+									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
+								}
+								
 							}
 						}
 					}
@@ -235,14 +239,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 			A->_isTerminated = true;
 		return true;
 	}
-	//if (A->getTop()<= POS_MAP_TOP_LEFT_Y)
-	//	return true;
-	//if (A->getBottom()  >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
-	//	return true;
-	//if (A->getLeft() <= POS_MAP_TOP_LEFT_X)
-	//	return true;
-	//if (A->getRight() >= POS_MAP_TOP_LEFT_X + MAP_WIDTH)
-	//	return true;
+
 	return false;
 }
 bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject *B)
@@ -347,96 +344,6 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 				B->InvertDirection();
 			return true;
 		}
-		//if (B->getCurrentMoveDirection() == DOWN &&
-		//	(A->getCurrentMoveDirection() == LEFT ||
-		//	A->getCurrentMoveDirection() == RIGHT ||
-		//	A->getCurrentMoveDirection() == DOWN))
-		//{
-		//	if (B->getBottom() < A->getTop())
-		//		B->InvertDirection();
-		//	return true;
-		//}
-		//if (A->getCurrentMoveDirection() == RIGHT &&
-		//	(B->getCurrentMoveDirection() == UP ||
-		//	B->getCurrentMoveDirection() == DOWN ||
-		//	B->getCurrentMoveDirection() == RIGHT))
-		//{
-		//	if (A->getRight() < B->getBottom())
-		//	{
-		//		A->InvertDirection();
-		//		B->InvertDirection();
-		//		return true;
-		//	}
-		//}
-		//if (A->getCurrentMoveDirection() == RIGHT && B->getCurrentMoveDirection() == LEFT ||
-		//	A->getCurrentMoveDirection() == LEFT && B->getCurrentMoveDirection() == RIGHT ||
-		//	A->getCurrentMoveDirection() == UP  && B->getCurrentMoveDirection() == DOWN ||
-		//	A->getCurrentMoveDirection() == DOWN && B->getCurrentMoveDirection() == UP)
-		//{
-		//	A->InvertDirection();
-		//	B->InvertDirection();
-		//	return true;
-		//}
-		//else
-		//{
-		//	A->InvertDirection();
-		//}
-		//if (A->getCurrentMoveDirection() == DOWN &&
-		//	(B->getCurrentMoveDirection() == LEFT ||
-		//	B->getCurrentMoveDirection() == RIGHT ||
-		//	B->getCurrentMoveDirection() == DOWN))
-		//{
-		//	if (A->getBottom() < B->getTop())
-		//		A->InvertDirection();
-		//	else if (A->getTop() > B->getBottom())
-		//		B->InvertDirection();
-		//	return true;
-		//}
-		//if (A->getCurrentMoveDirection() == LEFT &&
-		//	(B->getCurrentMoveDirection() == LEFT ||
-		//	B->getCurrentMoveDirection() == UP ||
-		//	B->getCurrentMoveDirection() == DOWN))
-		//{
-		//	if (A->getLeft() > B->getRight())
-		//	{
-		//		A->InvertDirection();
-		//	}
-		//	else if (A->getRight() < B->getLeft())
-		//	{
-		//		B->InvertDirection();
-		//	}
-		//	return true;
-		//}
-		//if (A->getCurrentMoveDirection() == RIGHT &&
-		//	(B->getCurrentMoveDirection() == RIGHT ||
-		//	B->getCurrentMoveDirection() == UP ||
-		//	B->getCurrentMoveDirection() == DOWN))
-		//{
-		//	if (A->getLeft() > B->getRight())
-		//	{
-		//		A->InvertDirection();
-		//	}
-		//	else if (A->getRight() < B->getLeft())
-		//	{
-		//		A->InvertDirection();
-		//	}
-		//	return true;
-		//}
-		//if (A->getCurrentMoveDirection() == UP &&
-		//	(B->getCurrentMoveDirection() == RIGHT ||
-		//	B->getCurrentMoveDirection() == UP ||
-		//	B->getCurrentMoveDirection() == LEFT))
-		//{
-		//	if (A->getTop() > B->getBottom())
-		//	{
-		//		A->InvertDirection();
-		//	}
-		//	else if (A->getBottom() < B->getTop())
-		//	{
-		//		B->InvertDirection();
-		//	}
-		//	return true;
-		//}
 		
 	}
 	return false;

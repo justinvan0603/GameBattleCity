@@ -65,6 +65,8 @@ void DynamicObject::FindNearbyObject()
 {
 	int currentObjectColumn = (_left - POS_MAP_TOP_LEFT_X)/ TILE_WIDTH;
 	int currentObjectRow = (_top - POS_MAP_TOP_LEFT_Y) /TILE_HEIGHT;
+	if (currentObjectColumn > 52 || currentObjectRow > 52)
+		return;
 	int nearbyObjectCountWidth;
 	int nearbyObjectCountHeight;
 	if (this->_id != ID_BULLET)
