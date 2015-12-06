@@ -1,6 +1,6 @@
 #include "GameTime.h"
 
-
+int GameTime::_tick = 0;
 
 GameTime::GameTime(float fps)
 {
@@ -29,6 +29,15 @@ bool GameTime::RenderFrame(DWORD& startTime, float delayTime)
 	}
 	return false;
 }
+
+bool GameTime::DelayTime(int& delayTime)
+{
+	delayTime -= 50;
+	if(delayTime < 0)
+		return true;
+	return false;
+}
+
 DWORD GameTime::GetTimePerFrame()
 {
 	return _timePerFrame;

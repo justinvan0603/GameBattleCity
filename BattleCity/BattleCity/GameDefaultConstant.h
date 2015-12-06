@@ -33,12 +33,12 @@
 #define DEFAULT_STATIC_HEIGHT 8
 
 //Dynamic Object ID
-#define ID_PLAYER 1
-#define ID_LIGHT_TANK 2
-#define ID_MEDIUM_TANK 3
-#define ID_HEAVY_TANK 4
-#define ID_SUPER_HEAVY_TANK 5
-#define ID_BONUS_TANK 6
+#define ID_PLAYER 4
+#define ID_MEDIUM_TANK 0
+#define ID_LIGHT_TANK 1
+#define ID_HEAVY_TANK 2
+#define ID_SUPER_HEAVY_TANK 3
+#define ID_BONUS_TANK 5
 
 //// DYNAMIC OBJECT SPEED------------------------25/11/2015
 #define DYNAMIC_OBJECT_LOW_SPEED D3DXVECTOR2(2.0f,2.0f)
@@ -142,7 +142,7 @@
 #define RESOURCE_PATH_ENEMY_ICON	"Resource\\Other\\miniarmy.png"
 #define RESOURCE_PATH_TANKLIFE_ICON	"Resource\\Other\\tanklife.png"
 #define POS_LIFE_IMAGE D3DXVECTOR3(540.0f,316.0f,0.0f)
-#define POS_NUM_LIFE D3DXVECTOR3(556.0f,332.0f,0.0f)
+#define POS_NUM_LIFE D3DXVECTOR3(558.0f,332.0f,0.0f)
 #define RESOURCE_PATH_FLAG_LEVEL_ICON	"Resource\\Other\\flag.png"
 #define POS_FLAG_LIFE_IMAGE  D3DXVECTOR3(540.0f,412.0f,0.0f)
 #define POS_NUM_LEVEL D3DXVECTOR3(556.0f,444.0f,0.0f)
@@ -229,7 +229,11 @@
 #define SCORE_POS_X 170.0f
 #define PTS_POS_X 280.0f
 #define NUM_TANK_POS_X 370.0f
-
+#define SCORE_MEDIUM_TANK 100
+#define SCORE_LIGHT_TANK 200
+#define SCORE_HEAVY_TANK 300
+#define SCORE_SUPER_HEAVY_TANK 400 
+#define SCORE_POWER_UP 500
 
 //Define End State
 #define ICON_END_GAME_PATH "Resource\\Other\\gameover.png"

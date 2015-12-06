@@ -8,21 +8,21 @@
 #include "EffectManager.h"
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
+	delayEndStage = 5000;
 	delaytimeReSpanw = 0;
-//	isPrepareRespawn = false;
+	isPrepareRespawn = false;
 	//
 	_startTime = GetTickCount();
 	_mapMatrix = new int*[NUM_ROW_TILE];
 	_steelBoundEagle = false;
 	_canUpdateEnemy = true;
 	_numEnemy = 0;
-	_numTankDie[0] = _numTankDie[1] = _numTankDie[2] = _numTankDie[3] = 0;
 	_spriteHandler = spriteHandler;
 	_spriteHandler->GetDevice(&d3ddev);
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
-	//_respawnEffect = _spriteItemManager->getRespawnSprite();
+	_respawnEffect = _spriteItemManager->getRespawnSprite();
 	_player = new PlayerTank(_spriteHandler);
 	_listEnemy = new vector<Enemy*>;
 	_listEnemyOnMap = new vector<Enemy*>;
@@ -119,11 +119,11 @@ void Map::InitListEnemy()
 	{
 		if (distance > MAX_RESPAWN_POS_X)
 			distance = 0.0f;
-		if(a[0] > 0)
+		if(a[ID_MEDIUM_TANK] > 0)
 		{
 			MediumTank* temp;
 			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[0] -= 1;
+			a[ID_MEDIUM_TANK] -= 1;
 			if(num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -133,11 +133,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if(a[1] > 0)
+		if(a[ID_LIGHT_TANK] > 0)
 		{
 			LightTank* temp;
 			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[1] -= 1;
+			a[ID_LIGHT_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -147,11 +147,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if (a[2] > 0)
+		if (a[ID_HEAVY_TANK] > 0)
 		{
 			HeavyTank* temp;
 			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[2] -= 1;
+			a[ID_HEAVY_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -161,11 +161,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if (a[3] > 0)
+		if (a[ID_SUPER_HEAVY_TANK] > 0)
 		{
 			SuperHeavyTank* temp;
 			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[3] -= 1;
+			a[ID_SUPER_HEAVY_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -180,7 +180,7 @@ void Map::InitListEnemy()
 	{
 		switch (order[i] - '0')
 		{
-			case 0:
+			case ID_MEDIUM_TANK:
 			{
 				int n = listMedium->size();
 				for (int j = 0; j < n;j++)
@@ -189,7 +189,7 @@ void Map::InitListEnemy()
 				}				
 				break;
 			}
-			case 1:
+			case ID_LIGHT_TANK:
 			{
 				int n = listLight->size();
 				for (int j = 0; j < n; j++)
@@ -198,7 +198,7 @@ void Map::InitListEnemy()
 				}
 				break;
 			}
-			case 2:
+			case ID_HEAVY_TANK:
 			{
 				int n = listHeavy->size();
 				for (int j = 0; j < n; j++)
@@ -207,7 +207,7 @@ void Map::InitListEnemy()
 				}
 				break;
 			}
-			case 3:
+			case ID_SUPER_HEAVY_TANK:
 			{
 				int n = listSuper->size();
 				for (int j = 0; j < n; j++)
@@ -257,7 +257,7 @@ void Map::Draw()
 	drawRightMenu();
 	drawMap();
 	_player->Draw();
-	//drawPowerUp();
+	drawPowerUp();
 	drawEnemy();
 	BulletManager::getInstance()->Draw();
 	EffectManager::getInstance(0)->Draw();
@@ -295,7 +295,7 @@ void Map::drawPowerUp()
 	{
 		if (_powerUpItem->IsEaten() == false)
 		{
-			if (GameTime::RenderFrame(_startTime, 300))
+			if (GameTime::RenderFrame(_startTime, 500))
 			{
 				_powerUpItem->Draw();
 			}
@@ -306,6 +306,14 @@ void Map::drawPowerUp()
 
 void Map::drawEnemy()
 {
+	if (isPrepareRespawn)
+	{
+		if(delaytimeReSpanw % 100 == 0)
+		{
+			_respawnEffect->Render(_listEnemy->front()->getLeft(), _listEnemy->front()->getTop());
+			_respawnEffect->Next();
+		}
+	}
 	int n = _listEnemyOnMap->size();
 	for (int i = 0; i < n; i++)
 	{
@@ -337,23 +345,18 @@ void Map::drawRightMenu()
 	//Draw so thu tu state hien tai
 	_spriteItemManager->getFlagIcon()->Render(0, 0, POS_FLAG_LIFE_IMAGE);
 	//Ve so
-	static Sprite num = Sprite(_spriteHandler, RESOURCE_PATH_NUMBER, IMAGE_NUMBER_WIDTH, IMAGE_NUMBER_HEIGHT, 10, 5);
-	num.Render(StageManager::getInstance()->getStage(), POS_NUM_LEVEL);
-	num.Render(_player->getLife(), POS_NUM_LIFE);
+	static Text text = Text(_spriteHandler);
+	text.drawText (to_string(StageManager::getInstance()->getStage()),POS_NUM_LEVEL,COLOR_BLACK,20);
+	text.drawText(to_string(_player->getLife()), POS_NUM_LIFE, COLOR_BLACK, 17);
 }
 
 void Map::Update()
 {
-	if(Keyboard::getInstance()->IsKeyDown(DIK_1))
+	if (Keyboard::getInstance()->IsKeyDown(DIK_1))
 	{
 		_powerUpItem->enablePowerUp();
 	}
-	if (Keyboard::getInstance()->IsKeyDown(DIK_2))
-	{
-		_powerUpItem->setEaten();
-	}
-	
-	//updatePowerItem();
+	updatePowerItem();
 	_player->Update();
 	updateEnemy();
 	BulletManager::getInstance()->Update();
@@ -376,31 +379,23 @@ void Map::Update()
 		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i));
 	}
 
-	ClearDestroyedEnemy();
-	//checkEndGame();
+	CollisionManager::CollisionWithItem(_player, _powerUpItem);
 
+	ClearDestroyedEnemy();
+	checkEndGame();
 }
 
 void Map::updateEnemy()
 {
-	if(_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME)
+	if(_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME && _listEnemy->size() >= 1)
 	{
 		if(_numEnemy == 0)
 		{
-			_listEnemyOnMap->push_back(_listEnemy->front());
-			_listEnemy->erase(_listEnemy->begin());
-			_numEnemy++;
+			respawnAfter(1000);
 		}
 		else
 		{
-			delaytimeReSpanw += 50;
-			if (delaytimeReSpanw >= 7000 /*DELAY_TIME_RESPAWN*/)
-			{
-				delaytimeReSpanw = 0;
-				_listEnemyOnMap->push_back(_listEnemy->front());
-				_listEnemy->erase(_listEnemy->begin());
-				_numEnemy++;
-			}
+			respawnAfter(6000);
 		}
 	}
 	int n = _listEnemyOnMap->size();
@@ -410,18 +405,33 @@ void Map::updateEnemy()
 	}
 }
 
+void Map::respawnAfter(int delaytime)
+{
+	delaytimeReSpanw += 50;
+	if(delaytime == 1000)
+	{
+		isPrepareRespawn = true;
+	}
+	else
+	{
+		if(delaytimeReSpanw >4000)
+		{
+			isPrepareRespawn = true;
+		}
+	}
+	if (delaytimeReSpanw > delaytime)
+	{
+		isPrepareRespawn = false;
+		delaytimeReSpanw = 0;
+		_listEnemyOnMap->push_back(_listEnemy->front());
+		_listEnemy->erase(_listEnemy->begin());
+		_numEnemy++;
+	}
+}
+
+
 void Map::updatePowerItem()
 {
-	if(Keyboard::getInstance()->IsKeyDown(DIK_1))
-	{
-		_powerUpItem->enablePowerUp();
-	}
-	if (Keyboard::getInstance()->IsKeyDown(DIK_2))
-	{
-		_powerUpItem->setEaten();
-	}
-	//xet va cham va xoa item tren map
-
 	if (_powerUpItem->IsEnable())
 	{
 		if (_powerUpItem->IsEaten())
@@ -443,7 +453,7 @@ void Map::updatePowerItem()
 				{
 					//cho quai no
 				}
-				if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
+				if (_powerUpItem->getType() == ID_POWER_SHEILD)
 				{
 					_player->ActivateShield();
 				}
@@ -465,23 +475,25 @@ void Map::checkEndGame()
 {
 	if (_player->getLife() == 0)
 	{
-		ScoreState::get()->addResultState(&_numTankDie[4]);
 		ScoreState::get()->setEndAfter(true);
 		GameState::switchState(ScoreState::get());
 		return;
 	}
 
-	if (_numEnemy == 0)
+  	if (_numEnemy == 20 && _listEnemyOnMap->size() == 0)
 	{
-		if (_player->getLife() == 0)
+		if (GameTime::DelayTime(delayEndStage))
 		{
-			ScoreState::get()->setEndAfter(true);
+			if (_player->getLife() == 0)
+			{
+				ScoreState::get()->setEndAfter(true);
+			}
+			else
+			{
+				//changeStage();
+			}
+			GameState::switchState(ScoreState::get());
 		}
-		else
-		{
-			changeStage();
-		}
-		GameState::switchState(ScoreState::get());
 	}
 
 }

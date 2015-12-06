@@ -168,8 +168,10 @@ StartingState::~StartingState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
-	SleepEx(DELAY_TIME_TO_START_PLAYING_STATE , false);
-	switchState(PlayingState::get());
+	if (GameTime::RenderFrame(_startTime, 3000))
+	{
+		switchState(PlayingState::get());
+	}
 }
 
 void StartingState::draw()
@@ -203,7 +205,7 @@ PlayingState* PlayingState::_instance = nullptr;
 PlayingState::PlayingState()
 {
 	_map = new Map(_spriteHandler);
-	GameSound::getInstance(0)->PlayRepeat(1);
+	//GameSound::getInstance(0)->PlayRepeat(1);
 	
 }
 
@@ -266,36 +268,35 @@ ScoreState* ScoreState::_instance = nullptr;
 
 ScoreState::ScoreState()
 {
-	_isEnd = true;
-	for (int i = 0; i < 4;i++)
-	{
-		_numTank[i] = 0;
-	}
+	_isEnd = false;
+	_delayTime = 10000;
 	_iconTankScore = new Sprite(_spriteHandler, ICON_TANK_SCORE_PATH, 48, 176, 1, 1);
 }
 
 void ScoreState::update()
 {
-	SleepEx(20000, false);
-	ScoreManager::getInstance()->addScore(_totalScore);
-	if(_isEnd)
+	if (GameTime::DelayTime(_delayTime))
 	{
-		GameState::switchState(EndState::get());
-	}
-	else
-	{
-
-		if (StageManager::getInstance()->getStage() == DEFAULT_MAX_STAGE)
+		ScoreManager::getInstance()->renewValue();
+		if (_isEnd)
 		{
-			//chuyen toi man hinh congration tu tao sau
+			GameState::switchState(EndState::get());
 		}
 		else
 		{
-			StageManager::getInstance()->nextStage();
-			GameState::switchState(StartingState::get());
+
+			if (StageManager::getInstance()->getStage() == DEFAULT_MAX_STAGE)
+			{
+				//chuyen toi man hinh congration tu tao sau
+				//chuc mung diem cao, end game quay lai tu dau
+			}
+			else
+			{
+				StageManager::getInstance()->nextStage();
+				GameState::switchState(StartingState::get());
+			}
 		}
 	}
-
 }
 
 void ScoreState::draw()
@@ -305,23 +306,20 @@ void ScoreState::draw()
 	_text->drawText("STAGE", POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(StageManager::getInstance()->getStage()), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(ScoreManager::getInstance()->getScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
+	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);
 	float a = BEGIN_X;
-	int tempScore;
-	_totalScore = 0;
-	for (int i = 0; i < 4;i++)
+	
+	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
 	{
-		tempScore = ScoreManager::getInstance()->CalculateScore(i, _numTank[i]);
-		_totalScore += tempScore;
-		_text->drawText(to_string(tempScore), D3DXVECTOR3(SCORE_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 4);
+		_text->drawText(to_string(ScoreManager::getInstance()->getScoreTank(i)), D3DXVECTOR3(SCORE_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 4);
 		_text->drawText("PTS", D3DXVECTOR3(PTS_POS_X,a , 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-		_text->drawText(to_string(_numTank[i]), D3DXVECTOR3(NUM_TANK_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
+		_text->drawText(to_string(ScoreManager::getInstance()->getNumTank(i)), D3DXVECTOR3(NUM_TANK_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
 		a += DISTANCE_LINE;
 	}
 	_text->drawText("______", POS_LINE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("TOTAL", POS_TOTAL_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(_totalScore), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
+	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
 }
 
 void ScoreState::enter()
@@ -342,14 +340,6 @@ ScoreState* ScoreState::get()
 void ScoreState::setEndAfter(bool isEnd)
 {
 	_isEnd = isEnd;
-}
-
-void ScoreState::addResultState(int numtank[4])
-{
-	for (int i = 0; i < 4;i++)
-	{
-		_numTank[i] = numtank[i];
-	}
 }
 
 ScoreState::~ScoreState()

@@ -4,17 +4,23 @@ class ScoreManager
 {
 public:
 	static ScoreManager* getInstance();
-	int CalculateScore(int type, int num);
-	void addScore(int score);
-	int getScore();
+	int getPlayerScore();
 	int getHighScore();
+	void addKillTankScore(int typeTank);
+	void addPowerUpScore();
+	int getScoreTank(int typeTank);
+	int getNumTank(int typeTank);
+	int getNumTank();
+	void renewValue();
 private:
 	ScoreManager();
 	~ScoreManager();
 	static ScoreManager* _instance;
-	int _score;
+	int _playerScore;
 	int _highScore;
 	int _scoreTank[4];
+	int _scorePowerUp;
+	int _numTank[4];
 };
 #endif
  

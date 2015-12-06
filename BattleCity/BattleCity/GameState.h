@@ -129,17 +129,15 @@ public:
 	virtual void enter();
 
 	static ScoreState* get();
-	void setEndAfter(bool isEnd);
 
-	void addResultState(int numtank[4]);
+	void setEndAfter(bool isEnd);
 
 private:
 	bool _isEnd;
-	int _numTank[4];
-	int _totalScore;
 	Sprite* _iconTankScore;
 	ScoreState();
 	~ScoreState();
+	int _delayTime;
 
 private:
 	static ScoreState* _instance;

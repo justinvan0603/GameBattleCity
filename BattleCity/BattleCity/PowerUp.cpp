@@ -56,8 +56,8 @@ void PowerUp::enablePowerUp()
 	srand(time(NULL));
 	_typePower = ID_POWER_BOMB + rand() % (ID_POWER_STAR - ID_POWER_BOMB + 1);
 	
-	this->_top = 0 + rand() % (100 - 0 + 1);
-	this->_left = 0 + rand() % (100 - 0 + 1);
+	this->_top = 51;//0 + rand() % (100 - 0 + 1);
+	this->_left = 100;//0 + rand() % (100 - 0 + 1);
 }
 
 PowerUp::~PowerUp()

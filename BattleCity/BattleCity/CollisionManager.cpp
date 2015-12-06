@@ -4,6 +4,8 @@
 #include "SuperHeavyTank.h"
 #include "EffectManager.h"
 #include "GameSound.h"
+#include "ScoreManager.h"
+
 CollisionManager::CollisionManager()
 {
 }
@@ -207,6 +209,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 						if (B->getId() != ID_SUPER_HEAVY_TANK)
 						{
 							//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+							ScoreManager::getInstance()->addKillTankScore(B->getId());
 							B->_isTerminated = true;
 						}
 						else
@@ -218,6 +221,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 								if (superHeavy->getHitPoint() <= 0)
 								{
 									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+									ScoreManager::getInstance()->addKillTankScore(B->getId());
 									B->_isTerminated = true;
 								}
 								else
@@ -413,29 +417,9 @@ bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 	MyRectangle broadphaseRectA = BroadphaseRect(A);
 	if (AABBCheck(&broadphaseRectA, B))
 	{
-		if (B->getType() == 1) //Star
-		{
-			A->PlayerPromoted();
-			B->setEaten();
-			return true;
-		}
-		if (B->getType() == 2) //Shield
-		{
-			A->ActivateShield();
-			B->setEaten();
-			return true;
-		}
-		if (B->getType() == 3) //Bomb
-		{
-			B->setEaten();
-			return true;
-		}
-		if (B->getType() == 4) //Freeze
-		{
-			B->setEaten();
-			return true;
-		}
-
+		ScoreManager::getInstance()->addPowerUpScore();
+		B->setEaten();
+		return true;
 	}
 	return false;
 }

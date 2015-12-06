@@ -72,10 +72,10 @@ void PlayerTank::Draw()
 			//	_currentDirection = DOWN;
 			//	_curSprite = _listSprite[DOWN];
 			//}
-		_curSprite->Render(_left, _top);
+		//_curSprite->Render(_left, _top);
 
 		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
-				//_curSprite->Render(_level - 1, _left, _top);//
+		_curSprite->Render(_level - 1, _left, _top);//
 		ShootableObject::Draw();
 		ShootableObject::DrawBullet();
 	}
@@ -222,6 +222,7 @@ int PlayerTank::getLife()
 
 void PlayerTank::ActivateShield()
 {
+	_startTime = GetTickCount();
 	this->_isActiveShield = true;
 	this->_isImmortal = true;
 }

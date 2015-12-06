@@ -29,17 +29,18 @@ public:
 	~Map();
 private:
 	PlayerTank*	_player;
-	int _numTankDie[4];
 	int** _mapMatrix;
 	int _numEnemy;
 	bool _steelBoundEagle;
 	bool _canUpdateEnemy;
 	int _lastIndexofSteel;
+	bool isPrepareRespawn;
 	DWORD _startTime;
 	fstream _mapFile;
 	SpriteMapItemMagager* _spriteItemManager;
 	Eagle* _eagle;
 	PowerUp* _powerUpItem;
+	Sprite* _respawnEffect;
 	LPD3DXSPRITE _spriteHandler;
 	LPDIRECT3DDEVICE9 d3ddev;
 	D3DXVECTOR3 getPositionFromMapMatrix(int row, int column);
@@ -50,6 +51,7 @@ private:
 	void updateMaxtrix();
 	void checkEndGame();
 	void updateEnemy();
+	void respawnAfter(int delaytime);
 	void updatePowerItem();
 	void drawMap();
 	void drawPowerUp();
@@ -63,5 +65,6 @@ private:
 	vector<Enemy*>* _listEnemy;
 	vector<Enemy*>* _listEnemyOnMap;
 	int delaytimeReSpanw;
+	int delayEndStage;
 };
 #endif

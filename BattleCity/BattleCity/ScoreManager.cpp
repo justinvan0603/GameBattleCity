@@ -1,4 +1,5 @@
 #include "ScoreManager.h"
+#include "GameDefaultConstant.h"
 
 ScoreManager* ScoreManager::_instance = nullptr;
 
@@ -11,19 +12,9 @@ ScoreManager* ScoreManager::getInstance()
 	return _instance;
 }
 
-int ScoreManager::CalculateScore(int type, int num)
+int ScoreManager::getPlayerScore()
 {
-	return _scoreTank[type] * num;;
-}
-
-void ScoreManager::addScore(int score)
-{
-	_score += score;
-}
-
-int ScoreManager::getScore()
-{
-	return _score;
+	return _playerScore;
 }
 
 int ScoreManager::getHighScore()
@@ -31,13 +22,55 @@ int ScoreManager::getHighScore()
 	return _highScore;
 }
 
+void ScoreManager::addKillTankScore(int typeTank)
+{
+	_playerScore += _scoreTank[typeTank];
+	_numTank[typeTank]++;
+}
+
+void ScoreManager::addPowerUpScore()
+{
+	_playerScore += _scorePowerUp;
+}
+
+int ScoreManager::getNumTank(int typeTank)
+{
+	return _numTank[typeTank];
+}
+
+int ScoreManager::getNumTank()
+{
+	int temp = 0;
+	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
+	{
+		temp += _numTank[i];
+	}
+	return temp;
+}
+
+void ScoreManager::renewValue()
+{
+	for (int i = 0; i < NUM_TYPE_ENEMY; i++)
+	{
+		_numTank[i] = 0;
+	}
+}
+
+int ScoreManager::getScoreTank(int typeTank)
+{
+	return _numTank[typeTank] * _scoreTank[typeTank];
+}
+
+
 ScoreManager::ScoreManager()
 {
-	_scoreTank[0] = 0;
-	_scoreTank[1] = 0;
-	_scoreTank[2] = 0;
-	_scoreTank[3] = 0;
-	_score = 0;
+	_scoreTank[0] = SCORE_MEDIUM_TANK;
+	_scoreTank[1] = SCORE_LIGHT_TANK;
+	_scoreTank[2] = SCORE_HEAVY_TANK;
+	_scoreTank[3] = SCORE_SUPER_HEAVY_TANK;
+	_scorePowerUp = SCORE_POWER_UP;
+	renewValue();
+	_playerScore = 0;
 	_highScore = 30000;
 	//get in file
 }
