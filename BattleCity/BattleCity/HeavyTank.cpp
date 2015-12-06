@@ -25,7 +25,7 @@ HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler)
 HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 {
 	this->_id = ID_HEAVY_TANK;
-	this->_level = 2;
+	this->_level = LEVEL_TWO;
 	this->_spriteHandler = spriteHandler;
 	this->_currentDirection = RIGHT;
 	this->_left = (int)position.x;
@@ -57,7 +57,7 @@ void HeavyTank::Update()
 {
 	FindNearbyObject();
 	this->Move();
-	//this->Shoot();
+	this->Shoot();
 	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
 	{
 		_isCollied = CollisionManager::CollisionPreventMove(this, *i);

@@ -4,8 +4,16 @@ GameSound* GameSound::_instance = NULL;
 GameSound::GameSound(DSound* dsound)
 {
 	_startGame = dsound->CreateSound(SOUND_START_GAME);
-	//_fire = dsound->CreateSound(SOUND_FIRE);
-
+	/*_fire = dsound->CreateSound(SOUND_FIRE);
+	_bulletExplode = dsound->CreateSound(SOUND_BULLET_EXPLODE);
+	_eatPower = dsound->CreateSound(SOUND_ITEM_EAT);
+	_enemyExplode = dsound->CreateSound(SOUND_TANK_EXPLODE);
+	_allyExplode = dsound->CreateSound(SOUND_ALLY_EXPLODE);
+	_powerAppear = dsound->CreateSound(SOUND_ITEM_APPEAR);
+	_tankEngine = dsound->CreateSound(SOUND_TANK_ENGINE);
+	_tankHit = dsound->CreateSound(SOUND_TANK_HIT);
+	_tankMove = dsound->CreateSound(SOUND_TANK_MOVE);
+	_lifeUp = dsound->CreateSound(SOUND_LIFE_UP);*/
 }
 GameSound* GameSound::getInstance(DSound* dsound)
 {

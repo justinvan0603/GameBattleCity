@@ -1,6 +1,7 @@
 #include "PlayerTank.h"
 #include "CollisionManager.h"
 #include "BulletManager.h"
+#include "GameSound.h"
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
@@ -87,6 +88,7 @@ void PlayerTank::Move()
 		_vx = 0;
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 		_vy = 0;
+	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_MOVE);
 	if (Keyboard::getInstance()->IsKeyDown(DIK_UP))
 	{
 
@@ -130,6 +132,7 @@ void PlayerTank::Shoot()
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
 	{
+		//GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
 		int _delayTime;
 		if (_level < LEVEL_THREE)
 			_delayTime = PLAYER_DEFAULT_BULLET_RELOAD_TIME;
@@ -155,6 +158,7 @@ void PlayerTank::Shoot()
 }
 void PlayerTank::Update()
 {
+	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_ENGINE);
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();

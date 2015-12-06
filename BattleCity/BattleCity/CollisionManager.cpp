@@ -3,7 +3,7 @@
 #include "PlayerTank.h"
 #include "SuperHeavyTank.h"
 #include "EffectManager.h"
-
+#include "GameSound.h"
 CollisionManager::CollisionManager()
 {
 }
@@ -135,9 +135,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			EffectManager::getInstance(0)->AddBulletEffect(position);
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
-
+				//if (B->getId() == )
 				if (B->getId() == ID_STEELWALL)
 				{
+					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
 					if (A->GetLevel() == 4)
 						B->_isTerminated = true;
 					return true;
@@ -145,11 +146,13 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				}
 				if (B->getId() == ID_WATER)
 				{
+
 					A->_isTerminated = false;
 					return true;
 				}
 				if (B->getId() == ID_BRICKWALL);
 				{
+					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
 					B->_isTerminated = true;
 					return true;
 				}
@@ -163,6 +166,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 						//B->_isTerminated = true;
 						if (B->getId() != ID_SUPER_HEAVY_TANK)
 						{
+							//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
 							B->_isTerminated = true;
 						}
 						else
@@ -171,8 +175,12 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 							if (superHeavy != NULL)
 							{
 								superHeavy->lostHitPoint();
+								//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
 								if (superHeavy->getHitPoint() == 0)
-									B->_isTerminated = true;							
+								{
+									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+									B->_isTerminated = true;
+								}
 							}
 						}
 					}
@@ -183,6 +191,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					{
 						if (!A->_isImmortal)
 						{
+							//GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
 							A->_isTerminated = true;
 						}
 					}

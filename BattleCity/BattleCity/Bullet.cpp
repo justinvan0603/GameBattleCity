@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "EffectManager.h"
 #include "CollisionManager.h"
+#include "GameSound.h"
 Bullet::Bullet(LPD3DXSPRITE spriteHandler, int ally)
 {
 	_allyObject = ally;
@@ -204,7 +205,9 @@ void Bullet::Update()
 
 	}
 
-	CollisionManager::CollisionWithScreen(this);
+	bool isCollided=  CollisionManager::CollisionWithScreen(this);
+	//if (isCollided)
+		//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
 	DynamicObject::Update();
 	
 }

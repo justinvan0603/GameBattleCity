@@ -62,26 +62,26 @@ void LightTank::Move()
 		_vy = 0;
 	if (_currentDirection == UP)
 	{
-		this->_vy = -4;// (int)DYNAMIC_OBJECT_HIGH_SPEED.y;
+		this->_vy = -DYNAMIC_OBJECT_HIGH_SPEED.y;
 		_curSprite = _listSprite[UP];
 		return;
 	}
 	if (_currentDirection == DOWN)
 	{
-		this->_vy = 4;// (int)DYNAMIC_OBJECT_HIGH_SPEED.y;
+		this->_vy = (int)DYNAMIC_OBJECT_HIGH_SPEED.y;
 		_curSprite = _listSprite[DOWN];	
 		return;
 	}
 
 	if (_currentDirection == LEFT)
 	{
-		this->_vx = -4;// (int)DYNAMIC_OBJECT_HIGH_SPEED.x;
+		this->_vx = -(int)DYNAMIC_OBJECT_HIGH_SPEED.x;
 		_curSprite = _listSprite[LEFT];
 		return;
 	}
 	if (_currentDirection == RIGHT)
 	{
-		this->_vx = 4;// (int)DYNAMIC_OBJECT_HIGH_SPEED.x;
+		this->_vx = (int)DYNAMIC_OBJECT_HIGH_SPEED.x;
 		_curSprite = _listSprite[RIGHT];
 		return;
 	}
