@@ -28,7 +28,7 @@ MyRectangle CollisionManager::BroadphaseRectWithRelativeSpeed(Object *A, Object*
 
 MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 {
-	//Ham tao broadphase co van toc tuong doi
+
 	int x, y, width, height;
 	x = A->getPositionX();
 	if (A->getVelocityX() < 0)
@@ -46,25 +46,71 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 {
 	// A chuyển động B đứng yên
 
-	float v2x, v2y;
-	v2x = B->getVelocityX();
-	v2y = B->getVelocityY();
-	A->setVelocityX(A->getVelocityX() - v2x);
-	A->setVelocityY(A->getVelocityY() - v2y);
+	//float v2x, v2y;
+	//v2x = B->getVelocityX();
+	//v2y = B->getVelocityY();
+	//A->setVelocityX(A->getVelocityX() - v2x);
+	//A->setVelocityY(A->getVelocityY() - v2y);
 
-	
+	//
+	//MyRectangle broadphase = BroadphaseRect(A);
+	//if (AABBCheck(&broadphase, B))
+	//{
+	//	
+	//	B->setVelocityX(0);
+	//	B->setVelocityY(0);
+	//	A->setVelocityX(0);
+	//	A->setVelocityY(0);
+
+	//	if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
+	//	{
+	//		//A->setVelocityX(0);
+	//		if (A->getLeft() < B->getLeft())
+	//		{
+	//			A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
+
+	//			return true;
+	//		}
+	//		if (A->getRight() > B->getRight())
+	//		{
+	//			A->setPositionX(A->getPositionX() + B->getRight() - A->getLeft() + 1);
+
+	//			return true;
+	//		}
+	//		
+
+	//	}
+
+	//	if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
+	//	{
+	//		//A->setVelocityY(0);
+	//		if (A->getTop() < B->getTop())
+	//		{
+	//			A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
+
+	//			return true;
+	//		}
+	//		if (A->getBottom() > B->getBottom())
+	//		{
+	//			A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
+
+	//			return true;
+	//		}
+	//		
+	//	}
+	//	
+	//	return true;
+	//}
+	//A->setVelocityX(A->getVelocityX() + v2x);
+	//A->setVelocityY(A->getVelocityY() + v2y);
+	//return false;
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
-		
-		B->setVelocityX(0);
-		B->setVelocityY(0);
-		A->setVelocityX(0);
-		A->setVelocityY(0);
-
+		A->setVelocityX(SPEED_NO);
+		A->setVelocityY(SPEED_NO);
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
-			//A->setVelocityX(0);
 			if (A->getLeft() < B->getLeft())
 			{
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
@@ -77,13 +123,10 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 
 				return true;
 			}
-			
-
 		}
 
 		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
 		{
-			//A->setVelocityY(0);
 			if (A->getTop() < B->getTop())
 			{
 				A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
@@ -96,13 +139,10 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 
 				return true;
 			}
-			
 		}
-		
+
 		return true;
 	}
-	A->setVelocityX(A->getVelocityX() + v2x);
-	A->setVelocityY(A->getVelocityY() + v2y);
 	return false;
 }
 void CollisionManager::CollisionStopMoving(Object* A, Object* B)
@@ -201,14 +241,14 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				}
 				else
 				{
-					if (A->getId() == ID_PLAYER)
-					{
-						if (!A->_isImmortal)
-						{
-							//GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
-							A->_isTerminated = true;
-						}
-					}
+					//if (B->getId() == ID_PLAYER)
+					//{
+					//	if (!B->_isImmortal)
+					//	{
+					//		//GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
+					//		B->_isTerminated = true;
+					//	}
+					//}
 				}
 			}
 
@@ -262,20 +302,24 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 	{
 		A->setVelocityX(SPEED_NO);
 		A->setVelocityY(SPEED_NO);
+
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
+
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
-
+				B->RandomChangeDirection();
+				return true;
 
 			}
 			if (A->getRight() > B->getRight())
 			{
 				A->setPositionX(A->getPositionX() + B->getRight() - A->getLeft() + 1);
-
+				B->RandomChangeDirection();
+				return true;
 
 			}
 		}
@@ -284,21 +328,25 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 			if (A->getTop() < B->getTop())
 			{
 				A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
-
+				B->RandomChangeDirection();
+				return true;
 
 			}
 			if (A->getBottom() > B->getBottom())
 			{
 				A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
+				B->RandomChangeDirection();
+				return true;
 			}
 		}
-		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
-		{
-			if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
-				B->InvertDirection();
-			return true;
-		}
-		B->RandomChangeDirection();
+		//if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+		//{
+		//	if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
+		//		B->InvertDirection();
+		//	return true;
+		//}
+
+		//B->RandomChangeDirection();
 		return true;
 	}
 	return false;
