@@ -292,5 +292,7 @@
 //OBJECT TYPE
 #define ENEMY_OBJECT_TYPE 1
 
+
+
 #endif // ! __GAME_DEFAULT_CONSTANT__
 
