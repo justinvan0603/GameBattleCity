@@ -8,6 +8,7 @@ SteelWall::SteelWall()
 
 SteelWall::SteelWall(Sprite* sprite, int typeSteel, D3DXVECTOR3 pos)
 {
+	this->_id = ID_STEELWALL;
 	this->_typeSteel = typeSteel;
 	this->_left = (int)pos.x;
 	this->_top = (int)pos.y;
