@@ -19,11 +19,11 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_vy = DEFAULT_PLAYER_SPEED_Y;
 	this->_hitPoint = DEFAULT_PLAYER_HP;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
-	this->_listSprite[UP] = new Sprite(_spriteHandler, PLAYER_SPRITE_UP_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[LEFT] = new Sprite(_spriteHandler, PLAYER_SPRITE_LEFT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_shieldEffect = new Effect(_spriteHandler, EFFECT_SHIELD, SPRITE_WIDTH, SPRITE_HEIGHT, 2, 2);
+	this->_listSprite[UP] = new Sprite(_spriteHandler, PLAYER_SPRITE_UP_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
+	this->_listSprite[LEFT] = new Sprite(_spriteHandler, PLAYER_SPRITE_LEFT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
+	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
+	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
+	this->_shieldEffect = new Effect(_spriteHandler, EFFECT_SHIELD, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE_SHIELD, NUMB_OF_SPRITE_SHIELD);
 	_curSprite = this->_listSprite[UP];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
@@ -179,10 +179,18 @@ void PlayerTank::Update()
 
 		(*i)->Update();
 	}
-	
+
 	CollisionManager::CollisionWithScreen(this);
+
 	ShootableObject::CleanBulletList();
 	DynamicObject::Update();
+	if (_isTerminated)
+	{
+		if (_life > 0)
+		{
+			Respawn();
+		}
+	}
 }
 void PlayerTank::Respawn()
 {
