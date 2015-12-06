@@ -174,16 +174,26 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 							SuperHeavyTank* superHeavy = dynamic_cast<SuperHeavyTank*>(B);
 							if (superHeavy != NULL)
 							{
-								if (superHeavy->getHitPoint() == 0)
+								superHeavy->lostHitPoint();
+								if (superHeavy->getHitPoint() <= 0)
 								{
 									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
 									B->_isTerminated = true;
 								}
 								else
 								{
-									superHeavy->lostHitPoint();
 									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
 								}
+								//if (superHeavy->getHitPoint() == 0)
+								//{
+								//	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+								//	B->_isTerminated = true;
+								//}
+								//else
+								//{
+								//	superHeavy->lostHitPoint();
+								//	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
+								//}
 								
 							}
 						}
@@ -284,6 +294,8 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 		}
 		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
 		{
+			if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
+				B->InvertDirection();
 			return true;
 		}
 		B->RandomChangeDirection();
