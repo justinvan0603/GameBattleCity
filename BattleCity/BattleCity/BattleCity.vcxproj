@@ -26,6 +26,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="HeavyTank.cpp" />
+    <ClCompile Include="Ice.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LightTank.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -44,6 +45,8 @@
     <ClCompile Include="SteelWall.cpp" />
     <ClCompile Include="SuperHeavyTank.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Trees.cpp" />
+    <ClCompile Include="Water.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -65,6 +68,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="HeavyTank.h" />
+    <ClInclude Include="Ice.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LightTank.h" />
     <ClInclude Include="Map.h" />
@@ -83,6 +87,8 @@
     <ClInclude Include="SteelWall.h" />
     <ClInclude Include="SuperHeavyTank.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="Trees.h" />
+    <ClInclude Include="Water.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

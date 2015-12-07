@@ -54,7 +54,7 @@
 #define ID_STEELWALL 8
 #define ID_TREES	 9
 #define ID_WATER	 10
-#define IF_ICE		 11
+#define ID_ICE		 11
 
 //Bullet
 #define ID_BULLET 20

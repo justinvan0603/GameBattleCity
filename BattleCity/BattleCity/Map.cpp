@@ -6,11 +6,16 @@
 #include "SuperHeavyTank.h"
 #include "BulletManager.h"
 #include "EffectManager.h"
+#include "Water.h"
+#include "Trees.h"
+#include "Ice.h"
+
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	delayEndStage = 5000;
 	delaytimeReSpanw = 0;
 	isPrepareRespawn = false;
+	_maxEnemy = MAX_ENEMY;
 	//
 	_startTime = GetTickCount();
 	_mapMatrix = new int*[NUM_ROW_TILE];
@@ -38,10 +43,24 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 
 void Map::changeStage()
 {
+	int numOfTypeEnemy[4];
+	string orderAppear;
 	string stringLine;
+	int tempMaxEnemy;
 	int i, j;	
 	if (!GetFileMap())
 		return;
+	getline(_mapFile, stringLine);
+	tempMaxEnemy = std::stoi(stringLine);
+	if (tempMaxEnemy > _maxEnemy)
+		_maxEnemy = tempMaxEnemy;
+	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
+	{
+		getline(_mapFile, stringLine);
+		numOfTypeEnemy[i] = std::stoi(stringLine);
+	}
+	getline(_mapFile, stringLine);
+	orderAppear = stringLine;
 	//read matrix map
 	i = 0;
 	while (!_mapFile.eof())
@@ -60,7 +79,7 @@ void Map::changeStage()
 	InitColisObject();
 	_mapFile.close();
 	_player->InitMapData(_mapMatrix, _colisObj);
-	InitListEnemy();
+	InitListEnemy(numOfTypeEnemy,orderAppear);
 	 
 }
 
@@ -78,52 +97,50 @@ void Map::InitColisObject()
 			if (type == 0 || type == 1 || type == 10 || type == 11)
 				temp[type].push_back(new BrickWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 			if(type == 2 || type == 3 || type == 12 || type == 13)
-			{
 				temp[type].push_back(new SteelWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-				/*if(i < 46)
-				{
-					_lastIndexofSteel = _mapMatrix[i][j] / 100;
-				}
-				if(i==46)
-				{
-					if(j < 22)
-					{
-						_lastIndexofSteel = _mapMatrix[i][j] / 100;
-					}
-				}*/
-					
-			}
+			if (type == 4 || type == 5 || type == 14 || type == 15)
+				temp[type].push_back(new Water(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+			if (type == 6 || type == 7 || type == 16 || type == 17)
+				temp[type].push_back(new Trees(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+			if (type == 8 || type == 9 || type == 18 || type == 19)
+				temp[type].push_back(new Ice(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+
 		}
 	}
 	for (int i = 0; i < 20;i++)
 		_colisObj->push_back(temp[i]);
 }
 
-void Map::InitListEnemy()
+void Map::InitListEnemy(int numOfEnemy[], string order)
 {
 	//a[] & order 
 	//0 - medium tank
 	//1 - light tank
 	//2 - heavy  tank
 	//3 - super heavy tank
-	int a[4] = { 7,6,4,3 };
+	/*int numOfEnemy[4];
+	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
+	{
+		numOfEnemy[i] = numEnemy[i];
+	}*/
 	//Thu tu xuat hien cac loai tank 
-	string order = "0123"; //Neu thay yeu cau random thi viet them ham random
+	//string order = orderAppear;
+
 	float distance = 0.0f;
 	int num = 1;
 	vector<MediumTank*>* listMedium = new vector<MediumTank*>;
 	vector<LightTank*>* listLight = new vector<LightTank*>;
 	vector<HeavyTank*>* listHeavy = new vector<HeavyTank*>;
 	vector<SuperHeavyTank*>* listSuper = new vector<SuperHeavyTank*>;
-	for (int i = 0; i < MAX_ENEMY; i++)
+	for (int i = 0; i < _maxEnemy; i++)
 	{
 		if (distance > MAX_RESPAWN_POS_X)
 			distance = 0.0f;
-		if(a[ID_MEDIUM_TANK] > 0)
+		if(numOfEnemy[ID_MEDIUM_TANK] > 0)
 		{
 			MediumTank* temp;
 			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[ID_MEDIUM_TANK] -= 1;
+			numOfEnemy[ID_MEDIUM_TANK] -= 1;
 			if(num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -133,11 +150,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if(a[ID_LIGHT_TANK] > 0)
+		if(numOfEnemy[ID_LIGHT_TANK] > 0)
 		{
 			LightTank* temp;
 			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[ID_LIGHT_TANK] -= 1;
+			numOfEnemy[ID_LIGHT_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -147,11 +164,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if (a[ID_HEAVY_TANK] > 0)
+		if (numOfEnemy[ID_HEAVY_TANK] > 0)
 		{
 			HeavyTank* temp;
 			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[ID_HEAVY_TANK] -= 1;
+			numOfEnemy[ID_HEAVY_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -161,11 +178,11 @@ void Map::InitListEnemy()
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
 		}
-		if (a[ID_SUPER_HEAVY_TANK] > 0)
+		if (numOfEnemy[ID_SUPER_HEAVY_TANK] > 0)
 		{
 			SuperHeavyTank* temp;
 			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
-			a[ID_SUPER_HEAVY_TANK] -= 1;
+			numOfEnemy[ID_SUPER_HEAVY_TANK] -= 1;
 			if (num == 4 || num == 11 || num == 18)
 			{
 				//set tank has powerup
@@ -325,7 +342,7 @@ void Map::drawRightMenu()
 {
 	///////////Draw khung enemy goc phai
 	float x, y = 0;
-	int num_enemy = MAX_ENEMY - _numEnemy;
+	int num_enemy = _maxEnemy - _numEnemy;
 	for (int i = 0; i < num_enemy; i++)
 	{
 		if (i % 2 == 0)
@@ -480,7 +497,7 @@ void Map::checkEndGame()
 		return;
 	}
 
-  	if (_numEnemy == 20 && _listEnemyOnMap->size() == 0)
+  	if (_numEnemy == _maxEnemy && _listEnemyOnMap->size() == 0)
 	{
 		if (GameTime::DelayTime(delayEndStage))
 		{

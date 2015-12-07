@@ -2,42 +2,35 @@
 
 
 
-BrickWall::BrickWall(Sprite* sprite, int typeBrick, D3DXVECTOR3 pos)
+BrickWall::BrickWall(Sprite* sprite, int type, D3DXVECTOR3 pos):StaticObject(sprite,type,pos)
 {
-	this->_typeBrick = typeBrick;
-	this->_left = (int)pos.x;
-	this->_top = (int)pos.y;
-	this->_id = STATIC_OBJECT;
-	_isTerminated = false;
-	_image = sprite; //new Sprite(_spriteHandler, MAP_RESOURCE_PATH_BRICKWALL, TILE_WIDTH, TILE_HEIGHT, 1, 1);
+	this->_isTerminated = false;
+	this->_id = ID_BRICKWALL;
 }
 
 BrickWall::BrickWall()
 {
-
+	this->_isTerminated = false;
+	this->_id = ID_BRICKWALL;
 }
 
 void BrickWall::Draw()
 {
-	D3DXVECTOR3 position((float)this->_left, (float)this->_top, 0.0f);
-	_image->Render(_typeBrick, position);
+	StaticObject::Draw();
 }
 
 void BrickWall::Init(Sprite* sprite, int type, D3DXVECTOR3 pos)
 {
-	this->_typeBrick = type;
-	this->_left = (int)pos.x;
-	this->_top = (int)pos.y;
-	_image = sprite; //new Sprite(_spriteHandler, MAP_RESOURCE_PATH_BRICKWALL, TILE_WIDTH, TILE_HEIGHT, 1, 1);
+	StaticObject::Init(sprite, type, pos);
 }
 
 void BrickWall::Update()
 {
+	StaticObject::Update();
 }
 
 
 BrickWall::~BrickWall()
 {
-	if (_image != NULL)
-		_image = NULL;
+	
 }

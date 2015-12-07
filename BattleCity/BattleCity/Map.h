@@ -31,10 +31,12 @@ private:
 	PlayerTank*	_player;
 	int** _mapMatrix;
 	int _numEnemy;
-	bool _steelBoundEagle;
-	bool _canUpdateEnemy;
-	int _lastIndexofSteel;
 	bool isPrepareRespawn;
+	int delaytimeReSpanw;
+	int delayEndStage;
+	vector<vector<StaticObject*>>* _colisObj;
+	vector<Enemy*>* _listEnemy;
+	vector<Enemy*>* _listEnemyOnMap;
 	DWORD _startTime;
 	fstream _mapFile;
 	SpriteMapItemMagager* _spriteItemManager;
@@ -47,7 +49,7 @@ private:
 	D3DXVECTOR2 getPositionObjectInMapMatrix(int x, int y);
 	bool GetFileMap();
 	void InitColisObject();
-	void InitListEnemy();
+	void InitListEnemy(int numOfEnemy[], string order);
 	void updateMaxtrix();
 	void checkEndGame();
 	void updateEnemy();
@@ -57,14 +59,11 @@ private:
 	void drawPowerUp();
 	void drawEnemy();
 	void drawRightMenu();
-
 	//Xoa enemy da bi ban ra khoi list (JT)
 	void ClearDestroyedEnemy();
-
-	vector<vector<StaticObject*>>* _colisObj;
-	vector<Enemy*>* _listEnemy;
-	vector<Enemy*>* _listEnemyOnMap;
-	int delaytimeReSpanw;
-	int delayEndStage;
+	int _maxEnemy;
+	bool _steelBoundEagle;
+	bool _canUpdateEnemy;
+	int _lastIndexofSteel;
 };
 #endif

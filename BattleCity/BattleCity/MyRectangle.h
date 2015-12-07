@@ -26,6 +26,6 @@ public:
 	void setVelocityX(int vx);
 	void setVelocityY(int vy);
 	void setRelativeVelocity(MyRectangle* moveObject);
-	~MyRectangle();
+	virtual ~MyRectangle();
 };
 
