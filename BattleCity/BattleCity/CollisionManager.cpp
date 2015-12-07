@@ -174,12 +174,13 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			D3DXVECTOR2 position;
 			position.x = A->getLeft() - SPRITE_WIDTH/2;
 			position.y = A->getTop() - SPRITE_HEIGHT/2;
-			EffectManager::getInstance(0)->AddBulletEffect(position);
+			
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
 				//if (B->getId() == )
 				if (B->getId() == ID_STEELWALL)
 				{
+					EffectManager::getInstance(0)->AddBulletEffect(position);
 					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
 					if (A->GetLevel() == LEVEL_FOUR)
 						B->_isTerminated = true;
@@ -194,6 +195,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				}
 				if (B->getId() == ID_BRICKWALL);
 				{
+					EffectManager::getInstance(0)->AddBulletEffect(position);
 					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
 					B->_isTerminated = true;
 					return true;

@@ -30,7 +30,7 @@ void Enemy::Shoot()
 		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
 		_startTime = GetTickCount();
 	}
-	else if (GameTime::RenderFrame(_startTime, 2000))
+	else if (GameTime::RenderFrame(_startTime, 3000))
 	{
 		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
 		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));

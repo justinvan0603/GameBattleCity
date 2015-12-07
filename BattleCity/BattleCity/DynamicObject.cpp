@@ -104,7 +104,9 @@ void DynamicObject::FindNearbyObject()
 				value = _map[currentObjectRow-1][i];
 				if (value != -1)
 				{
-					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
+						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
+						_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			}
 
@@ -113,6 +115,9 @@ void DynamicObject::FindNearbyObject()
 				value = _map[currentObjectRow + nearbyObjectCountHeight][i];
 				if (value != -1)
 				{
+					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
+						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
+		
 					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			} 
@@ -129,6 +134,9 @@ void DynamicObject::FindNearbyObject()
 				value = _map[i][currentObjectColumn - 1];
 				if (value != -1)
 				{
+					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
+						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
+
 					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			}
@@ -138,6 +146,9 @@ void DynamicObject::FindNearbyObject()
 				value = _map[i][currentObjectColumn + nearbyObjectCountWidth];
 				if (value != -1)
 				{
+					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
+						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
+			
 					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			}

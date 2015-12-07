@@ -3,7 +3,8 @@
 class Enemy : public ShootableObject
 {
 private:
-	
+	bool _isBonusTank;
+
 	bool _isStopped;
 public:
 	bool _isCollied;
