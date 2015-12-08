@@ -511,7 +511,8 @@ int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, in
 	{
 		isEnemyCollided = false;
 		isPlayerCollided = false;
-		for (int i = 0; i < 3; i++)
+		int size = listposition->size();
+		for (int i = 0; i < size; i++)
 		{
 			if (i != currentposition)
 			{
@@ -532,6 +533,11 @@ int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, in
 				{
 					return i;
 				}
+			}
+
+			if (!isEnemyCollided && !isPlayerCollided)
+			{
+				return i;
 			}
 
 		}

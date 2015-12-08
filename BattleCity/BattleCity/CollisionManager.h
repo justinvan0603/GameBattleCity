@@ -1,8 +1,11 @@
 #pragma once
 #include "Object.h"
 #include "Bullet.h"
-#include "PlayerTank.h"
+#include "Enemy.h"
 #include "PowerUp.h"
+#include "PlayerTank.h"
+#include <vector>
+using namespace std;
 #include "Enemy.h"
 
 class CollisionManager
