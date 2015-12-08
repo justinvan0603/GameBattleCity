@@ -18,8 +18,7 @@ void Trees::Update()
 
 void Trees::Draw()
 {
-	D3DXVECTOR3 position((float)this->_left, (float)this->_top, 1.0f);
-	_image->Render(_type, position);
+	StaticObject::Draw();
 }
 
 void Trees::Init(Sprite* sprite, int type, D3DXVECTOR3 pos)

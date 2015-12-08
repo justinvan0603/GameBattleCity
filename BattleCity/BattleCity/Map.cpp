@@ -16,7 +16,12 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 	delaytimeReSpanw = 0;
 	isPrepareRespawn = false;
 	_maxEnemy = MAX_ENEMY;
-	//
+	//init rectangleRespawn
+	_rectangleRespawn = new vector<MyRectangle*>;
+	for (int i = 0; i < 3;i++)
+	{
+		_rectangleRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
+	}
 	_startTime = GetTickCount();
 	_mapMatrix = new int*[NUM_ROW_TILE];
 	_steelBoundEagle = false;
@@ -47,7 +52,6 @@ void Map::changeStage()
 	string orderAppear;
 	string stringLine;
 	int tempMaxEnemy;
-	int i, j;	
 	if (!GetFileMap())
 		return;
 	getline(_mapFile, stringLine);
@@ -62,6 +66,7 @@ void Map::changeStage()
 	getline(_mapFile, stringLine);
 	orderAppear = stringLine;
 	//read matrix map
+	int i, j;
 	i = 0;
 	while (!_mapFile.eof())
 	{
@@ -92,8 +97,7 @@ void Map::InitColisObject()
 		for (short j = 0; j < NUM_COLUMN_TILE; j++)
 		{
 			type = _mapMatrix[i][j] % 100;
-			//chua lam water
-			
+
 			if (type == 0 || type == 1 || type == 10 || type == 11)
 				temp[type].push_back(new BrickWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 			if(type == 2 || type == 3 || type == 12 || type == 13)
@@ -104,7 +108,6 @@ void Map::InitColisObject()
 				temp[type].push_back(new Trees(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 			if (type == 8 || type == 9 || type == 18 || type == 19)
 				temp[type].push_back(new Ice(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-
 		}
 	}
 	for (int i = 0; i < 20;i++)
@@ -113,18 +116,12 @@ void Map::InitColisObject()
 
 void Map::InitListEnemy(int numOfEnemy[], string order)
 {
-	//a[] & order 
-	//0 - medium tank
-	//1 - light tank
-	//2 - heavy  tank
-	//3 - super heavy tank
-	/*int numOfEnemy[4];
-	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
-	{
-		numOfEnemy[i] = numEnemy[i];
-	}*/
-	//Thu tu xuat hien cac loai tank 
-	//string order = orderAppear;
+	//a[]
+	//	0 - medium tank
+	//	1 - light tank
+	//	2 - heavy  tank
+	//	3 - super heavy tank
+	//order - Thu tu xuat hien cac loai tank 
 
 	float distance = 0.0f;
 	int num = 1;
@@ -236,24 +233,9 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 		}
 		i++;
 	}
-	
 
 }
 
-
-void Map::updateMaxtrix()
-{
-	//muon cho gach nam phia duoi ngang bang dai bang thi hay luu index cua steel truoc dong 46 cot 22
-	int type;
-	for (int i = 46; i < 52;i++)
-	{
-		for (int j = 22; j < 52;j++)
-		{
-			type = _mapMatrix[i][j] % 100;
-
-		}
-	}
-}
 
 bool Map::GetFileMap()
 {
@@ -271,13 +253,33 @@ bool Map::GetFileMap()
 void Map::Draw()
 {
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
-	drawRightMenu();
+	drawRightMenu();	
 	drawMap();
-	_player->Draw();
-	drawPowerUp();
+	_player->Draw(); 
 	drawEnemy();
+	drawTrees();
+	drawPowerUp();
 	BulletManager::getInstance()->Draw();
 	EffectManager::getInstance(0)->Draw();
+}
+
+void Map::drawTrees()
+{
+	int n = _colisObj->size();
+	for (int i = 0; i < n; i++)
+	{
+		if (_colisObj->at(i).size() != 0)
+		{
+			if (_colisObj->at(i).at(0)->getId() != ID_TREES)
+				continue;
+			int m = _colisObj->at(i).size();
+			for (int j = 0; j < m; j++)
+			{
+				if (_colisObj->at(i).at(j) != NULL)
+					_colisObj->at(i).at(j)->Draw();
+			}
+		}
+	}
 }
 
 void Map::drawMap()
@@ -296,11 +298,16 @@ void Map::drawMap()
 	int n = _colisObj->size();
 	for (int i = 0; i < n; i++)
 	{
-		int m = _colisObj->at(i).size();
-		for (int j = 0; j < m; j++)
+		if (_colisObj->at(i).size() != 0)
 		{
-			if (_colisObj->at(i).at(j) != NULL)
-				_colisObj->at(i).at(j)->Draw();
+			if (_colisObj->at(i).at(0)->getId() == ID_TREES)
+				continue;
+			int m = _colisObj->at(i).size();
+			for (int j = 0; j < m; j++)
+			{
+				if (_colisObj->at(i).at(j) != NULL)
+					_colisObj->at(i).at(j)->Draw();
+			}
 		}
 	}
 	_eagle->Draw();
@@ -341,7 +348,7 @@ void Map::drawEnemy()
 void Map::drawRightMenu()
 {
 	///////////Draw khung enemy goc phai
-	float x, y = 0;
+	float x, y;
 	int num_enemy = _maxEnemy - _numEnemy;
 	for (int i = 0; i < num_enemy; i++)
 	{
@@ -422,6 +429,27 @@ void Map::updateEnemy()
 	}
 }
 
+bool Map::checkCollisionRespawnArea()
+{
+	int index;
+	for (index = 0; index < 3; index++)
+	{
+		if(_rectangleRespawn->at(index)->getLeft() == _listEnemy->front()->getLeft())
+			break;
+	}
+	int colli = CollisionManager::FindRespawnPosition(_rectangleRespawn, index, _player, _listEnemyOnMap);
+	if ( colli != index)
+	{
+		if(colli != -1)
+		{
+			_listEnemy->front()->setPositionX(_rectangleRespawn->at(colli)->getLeft());
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
 void Map::respawnAfter(int delaytime)
 {
 	delaytimeReSpanw += 50;
@@ -438,8 +466,13 @@ void Map::respawnAfter(int delaytime)
 	}
 	if (delaytimeReSpanw > delaytime)
 	{
+
 		isPrepareRespawn = false;
 		delaytimeReSpanw = 0;
+		if(checkCollisionRespawnArea())
+		{
+			return;
+		}
 		_listEnemyOnMap->push_back(_listEnemy->front());
 		_listEnemy->erase(_listEnemy->begin());
 		_numEnemy++;

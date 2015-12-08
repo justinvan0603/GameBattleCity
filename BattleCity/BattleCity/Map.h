@@ -20,8 +20,6 @@ public:
 	Map(LPD3DXSPRITE spriteHandler);
 	void changeStage();
 	void Draw();
-
-
 	void Update();
 	vector<vector<StaticObject*>>* getColisObject();
 	Eagle* getEagleObject();
@@ -50,18 +48,21 @@ private:
 	bool GetFileMap();
 	void InitColisObject();
 	void InitListEnemy(int numOfEnemy[], string order);
-	void updateMaxtrix();
 	void checkEndGame();
 	void updateEnemy();
+	bool checkCollisionRespawnArea();
 	void respawnAfter(int delaytime);
 	void updatePowerItem();
 	void drawMap();
+	void drawTrees();
 	void drawPowerUp();
 	void drawEnemy();
 	void drawRightMenu();
 	//Xoa enemy da bi ban ra khoi list (JT)
 	void ClearDestroyedEnemy();
 	int _maxEnemy;
+	vector<MyRectangle*>* _rectangleRespawn;
+
 	bool _steelBoundEagle;
 	bool _canUpdateEnemy;
 	int _lastIndexofSteel;

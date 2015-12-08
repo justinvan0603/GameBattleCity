@@ -10,7 +10,7 @@ Object::~Object()
 
 int Object::getId()
 {
-	return this->_id;
+  	return this->_id;
 }
 int Object::getObjectType()
 {

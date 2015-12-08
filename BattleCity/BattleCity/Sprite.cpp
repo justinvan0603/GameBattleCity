@@ -20,7 +20,7 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 	result = D3DXGetImageInfoFromFile(Path, &info);
 	if (result != D3D_OK)
 	{
-		int i = 10;
+		return;
 	}
 
 	LPDIRECT3DDEVICE9 d3ddv;
@@ -109,26 +109,6 @@ void Sprite::Render(int X, int Y)
 		NULL,
 		&position,
 		D3DCOLOR_XRGB(255, 255,255 ));
-	_SpriteHandler->End();
-
-}
-
-void Sprite::Render(D3DXVECTOR3 Location, D3DCOLOR transcolor)
-{
-	RECT srect;
-
-	srect.left = (_Index % _SpritePerRow) * (_Width);
-	srect.top = (_Index / _SpritePerRow) * (_Height);
-	srect.right = srect.left + _Width - 1;
-	srect.bottom = srect.top + _Height - 1;
-
-	_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-	this->_SpriteHandler->Draw(
-		_Image,
-		&srect,
-		NULL,
-		&Location,
-		D3DCOLOR_XRGB(99, 99, 99));
 	_SpriteHandler->End();
 }
 
