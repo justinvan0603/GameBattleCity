@@ -3,6 +3,8 @@
 #include "Bullet.h"
 #include "PlayerTank.h"
 #include "PowerUp.h"
+#include "Enemy.h"
+
 class CollisionManager
 {
 public:
@@ -18,7 +20,7 @@ public:
 	static bool CollisionChangeDirection(DynamicObject *A, DynamicObject *B);
 	static bool CollisionEnemy(DynamicObject* A, DynamicObject* B);
 	static bool CollisionWithItem(PlayerTank* A, PowerUp *B);
-	static int FindRespawnPosition(MyRectangle** listposition, int currentposition, PlayerTank* A, vector<Enemy*> enemyOnMap);
+	static int FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, PlayerTank* A, vector<Enemy*>* enemyOnMap);
 //	static bool CollisionPlayerWithEnemy(PlayerTank* player, vector<Enemy*> listEnemy);
 	//static void CalculateSpeedAfterCollision(Object* A, Object* B);
 	~CollisionManager();

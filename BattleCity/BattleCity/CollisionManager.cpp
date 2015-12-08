@@ -368,7 +368,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
 
-		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
+		/*if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
@@ -452,7 +452,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 					return true;
 				}
 			}
-		}
+		}*/
 
 		if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
 		{
@@ -484,20 +484,20 @@ bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 	return false;
 }
 
-int CollisionManager::FindRespawnPosition(MyRectangle** listposition, int currentposition, PlayerTank* A, vector<Enemy*> enemyOnMap)
+int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, PlayerTank* A, vector<Enemy*>* enemyOnMap)
 {
 	MyRectangle playerBroadphaseRect = BroadphaseRect(A);
 	bool isPlayerCollided = false;
 	bool isEnemyCollided = false;
-	if (AABBCheck(&playerBroadphaseRect, listposition[currentposition]))
+	if (AABBCheck(&playerBroadphaseRect, listposition->at(currentposition)))
 	{
 		isPlayerCollided = true;
 	}
-	int length = enemyOnMap.size();
+	int length = enemyOnMap->size();
 	for (int i = 0; i < length; i++)
 	{
-		MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap[i]);
-		if (AABBCheck(&enemyBroadphase, listposition[currentposition]))
+		MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap->at(i));
+		if (AABBCheck(&enemyBroadphase, listposition->at(currentposition)))
 		{
 			isEnemyCollided = true;
 			break;
@@ -515,14 +515,14 @@ int CollisionManager::FindRespawnPosition(MyRectangle** listposition, int curren
 		{
 			if (i != currentposition)
 			{
-				if (AABBCheck(&playerBroadphaseRect, listposition[i]))
+				if (AABBCheck(&playerBroadphaseRect, listposition->at(i)))
 				{
 					isPlayerCollided = true;
 				}
-				for (int j= 0; i < length; i++)
+				for (int j= 0; j < length; j++)
 				{
-					MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap[j]);
-					if (AABBCheck(&enemyBroadphase, listposition[i]))
+					MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap->at(j));
+					if (AABBCheck(&enemyBroadphase, listposition->at(i)))
 					{
 						isEnemyCollided = true;
 						break;
