@@ -25,7 +25,7 @@ void BonusTank::Draw()
 	if (!_isTerminated)
 	{
 		_curSprite->Render(_left, _top);
-		ShootableObject::DrawBullet();
+		
 		ShootableObject::Draw();
 
 	}
@@ -72,11 +72,7 @@ void BonusTank::Update()
 	{
 		CollisionManager::CollisionPreventMove(this, *i);
 	}
-	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	{
 
-		(*i)->Update();
-	}
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		_isCollied = true;

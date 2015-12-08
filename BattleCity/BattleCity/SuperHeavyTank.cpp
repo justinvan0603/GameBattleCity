@@ -37,7 +37,7 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
 	this->_listSprite[DOWN] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, 3,3);
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
-	_curSprite = _listSprite[RIGHT];
+	_curSprite = _listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
@@ -51,7 +51,7 @@ void SuperHeavyTank::Draw()
 		_curSprite->Render(_hitPoint-1,_left, _top);
 
 	}
-	ShootableObject::DrawBullet();
+	//ShootableObject::DrawBullet();
 }
 void SuperHeavyTank::Update()
 {

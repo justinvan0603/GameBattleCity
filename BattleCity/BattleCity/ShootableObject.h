@@ -7,7 +7,7 @@ class ShootableObject : public DynamicObject
 {
 protected:
 	bool isShooting;
-	vector<Bullet*> _listBullet;
+	//vector<Bullet*> _listBullet;
 	DWORD _startTime;
 
 public:
@@ -16,9 +16,9 @@ public:
 	virtual void Move() = 0;
 	virtual void Update() = 0;
 	D3DXVECTOR2 CalculateBulletPosition(int left, int top, MoveDirection currentDirection);
-	vector<Bullet*> getListBullet();
-	void DrawBullet();
-	void CleanBulletList();
+	//vector<Bullet*> getListBullet();
+	//void DrawBullet();
+	//void CleanBulletList();
 	~ShootableObject();
 };
 

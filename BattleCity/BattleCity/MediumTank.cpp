@@ -37,7 +37,7 @@ MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[DOWN] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	_curSprite = _listSprite[RIGHT];
+	_curSprite = _listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
@@ -53,7 +53,7 @@ void MediumTank::Draw()
 
 
 	}
-	ShootableObject::DrawBullet();
+	//ShootableObject::DrawBullet();
 }
 void MediumTank::Update()
 {

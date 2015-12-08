@@ -13,7 +13,7 @@ private: //Singletton Pattern
 	EffectManager(LPD3DXSPRITE);
 	~EffectManager();
 public:
-	static EffectManager* getInstance(LPD3DXSPRITE);
+	static EffectManager* getInstance(LPD3DXSPRITE = 0);
 public:
 	void AddBulletEffect(D3DXVECTOR2 position);
 	void AddDestroyEffect(D3DXVECTOR2 position);

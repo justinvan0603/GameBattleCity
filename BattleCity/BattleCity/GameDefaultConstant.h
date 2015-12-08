@@ -62,10 +62,10 @@
 #define DEFAULT_BULLET_SPEED_Y 6
 #define BULLET_PROMOTED_SPEED_X 7
 #define BULLET_PROMOTED_SPEED_Y 7
-#define BULLET_SPRITE_UP_PATH		"bullet-up.png"
-#define BULLET_SPRITE_DOWN_PATH		"bullet-down.png"
-#define BULLET_SPRITE_LEFT_PATH		"bullet-left.png"
-#define BULLET_SPRITE_RIGHT_PATH	"bullet-right.png"
+#define BULLET_SPRITE_UP_PATH		"Resource\\Other\\bullet\\bullet-up.png"
+#define BULLET_SPRITE_DOWN_PATH		"Resource\\Other\\bullet\\bullet-down.png"
+#define BULLET_SPRITE_LEFT_PATH		"Resource\\Other\\bullet\\bullet-left.png"
+#define BULLET_SPRITE_RIGHT_PATH	"Resource\\Other\\bullet\\bullet-right.png"
 #define BULLET_WIDTH 8
 #define BULLET_HEIGHT 8
 
@@ -269,9 +269,8 @@
 //------------game effect ID--------------------
 //PATH
 #define EFFECT_SHIELD "Resource\\Other\\shield.png"
-#define EFFECT_RESPAWN ""
-#define EFFECT_SMALL_EXPLODE "Resource\\Other\\explode.png"
-#define EFFECT_SPECIAL_EXPLODE ""
+#define EFFECT_SMALL_EXPLODE "Resource\\Other\\explode-mini.png"
+#define EFFECT_SPECIAL_EXPLODE "Resource\\Other\\explode-big.png"
 //ID
 #define ID_EFFECT_SHIELD 1
 #define ID_EFFECT_RESPAWN 2

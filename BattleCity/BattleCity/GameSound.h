@@ -22,8 +22,9 @@ private:
 	~GameSound();
 	static GameSound* _instance;
 public:
-	static GameSound* getInstance(DSound* dsound);
+	static GameSound* getInstance(DSound* dsound= 0);
 	void Play(int id);
 	void PlayRepeat(int id);
+	void Stop(int id);
 };
 

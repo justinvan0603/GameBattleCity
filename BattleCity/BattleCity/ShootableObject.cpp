@@ -4,34 +4,8 @@
 ShootableObject::ShootableObject()
 {
 }
-void ShootableObject::DrawBullet()
-{
-	//int size = _listBullet.size();
-	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	{
-			
-			(*i)->Draw();
-	}
-}
-void ShootableObject::CleanBulletList()
-{
-	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end();)
-	{
-		if ((*i)->_isTerminated)
-		{
-			delete *i;
-			*i = NULL;
-			i = _listBullet.erase(i);
-			
-		}
-		else
-			i++;
-	}
-}
-vector<Bullet*> ShootableObject::getListBullet()
-{
-	return _listBullet;
-}
+
+
 D3DXVECTOR2 ShootableObject::CalculateBulletPosition(int left, int top, MoveDirection currentDirection)
 {
 	int X;

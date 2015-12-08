@@ -20,7 +20,10 @@ void EffectManager::AddBulletEffect(D3DXVECTOR2 position)
 }
 void EffectManager::AddDestroyEffect(D3DXVECTOR2 position)
 {
-
+	D3DXVECTOR2 effectPosition;
+	effectPosition.x = position.x - 17;
+	effectPosition.y = position.y - 17;
+	this->_listEffect.push_back(new Effect(_spriteHandler, EFFECT_SPECIAL_EXPLODE, SPRITE_WIDTH * 2, SPRITE_HEIGHT * 2, 1, 1,effectPosition));
 }
 void EffectManager::Draw()
 {

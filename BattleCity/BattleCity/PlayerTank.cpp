@@ -2,10 +2,12 @@
 #include "CollisionManager.h"
 #include "BulletManager.h"
 #include "GameSound.h"
+#define PLAYER_SHIELD_TIME 4000
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
 	_startTime = GetTickCount();
+	_shieldTime = GetTickCount();
 	this->_objectType = DYNAMIC_OBJECT;
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
@@ -34,8 +36,8 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 
 void PlayerTank::Draw()
 {
-	
-	if (GameTime::RenderFrame(_startTime, 4000))
+
+	if (GameTime::RenderFrame(_shieldTime, PLAYER_SHIELD_TIME))
 	{
 		this->_isImmortal = false;
 		this->_isActiveShield = false;
@@ -50,89 +52,72 @@ void PlayerTank::Draw()
 	}
 	if (_isTerminated == false)
 	{
-		int size = _listBullet.size();
 
-			//if (_vx > 0)
-			//{
-			//	_currentDirection = RIGHT;
-			//	_curSprite = _listSprite[RIGHT];
-			//}
-			//if (_vx < 0)
-			//{
-			//	_currentDirection = LEFT;
-			//	_curSprite = _listSprite[LEFT];
-			//}
-			//if (_vy < 0)
-			//{
-			//	_currentDirection = UP;
-			//	_curSprite = _listSprite[UP];
-			//}
-			//if (_vy > 0)
-			//{
-			//	_currentDirection = DOWN;
-			//	_curSprite = _listSprite[DOWN];
-			//}
+
 		_curSprite->Render(_left, _top);
 
 		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
 				//_curSprite->Render(_level - 1, _left, _top);//
 		ShootableObject::Draw();
-		ShootableObject::DrawBullet();
 	}
 	
 }
 void PlayerTank::Move()
 {
-
+	GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
+	GameSound::getInstance()->Play(ID_SOUND_TANK_ENGINE);
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_LEFT) && !Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 		_vx = 0;
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 		_vy = 0;
-	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_MOVE);
 	if (Keyboard::getInstance()->IsKeyDown(DIK_UP))
 	{
-
-			this->_vy = -DEFAULT_PLAYER_SPEED_Y;
-
+		
+		this->_vy = -DEFAULT_PLAYER_SPEED_Y;
 		_curSprite = _listSprite[UP];
 		_currentDirection = UP;
+		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 	{
 
-			this->_vy = PLAYER_SPEED_PROMOTED_Y;
+		this->_vy = PLAYER_SPEED_PROMOTED_Y;
 		_curSprite = _listSprite[DOWN];
 		_currentDirection = DOWN;
+		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_LEFT))
 	{
 
-			this->_vx = -PLAYER_SPEED_PROMOTED_X;
+		this->_vx = -PLAYER_SPEED_PROMOTED_X;
 		_curSprite = _listSprite[LEFT];
 		_currentDirection = LEFT;
+		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 	{
 
-			this->_vx = PLAYER_SPEED_PROMOTED_X;
+		this->_vx = PLAYER_SPEED_PROMOTED_X;
 		_curSprite = _listSprite[RIGHT];
 		_currentDirection = RIGHT;
+		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
-	
-
-	
 }
 void PlayerTank::Shoot()
 {
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_SPACE))
 	{
-		//GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
+		
 		int _delayTime;
 		if (_level < LEVEL_THREE)
 			_delayTime = PLAYER_DEFAULT_BULLET_RELOAD_TIME;
@@ -142,14 +127,14 @@ void PlayerTank::Shoot()
 		if (BulletManager::getInstance()->getPlayerBulletSize() == 0)
 		{
 			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
-			//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
 			_startTime = GetTickCount();
+			GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
 		}
 		 if (GameTime::RenderFrame(_startTime,_delayTime))
 		{
-			//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject));
 			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 			isShooting = true;
+			GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
 			return;
 		}
 		
@@ -158,7 +143,8 @@ void PlayerTank::Shoot()
 }
 void PlayerTank::Update()
 {
-	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_ENGINE);
+
+	
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();
@@ -167,23 +153,11 @@ void PlayerTank::Update()
 	{
 		if (CollisionManager::CollisionPreventMove(this, *i))
 		{
-			//this->ActivateShield();
 			break;
-		}
-		
-	}
-
-	
-	for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	{
-
-		(*i)->Update();
+		}	
 	}
 
 	CollisionManager::CollisionWithScreen(this);
-
-	ShootableObject::CleanBulletList();
-	DynamicObject::Update();
 	if (_isTerminated)
 	{
 		if (_life > 0)
@@ -191,6 +165,7 @@ void PlayerTank::Update()
 			Respawn();
 		}
 	}
+	DynamicObject::Update();
 }
 void PlayerTank::Respawn()
 {

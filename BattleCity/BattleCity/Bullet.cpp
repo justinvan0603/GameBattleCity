@@ -193,14 +193,14 @@ void Bullet::Update()
 			flag = CollisionManager::CollisionBulletWithObject(this, *i);
 		if (flag && (*i)->_isTerminated)
 		{
-			posInMap = Object::getPositionObjectInMap((*i)->getLeft(),(*i)->getTop());
+			posInMap = Object::getPositionObjectInMap((*i)->getLeft(), (*i)->getTop());
 			int value = _map[(int)posInMap.y][(int)posInMap.x];
 			_map[(int)posInMap.y][(int)posInMap.x] = -1;
 			if (value != -1)
 			{
 				delete _listNearByObject->at(value % 100).at(value / 100);
 				_listNearByObject->at(value % 100).at(value / 100) = NULL;
-			}		
+			}
 		}
 
 	}

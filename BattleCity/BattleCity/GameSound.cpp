@@ -34,6 +34,7 @@ void GameSound::Play(int id)
 	case ID_SOUND_FIRE:
 	{
 		_fire.Play();
+		
 		break;
 	}
 	case ID_SOUND_BRICK_EXPLODE:
@@ -151,6 +152,75 @@ void GameSound::PlayRepeat(int id)
 	case ID_SOUND_STEEL_WALL_EXPLODE:
 	{
 		_steelwallExplode.PlayRepeat();
+	}
+	default:
+		break;
+	}
+}
+void GameSound::Stop(int id)
+{
+	switch (id)
+	{
+	case ID_SOUND_START_GAME:
+	{
+		_startGame.Stop();
+		break;
+	}
+	case ID_SOUND_FIRE:
+	{
+		_fire.Stop();
+
+		break;
+	}
+	case ID_SOUND_BRICK_EXPLODE:
+	{
+		_brickExplode.Stop();
+		break;
+	}
+	case ID_SOUND_TANK_EXPLODE:
+	{
+		_enemyExplode.Stop();
+		break;
+	}
+	case ID_SOUND_TANK_ENGINE:
+	{
+		_tankEngine.Stop();
+		break;
+	}
+	case ID_SOUND_TANK_HIT:
+	{
+		_tankHit.Stop();
+		break;
+	}
+	case ID_SOUND_TANK_MOVE:
+	{
+		_tankMove.Stop();
+		break;
+	}
+
+	case ID_SOUND_ALLY_EXPLODE:
+	{
+		_allyExplode.Stop();
+		break;
+	}
+	case ID_SOUND_ITEM_APPEAR:
+	{
+		_powerAppear.Stop();
+		break;
+	}
+	case ID_SOUND_ITEM_EAT:
+	{
+		_eatPower.Stop();
+		break;
+	}
+	case ID_SOUND_LIFE_UP:
+	{
+		_lifeUp.Stop();
+		break;
+	}
+	case ID_SOUND_STEEL_WALL_EXPLODE:
+	{
+		_steelwallExplode.Stop();
 	}
 	default:
 		break;

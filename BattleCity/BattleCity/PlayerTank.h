@@ -10,8 +10,10 @@ private:
 	GameTime *_bulletDelay;
 	GameTime *_shieldDelay;
 	Effect* _shieldEffect;
+	DWORD _shieldTime;
 	//DWORD _shieldRoundTime;
 	//time_t _shieldRoundTime;
+	bool _isMoving;
 	bool _isActiveShield;
 public:
 	

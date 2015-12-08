@@ -8,8 +8,8 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler)
 	this->_currentDirection = RIGHT;
 	this->_left = 100; //DEFAULT_TOP_LEFT.x;
 	this->_top = 51;// DEFAULT_TOP_LEFT.y;
-	this->_vx = 4;//(int)DYNAMIC_OBJECT_LOW_SPEED.x; //LIGHT_TANK_SPEED_X;
-	this->_vy = 4;//(int)DYNAMIC_OBJECT_LOW_SPEED.y; //LIGHT_TANK_SPEED_Y;
+	this->_vx = (int)DYNAMIC_OBJECT_HIGH_SPEED.x; 
+	this->_vy = (int)DYNAMIC_OBJECT_HIGH_SPEED.y; 
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
 	this->_listSprite[UP] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
@@ -31,8 +31,8 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	this->_currentDirection = RIGHT;
 	this->_left = (int)position.x; //DEFAULT_TOP_LEFT.x;
 	this->_top = (int)position.y;// DEFAULT_TOP_LEFT.y;
-	this->_vx = 4;//(int)DYNAMIC_OBJECT_LOW_SPEED.x; //LIGHT_TANK_SPEED_X;
-	this->_vy = 4;//(int)DYNAMIC_OBJECT_LOW_SPEED.y; //LIGHT_TANK_SPEED_Y;
+	this->_vx = (int)DYNAMIC_OBJECT_HIGH_SPEED.x;
+	this->_vy = (int)DYNAMIC_OBJECT_HIGH_SPEED.y; 
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
 	this->_listSprite[UP] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
 	this->_listSprite[LEFT] = new Sprite(_spriteHandler, LIGHT_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
@@ -52,7 +52,7 @@ void LightTank:: Draw()
 		_curSprite->Render(_left, _top);	
 		
 	}
-	ShootableObject::DrawBullet();
+	//ShootableObject::DrawBullet();
 }
 void LightTank::Move()
 {
@@ -102,11 +102,7 @@ void LightTank::Update()
 		if (_isCollied)
 			break;
 	}
-	//for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	//{
 
-	//	(*i)->Update();
-	//}
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;

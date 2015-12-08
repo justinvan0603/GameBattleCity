@@ -23,8 +23,6 @@ MyRectangle CollisionManager::BroadphaseRectWithRelativeSpeed(Object *A, Object*
 		y = A->getPositionY() + vyA;
 	width = A->getWidth() + abs(vxA);
 	height = A->getHeight() + abs(vyA);
-	//width = vxA > 0 ? vxA + A->getWidth() : A->getWidth() - vxA;
-	//height = vyA > 0 ? vyA + A->getHeight() : A->getHeight() - vyA;
 	return MyRectangle(y, x, width, height);
 }
 
@@ -46,66 +44,6 @@ MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 
 bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 {
-	// A chuyển động B đứng yên
-
-	//float v2x, v2y;
-	//v2x = B->getVelocityX();
-	//v2y = B->getVelocityY();
-	//A->setVelocityX(A->getVelocityX() - v2x);
-	//A->setVelocityY(A->getVelocityY() - v2y);
-
-	//
-	//MyRectangle broadphase = BroadphaseRect(A);
-	//if (AABBCheck(&broadphase, B))
-	//{
-	//	
-	//	B->setVelocityX(0);
-	//	B->setVelocityY(0);
-	//	A->setVelocityX(0);
-	//	A->setVelocityY(0);
-
-	//	if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
-	//	{
-	//		//A->setVelocityX(0);
-	//		if (A->getLeft() < B->getLeft())
-	//		{
-	//			A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
-
-	//			return true;
-	//		}
-	//		if (A->getRight() > B->getRight())
-	//		{
-	//			A->setPositionX(A->getPositionX() + B->getRight() - A->getLeft() + 1);
-
-	//			return true;
-	//		}
-	//		
-
-	//	}
-
-	//	if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
-	//	{
-	//		//A->setVelocityY(0);
-	//		if (A->getTop() < B->getTop())
-	//		{
-	//			A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
-
-	//			return true;
-	//		}
-	//		if (A->getBottom() > B->getBottom())
-	//		{
-	//			A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
-
-	//			return true;
-	//		}
-	//		
-	//	}
-	//	
-	//	return true;
-	//}
-	//A->setVelocityX(A->getVelocityX() + v2x);
-	//A->setVelocityY(A->getVelocityY() + v2y);
-	//return false;
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
@@ -155,9 +93,9 @@ void CollisionManager::CollisionStopMoving(Object* A, Object* B)
 
 		A->setVelocityX(SPEED_NO);
 		A->setVelocityY(SPEED_NO);
-		B->setVelocityX(SPEED_NO);
-		B->setVelocityY(SPEED_NO);
-
+		Enemy* enemy = dynamic_cast<Enemy*>(A);
+		if (enemy != NULL)
+			enemy->InvertDirection();
 	}
 }
 bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
@@ -180,10 +118,19 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				//if (B->getId() == )
 				if (B->getId() == ID_STEELWALL)
 				{
-					EffectManager::getInstance(0)->AddBulletEffect(position);
-					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
+					EffectManager::getInstance()->AddBulletEffect(position);
+					
 					if (A->GetLevel() == LEVEL_FOUR)
+					{
+						if (A->getAllyObject() == ALLY_PLAYER)
+							GameSound::getInstance()->Play(ID_SOUND_BRICK_EXPLODE);
 						B->_isTerminated = true;
+					}
+					else
+					{ 
+						if (A->getAllyObject() == ALLY_PLAYER)
+							GameSound::getInstance()->Play(ID_SOUND_STEEL_WALL_EXPLODE);
+					}
 					return true;
 
 				}
@@ -195,8 +142,9 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				}
 				if (B->getId() == ID_BRICKWALL);
 				{
-					EffectManager::getInstance(0)->AddBulletEffect(position);
-					//GameSound::getInstance(0)->Play(ID_SOUND_BULLET_EXPLODE);
+					EffectManager::getInstance()->AddBulletEffect(position);
+					if (A->getAllyObject() == ALLY_PLAYER)
+						GameSound::getInstance()->Play(ID_SOUND_BRICK_EXPLODE);
 					B->_isTerminated = true;
 					return true;
 				}
@@ -207,11 +155,16 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				{
 					if (B->getObjectType() == ENEMY_OBJECT_TYPE)
 					{
+						D3DXVECTOR2 pos;
+						pos.x = B->getLeft();
+						pos.y = B->getTop();
 						//B->_isTerminated = true;
 						if (B->getId() != ID_SUPER_HEAVY_TANK)
 						{
-							//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+							GameSound::getInstance()->Play(ID_SOUND_TANK_EXPLODE);
 							ScoreManager::getInstance()->addKillTankScore(B->getId());
+							
+							EffectManager::getInstance()->AddDestroyEffect(pos);
 							B->_isTerminated = true;
 						}
 						else
@@ -222,24 +175,16 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 								superHeavy->lostHitPoint();
 								if (superHeavy->getHitPoint() <= 0)
 								{
-									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
+									GameSound::getInstance()->Play(ID_SOUND_TANK_EXPLODE);
 									ScoreManager::getInstance()->addKillTankScore(B->getId());
+									EffectManager::getInstance()->AddDestroyEffect(pos);
 									B->_isTerminated = true;
 								}
 								else
 								{
-									//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
+									EffectManager::getInstance()->AddBulletEffect(position);
+									GameSound::getInstance()->Play(ID_SOUND_TANK_HIT);
 								}
-								//if (superHeavy->getHitPoint() == 0)
-								//{
-								//	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_EXPLODE);
-								//	B->_isTerminated = true;
-								//}
-								//else
-								//{
-								//	superHeavy->lostHitPoint();
-								//	//GameSound::getInstance(0)->Play(ID_SOUND_TANK_HIT);
-								//}
 								
 							}
 						}
@@ -247,6 +192,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				}
 				else
 				{
+					D3DXVECTOR2 pos;
+					pos.x = B->getLeft();
+					pos.y = B->getTop();
+					EffectManager::getInstance()->AddDestroyEffect(pos);
 					//if (B->getId() == ID_PLAYER)
 					//{
 					//	if (!B->_isImmortal)
@@ -264,39 +213,81 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 }
 bool CollisionManager::CollisionWithScreen(Object* A)
 {
-	
 	MyRectangle collisionRect = BroadphaseRect(A);
 	if (collisionRect.getTop() < POS_MAP_TOP_LEFT_Y)
 	{
-		A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y- A->getTop());
+		A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y - A->getTop());
 		if (A->getId() == ID_BULLET)
 			A->_isTerminated = true;
 		return true;
 	}
-	if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT )
+	if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
 	{
-		A->setPositionY(A->getPositionY() +POS_MAP_TOP_LEFT_Y + MAP_HEIGHT -A->getBottom());
+		A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y + MAP_HEIGHT - A->getBottom());
 		if (A->getId() == ID_BULLET)
 			A->_isTerminated = true;
 		return true;
 	}
 	if (collisionRect.getLeft() < POS_MAP_TOP_LEFT_X)
 	{
-		A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X- A->getLeft());
+		A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X - A->getLeft());
 		if (A->getId() == ID_BULLET)
 			A->_isTerminated = true;
 		return true;
-		 
+
 	}
-	if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH )
+	if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH)
 	{
-		A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X + MAP_WIDTH- A->getRight());
+		A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X + MAP_WIDTH - A->getRight());
 		if (A->getId() == ID_BULLET)
 			A->_isTerminated = true;
 		return true;
 	}
 
+
+
+	//if (A->getTop()<= POS_MAP_TOP_LEFT_Y)
+	//	return true;
+	//if (A->getBottom()  >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
+	//	return true;
+	//if (A->getLeft() <= POS_MAP_TOP_LEFT_X)
+	//	return true;
+	//if (A->getRight() >= POS_MAP_TOP_LEFT_X + MAP_WIDTH)
+	//	return true;
 	return false;
+	
+	//MyRectangle collisionRect = BroadphaseRect(A);
+	//if (collisionRect.getTop() < POS_MAP_TOP_LEFT_Y)
+	//{
+	//	A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y- A->getTop());
+	//	if (A->getId() == ID_BULLET)
+	//		A->_isTerminated = true;
+	//	return true;
+	//}
+	//if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT )
+	//{
+	//	A->setPositionY(A->getPositionY() +POS_MAP_TOP_LEFT_Y + MAP_HEIGHT -A->getBottom());
+	//	if (A->getId() == ID_BULLET)
+	//		A->_isTerminated = true;
+	//	return true;
+	//}
+	//if (collisionRect.getLeft() < POS_MAP_TOP_LEFT_X)
+	//{
+	//	A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X- A->getLeft());
+	//	if (A->getId() == ID_BULLET)
+	//		A->_isTerminated = true;
+	//	return true;
+	//	 
+	//}
+	//if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH )
+	//{
+	//	A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X + MAP_WIDTH- A->getRight());
+	//	if (A->getId() == ID_BULLET)
+	//		A->_isTerminated = true;
+	//	return true;
+	//}
+
+	//return false;
 }
 bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject *B)
 {
