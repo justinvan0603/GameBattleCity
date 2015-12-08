@@ -240,21 +240,22 @@
 #define POS_ICON_END D3DXVECTOR3(170.0f, 170.0f,0.0f)
 
 //Resource sound path
-#define SOUND_START_GAME "Resource\\sounds\\demo.wav"
-#define SOUND_FIRE ""
-#define SOUND_BULLET_EXPLODE ""
-#define SOUND_TANK_EXPLODE ""
-#define SOUND_TANK_HIT ""
-#define SOUND_TANK_ENGINE ""
-#define SOUND_TANK_MOVE ""
-#define SOUND_ALLY_EXPLODE ""
-#define SOUND_ITEM_APPEAR ""
-#define SOUND_ITEM_EAT ""
-#define SOUND_LIFE_UP ""
+#define SOUND_START_GAME "Resource\\Sound\\levelstarting.wav"
+#define SOUND_FIRE "Resource\\Sound\\shoot.wav"
+#define SOUND_BRICK_EXPLODE "Resource\\Sound\\brickhit.wav"
+#define SOUND_STEEL_WALL_EXPLODE "Resource\\Sound\\steelandwallhit.wav"
+#define SOUND_TANK_EXPLODE "Resource\\Sound\\enemyExplosion.wav"
+#define SOUND_TANK_HIT "Resource\\Sound\\shieldhit.wav"
+#define SOUND_TANK_ENGINE "Resource\\Sound\\nonmove.wav"
+#define SOUND_TANK_MOVE "Resource\\Sound\\move.wav"
+#define SOUND_ALLY_EXPLODE "Resource\\Sound\\eagleExplosion.wav"
+#define SOUND_ITEM_APPEAR "Resource\\Sound\\hitenemybonus.wav"
+#define SOUND_ITEM_EAT "Resource\\Sound\\eatbonus.wav"
+#define SOUND_LIFE_UP "Resource\\Sound\\eatlifebonus.wav"
 
 #define ID_SOUND_START_GAME 1
 #define ID_SOUND_FIRE 2
-#define ID_SOUND_BULLET_EXPLODE 3
+#define ID_SOUND_BRICK_EXPLODE 3
 #define ID_SOUND_TANK_EXPLODE 4
 #define ID_SOUND_TANK_ENGINE 5
 #define ID_SOUND_TANK_HIT 6
@@ -263,7 +264,7 @@
 #define ID_SOUND_ITEM_APPEAR 9
 #define ID_SOUND_ITEM_EAT 10
 #define ID_SOUND_LIFE_UP 11
-
+#define ID_SOUND_STEEL_WALL_EXPLODE 12
 //20/11/2015
 //------------game effect ID--------------------
 //PATH
