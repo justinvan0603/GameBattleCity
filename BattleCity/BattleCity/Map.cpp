@@ -390,7 +390,9 @@ void Map::Update()
 	{
 		for (int j = i + 1; j < n; j++)
 		{
-			CollisionManager::CollisionEnemy(_listEnemyOnMap->at(i), _listEnemyOnMap->at(j));
+			bool isCollided =CollisionManager::CollisionEnemy(_listEnemyOnMap->at(i), _listEnemyOnMap->at(j));
+			if (isCollided)
+				break;
 		}
 	}
 	for (int i = 0; i < n; i++)
