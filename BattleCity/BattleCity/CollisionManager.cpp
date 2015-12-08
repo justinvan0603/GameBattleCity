@@ -273,7 +273,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 			A->_isTerminated = true;
 		return true;
 	}
-	if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
+	if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT )
 	{
 		A->setPositionY(A->getPositionY() +POS_MAP_TOP_LEFT_Y + MAP_HEIGHT -A->getBottom());
 		if (A->getId() == ID_BULLET)
@@ -288,7 +288,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 		return true;
 		 
 	}
-	if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH)
+	if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH )
 	{
 		A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X + MAP_WIDTH- A->getRight());
 		if (A->getId() == ID_BULLET)
@@ -374,12 +374,40 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 			{
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
 
+				if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
+				{
+					A->InvertDirection();
+					B->InvertDirection();
+					return true;
+				}
+				if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+				{
+					if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
+						A->InvertDirection();
+					else
+						B->InvertDirection();
+					return true;
+				}
 
 			}
 			if (A->getRight() > B->getRight())
 			{
 				A->setPositionX(A->getPositionX() + B->getRight() - A->getLeft() + 1);
 
+				if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
+				{
+					A->InvertDirection();
+					B->InvertDirection();
+					return true;
+				}
+				if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+				{
+					if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
+						A->InvertDirection();
+					else
+						B->InvertDirection();
+					return true;
+				}
 
 			}
 		}
@@ -389,13 +417,43 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 			{
 				A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
 
+				if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
+				{
+					A->InvertDirection();
+					B->InvertDirection();
+					return true;
+				}
+				if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+				{
+					if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
+						A->InvertDirection();
+					else
+						B->InvertDirection();
+					return true;
+				}
 
 			}
 			if (A->getBottom() > B->getBottom())
 			{
 				A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
+
+				if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
+				{
+					A->InvertDirection();
+					B->InvertDirection();
+					return true;
+				}
+				if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+				{
+					if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
+						A->InvertDirection();
+					else
+						B->InvertDirection();
+					return true;
+				}
 			}
 		}
+
 		if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
 		{
 			A->InvertDirection();
@@ -424,6 +482,60 @@ bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 		return true;
 	}
 	return false;
+}
+
+int CollisionManager::FindRespawnPosition(MyRectangle** listposition, int currentposition, PlayerTank* A, vector<Enemy*> enemyOnMap)
+{
+	MyRectangle playerBroadphaseRect = BroadphaseRect(A);
+	bool isPlayerCollided = false;
+	bool isEnemyCollided = false;
+	if (AABBCheck(&playerBroadphaseRect, listposition[currentposition]))
+	{
+		isPlayerCollided = true;
+	}
+	int length = enemyOnMap.size();
+	for (int i = 0; i < length; i++)
+	{
+		MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap[i]);
+		if (AABBCheck(&enemyBroadphase, listposition[currentposition]))
+		{
+			isEnemyCollided = true;
+			break;
+		}
+	}
+	if (!isEnemyCollided && !isEnemyCollided)
+	{
+		return currentposition;
+	}
+	else
+	{
+		isEnemyCollided = false;
+		isPlayerCollided = false;
+		for (int i = 0; i < 3; i++)
+		{
+			if (i != currentposition)
+			{
+				if (AABBCheck(&playerBroadphaseRect, listposition[i]))
+				{
+					isPlayerCollided = true;
+				}
+				for (int j= 0; i < length; i++)
+				{
+					MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap[j]);
+					if (AABBCheck(&enemyBroadphase, listposition[i]))
+					{
+						isEnemyCollided = true;
+						break;
+					}
+				}
+			}
+			if (!isEnemyCollided && !isPlayerCollided)
+			{
+				return i;
+			}
+		}
+	}
+	return -1;
 }
 
 bool CollisionManager::isCollision(Object* A, Object* B)
