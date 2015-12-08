@@ -34,7 +34,6 @@ public:
 
 protected:
 	static GameState*	_gameState;
-	//static PlayerTank* _player;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;
 	static DWORD _startTime;
@@ -66,6 +65,29 @@ private:
 	Sprite* _selector;
 	D3DXVECTOR3 _menuImagePosition;
 	D3DXVECTOR3 _selectorPosition;
+};
+#pragma endregion
+
+#pragma region Instruction
+
+
+class Instruction : public GameState
+{
+public:
+	virtual void update();
+
+	virtual void draw();
+
+	virtual void enter();
+
+	static Instruction* get();
+
+private:
+	Instruction();
+	~Instruction();
+
+private:
+	static Instruction* _instance;
 };
 #pragma endregion
 

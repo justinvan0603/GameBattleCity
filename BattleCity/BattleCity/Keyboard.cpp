@@ -1,4 +1,5 @@
 #include "Keyboard.h"
+#include "DefaultConstant.h"
 
 Keyboard* Keyboard::_instance = NULL;
 Keyboard::Keyboard()
@@ -55,15 +56,39 @@ Keyboard::~Keyboard()
 
 }
 
-void Keyboard::ProcessKeyboard(HWND hWnd)
+void Keyboard::update(HWND hWnd)
 {
-	if (_keyboard->Poll() != DI_OK)
-		_keyboard->Acquire();
-	_keyboard->GetDeviceState(sizeof(_keyState), _keyState);
-	if (IsKeyDown(DIK_ESCAPE))
+	memcpy(_keyStatePrevious, _keyState, sizeof(_keyState));
+
+	HRESULT result;
+	int i = sizeof(_keyState);
+	result = _keyboard->GetDeviceState(sizeof(_keyState), (LPVOID)&_keyState);
+
+	if (FAILED(result))
 	{
-		PostMessage(hWnd, WM_QUIT, 0, 0);
+		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
+			_keyboard->Acquire();
+		else
+			WARNING_BOX(WARNING_CAN_NOT_READ_KEYBOARD);
 	}
-	DWORD dwElement = KEYBOARD_BUFFER_SIZE;
-	HRESULT result = _keyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), _keyEvent, &dwElement, 0);
+}
+// -----------------------------------------------
+// Desc: Check if the key is DOWN, UP, just PRESS or just RELEASE.
+// -----------------------------------------------
+KeyState Keyboard::getKeyState(int key)
+{
+	if (CHECK_IF_STATE_IS_DOWN(_keyState[key]))
+	{
+		if (CHECK_IF_STATE_IS_DOWN(_keyStatePrevious[key]))
+			return KeyState::KEY_DOWN;
+		else
+			return KeyState::KEY_PRESS;
+	}
+	else 
+	{
+		if (CHECK_IF_STATE_IS_DOWN(_keyStatePrevious[key]))
+			return KeyState::KEY_RELEASE;
+		else
+			return KeyState::KEY_UP;
+	}
 }

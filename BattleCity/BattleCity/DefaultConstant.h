@@ -13,6 +13,7 @@
 #define WARNING_GAME_CAN_NOT_INIT_WINDOW "Init windows fail!\n"
 #define WARNING_GAME_CAN_NOT_INIT_D3D "Init Direct3D fail!\n"
 #define WARNING_GAME_CAN_NOT_INIT_KEYBOARD "Init Keyboard fail!\n"
+#define WARNING_CAN_NOT_READ_KEYBOARD	"Unable to read keyboard status.\n"
 #define CAN_NOT_INIT_TEXT "Init Text fail!\n"
 
 #endif

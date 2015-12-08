@@ -270,7 +270,7 @@ void Map::drawTrees()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (_colisObj->at(i).at(0)->getId() != ID_TREES)
+			if (i != 6 && i != 7 && i != 16 && i != 17)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)
@@ -300,7 +300,7 @@ void Map::drawMap()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (_colisObj->at(i).at(0)->getId() == ID_TREES)
+			if (i == 6 || i == 7 || i == 16 || i == 17)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)

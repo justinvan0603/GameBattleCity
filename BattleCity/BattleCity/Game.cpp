@@ -39,7 +39,7 @@ bool Game::GameInit(HINSTANCE hInstance)
 
 void Game::GameUpdate()
 {
-	_keyboard->ProcessKeyboard(win->get_windowHandler());
+	_keyboard->update(win->get_windowHandler());
 	GameState::stateUpdate();
 }
 

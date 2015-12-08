@@ -14,8 +14,6 @@ MainMenu* MainMenu::_instance = nullptr;
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
 
-//LightTank* GameState::_enemy = nullptr;
-//PlayerTank* GameState::_player = nullptr;
 Text* GameState::_text = nullptr;
 DWORD GameState::_startTime = 0;
 
@@ -25,10 +23,9 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 	_startTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
-	//_player = new PlayerTank(_spriteHandler);
 	BulletManager::getInstance();
 	EffectManager::getInstance(_spriteHandler);
-	switchState(PlayingState::get());
+	switchState(MainMenu::get());
 }
 
 void GameState::release()
@@ -88,6 +85,10 @@ void MainMenu::update()
 	if(_menuImagePosition.y > 0)
 	{
 		_menuImagePosition.y -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
+		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)
+		{
+			_menuImagePosition.y = 0;
+		}
 	}
 	else
 	{
@@ -105,7 +106,7 @@ void MainMenu::update()
 		{
 			_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
 		}
-		if(Keyboard::getInstance()->IsKeyDown(DIK_RETURN))
+		if(Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)
 		{
 			if (_selectorPosition == IMAGE_SELECTOR_POS_PLAY)
 			{
@@ -113,7 +114,7 @@ void MainMenu::update()
 			}
 			else
 			{
-				//code instruction
+				switchState(Instruction::get());
 			}
 		}
 	}
@@ -147,6 +148,46 @@ void MainMenu::enter()
 }
 
 #pragma endregion
+
+#pragma region Instruction
+Instruction* Instruction::_instance = nullptr;
+
+Instruction::Instruction()
+{
+	
+}
+
+Instruction::~Instruction()
+{
+	
+}
+
+void Instruction::update()
+{
+	
+
+}
+
+void Instruction::draw()
+{
+	
+}
+
+Instruction* Instruction::get()
+{
+	if (_instance == nullptr)
+		_instance = new Instruction();
+
+	return _instance;
+}
+
+void Instruction::enter()
+{
+
+}
+
+#pragma endregion
+
 
 #pragma region Starting
 
