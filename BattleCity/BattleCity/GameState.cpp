@@ -154,7 +154,13 @@ Instruction* Instruction::_instance = nullptr;
 
 Instruction::Instruction()
 {
-	
+	_currentTab = 1;
+	_imageTabStory = new Sprite(_spriteHandler, IMAGE_TAB_STORY_PATH, 212, 212, 1, 1);
+	_imageTabControl = new Sprite(_spriteHandler, IMAGE_TAB_CONTROL_PATH, SPRITE_WIDTH, SPRITE_HEIGHT*7, 1, 1);
+	_imageBulletRight = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+	_imageTabEmies = new Sprite(_spriteHandler, IMAGE_TAB_ENEMIES_PATH, SPRITE_WIDTH, 176, 1, 1);
+	_imageTabPowerUp = new Sprite(_spriteHandler, IMAGE_TAB_POWERUP_PATH, SPRITE_WIDTH, 224, 1, 1);
+	_imageTabEnvironment = new Sprite(_spriteHandler, IMAGE_TAB_ENVIRONMENT_PATH, SPRITE_WIDTH, 224, 1, 1);
 }
 
 Instruction::~Instruction()
@@ -164,13 +170,119 @@ Instruction::~Instruction()
 
 void Instruction::update()
 {
-	
-
+	if(Keyboard::getInstance()->getKeyState(DIK_RIGHT) == KeyState::KEY_PRESS)
+	{
+		if(_currentTab < 5)
+		{
+			_currentTab++;
+		}
+	}
+	if(Keyboard::getInstance()->getKeyState(DIK_LEFT) == KeyState::KEY_PRESS)
+	{
+		if (_currentTab > 1)
+		{
+			_currentTab--;
+		}
+	}
+	if (Keyboard::getInstance()->getKeyState(DIK_ESCAPE) == KeyState::KEY_PRESS)
+	{
+		switchState(MainMenu::get());
+	}
 }
 
 void Instruction::draw()
 {
-	
+	_text->drawText(TEXT_TUT, POS_TUTORIAL,COLOR_WHITE,10);
+	_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_WHITE);
+	_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_WHITE);
+	_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_WHITE);
+	_text->drawText(TEXT_TAB_POWER_UP, POS_TEXT_POWER_UP, COLOR_WHITE);
+	_text->drawText(TEXT_TAB_ENVIRONMENT, POS_TEXT_ENVIRONMENT, COLOR_WHITE);
+
+	switch (_currentTab)
+	{
+		case 1:
+		{
+			_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_RED);
+			_text->drawText(TEXT_INFO_STORY
+				, POS_TEXT_INFO_STORY, COLOR_WHITE, 10,0,0,9);
+			_imageTabStory->Render(POS_IMAGE_STORY);
+			break;
+		}
+		case 2:
+		{		
+			_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_RED);
+
+			float translateX = 100.0f, translateY = 100.0f;
+			_text->drawText(TEXT_TAB_CONTROL_ACTION, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12,DT_CENTER,9);
+			_text->drawText(TEXT_TAB_CONTROL_KEY, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f , 0.0f), COLOR_WHITE, 12);
+		
+			_imageTabControl->Render(0, D3DXVECTOR3(translateX + 140.0f,translateY + 80.0f,0.0f));
+			_imageBulletRight->Render(0, D3DXVECTOR3(translateX + 175.0f, translateY + 285.0f, 0.0f));
+
+			_text->drawText(TEXT_TAB_CONTROL_UP, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 12);
+			_text->drawText(TEXT_TAB_CONTROL_RIGHT, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_CONTROL_DOWN, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_CONTROL_LEFT, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_CONTROL_SPACE, D3DXVECTOR3(translateX + 260.0f, translateY + 285.0f, 0.0f), COLOR_WHITE, 10);
+			break;
+		}
+		case 3: 
+		{
+			_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_RED);
+
+			float translateX = 0.0f, translateY = 100.0f;
+			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+			_imageTabEmies->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+			_text->drawText(TEXT_TAB_ENEMIES_INFO_BASIC, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_ENEMIES_INFO_FAST, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_ENEMIES_INFO_POWER, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_ENEMIES_INFO_SHEILD, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+
+			break;
+		}
+		case 4:
+		{
+			_text->drawText(TEXT_TAB_POWER_UP, POS_TEXT_POWER_UP, COLOR_RED);
+
+			float translateX = -100.0f, translateY = 100.0f;
+			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+			_imageTabPowerUp->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+			_text->drawText(TEXT_TAB_POWER_UP_GRENADE, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_POWER_UP_HELMET, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_POWER_UP_TIMER, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_POWER_UP_TANK, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+			_text->drawText(TEXT_TAB_POWER_UP_STAR, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 3);
+
+			break;
+		}
+		case 5:
+		{
+			_text->drawText(TEXT_TAB_ENVIRONMENT, POS_TEXT_ENVIRONMENT, COLOR_RED);
+
+			float translateX = -100.0f, translateY = 100.0f;
+			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+			_imageTabEnvironment->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+			_text->drawText(TEXT_TAB_ENVIRONMENT_BRICK, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_ENVIRONMENT_STEEL, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_ENVIRONMENT_TREES, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_ENVIRONMENT_WATER, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+			_text->drawText(TEXT_TAB_ENVIRONMENT_ICE, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+
+			break;
+		}
+	}
+		
+
 }
 
 Instruction* Instruction::get()

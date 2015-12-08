@@ -16,7 +16,7 @@ public:
 	~Text(void);
 
 	void drawText(std::string Content, D3DXVECTOR3 Position, D3DCOLOR Color = D3DCOLOR_XRGB(0, 0, 0),
-					int Size = DEFAULT_FONTSIZE, UINT DT_Type = DT_LEFT, int Max_Lengh = 0);
+					int Size = DEFAULT_FONTSIZE, UINT DT_Type = DT_LEFT, int Max_Lengh = 0, int Max_Line = 0);
 
 private:
 	void setFontSize(int newSize);

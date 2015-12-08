@@ -88,6 +88,14 @@ private:
 
 private:
 	static Instruction* _instance;
+	
+	int _currentTab;
+	Sprite* _imageTabStory;
+	Sprite* _imageTabControl;
+	Sprite* _imageBulletRight;
+	Sprite* _imageTabEmies;
+	Sprite* _imageTabPowerUp;
+	Sprite* _imageTabEnvironment;
 };
 #pragma endregion
 

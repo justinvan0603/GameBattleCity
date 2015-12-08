@@ -84,6 +84,7 @@
 #define IMAGE_NUMBER_HEIGHT 16
 #define COLOR_BLACK D3DCOLOR_XRGB(0,0,0)
 #define COLOR_WHITE D3DCOLOR_XRGB(255,255,255)
+#define COLOR_RED D3DCOLOR_XRGB(255,0,0)
 #define COLOR_HIGHSCORE_TEXT D3DCOLOR_XRGB(184,9,9)
 #define COLOR_SCORE_TEXT D3DCOLOR_XRGB(197,161,9)
 	//Mainmenu
@@ -98,6 +99,50 @@
 #define SELECTOR_SPEED_CHANGE 100
 #define IMAGE_SELECTOR_POS_PLAY D3DXVECTOR3(200.0f,300.0f,0.0f)
 #define IMAGE_SELECTOR_POS_INSTRUCTION D3DXVECTOR3(200.0f,335.0f,0.0f)
+	//Instruction
+#define IMAGE_TAB_STORY_PATH "Resource\\Other\\Instruction\\story.png"
+#define IMAGE_TAB_CONTROL_PATH "Resource\\Other\\Instruction\\tabcontrol.png"
+#define IMAGE_TAB_ENEMIES_PATH "Resource\\Other\\Instruction\\tabenemy.png"
+#define IMAGE_TAB_POWERUP_PATH "Resource\\Other\\Instruction\\tabpowerup.png"
+#define IMAGE_TAB_ENVIRONMENT_PATH "Resource\\Other\\Instruction\\tabenvironment.png"
+#define TEXT_TUT "Move: LEFT | RIGHT    Back: ESC"
+#define TEXT_TAB_STORY "Story"
+#define TEXT_INFO_STORY "You are the last member of your army's elite tank commanders,\nwith no choice but to defend your fortress against an entire \narmy of enemy tanks bent on your base's destruction.\nBreak holes through the walls and situate yourself\nstrategically to remove the enemy as quickly as possible, but\nstay out of their line of fire, and don't let them shoot your\nbase down."
+#define TEXT_TAB_CONTROL "Control"
+#define TEXT_TAB_CONTROL_ACTION "Action"
+#define TEXT_TAB_CONTROL_KEY "Key"
+#define TEXT_TAB_CONTROL_UP "Up"
+#define TEXT_TAB_CONTROL_RIGHT "Right"
+#define TEXT_TAB_CONTROL_DOWN "Down"
+#define TEXT_TAB_CONTROL_LEFT "Left"
+#define TEXT_TAB_CONTROL_SPACE "Space"
+#define TEXT_TAB_ENEMIES "Enemies"
+#define TEXT_TAB_ENEMIES_TYPETANK "Type"
+#define TEXT_TAB_ENEMIES_TANKINFO "Infomation"
+#define TEXT_TAB_ENEMIES_INFO_BASIC "Basic tank: Move slow"
+#define TEXT_TAB_ENEMIES_INFO_FAST "Fast tank: Move fast"
+#define TEXT_TAB_ENEMIES_INFO_POWER "Power tank: Shoot fast"
+#define TEXT_TAB_ENEMIES_INFO_SHEILD "Armor tank: Need 3 hits to kill"
+#define TEXT_TAB_POWER_UP "PowerUps"
+#define TEXT_TAB_POWER_UP_GRENADE "Grenade: Destroys every enemy currently on the \nscreen"
+#define TEXT_TAB_POWER_UP_HELMET "Helmet: Gives a temporary force field that \nshields from enemy shots"
+#define TEXT_TAB_POWER_UP_TIMER "Timer: The timer power-up temporarily freezes \ntime, stopping all enemy tanks' movement"
+#define TEXT_TAB_POWER_UP_TANK "Tank: Gives an extra life"
+#define TEXT_TAB_POWER_UP_STAR "Star: Increases your offensive power by one \ntier (default, second, third, and fourth). \nPower level only resets to default when you die"
+#define TEXT_TAB_ENVIRONMENT "Environment"
+#define TEXT_TAB_ENVIRONMENT_BRICK "Brick: Tanks and bullets cannot pass through \nthis. Can be destroyed by being shot"
+#define TEXT_TAB_ENVIRONMENT_STEEL "Steel: Stops tanks and bullets completely. Can \nonly be destroyed if hit by bullets level 4"
+#define TEXT_TAB_ENVIRONMENT_TREES "Trees: Obfuscates tanks and bullets under it \nwhen moving through"
+#define TEXT_TAB_ENVIRONMENT_WATER "Water: Tanks cannot traverse through at all \nbut bullets can fly across"
+#define TEXT_TAB_ENVIRONMENT_ICE "Ice: Tanks can move on it. Obfuscates flying \nbullets"
+#define POS_TEXT_INFO_STORY D3DXVECTOR3(25.0f, 110.0f, 0.0f)
+#define POS_TEXT_STORY D3DXVECTOR3(25.0f, 50.0f, 0.0f)	
+#define POS_IMAGE_STORY D3DXVECTOR3(200.0f, 210.0f, 0.0f)
+#define POS_TEXT_CONTROL D3DXVECTOR3(115.0f, 50.0f, 0.0f)
+#define POS_TEXT_ENEMIES D3DXVECTOR3(230.0f, 50.0f, 0.0f)
+#define POS_TEXT_POWER_UP D3DXVECTOR3(350.0f, 50.0f, 0.0f)
+#define POS_TEXT_ENVIRONMENT D3DXVECTOR3(475.0f, 50.0f, 0.0f)
+#define POS_TUTORIAL D3DXVECTOR3(300.0f, 535.0f, 0.0f)
 	//Starting
 #define IMAGE_STATE_POS D3DXVECTOR3(250.0f,252.0f,0.0f)
 #define DELAY_TIME_TO_START_PLAYING_STATE 2000

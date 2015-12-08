@@ -255,11 +255,12 @@ void Map::Draw()
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
 	drawRightMenu();	
 	drawMap();
+	BulletManager::getInstance()->Draw();
+	drawIce();
 	_player->Draw(); 
 	drawEnemy();
 	drawTrees();
 	drawPowerUp();
-	BulletManager::getInstance()->Draw();
 	EffectManager::getInstance(0)->Draw();
 }
 
@@ -271,6 +272,25 @@ void Map::drawTrees()
 		if (_colisObj->at(i).size() != 0)
 		{
 			if (i != 6 && i != 7 && i != 16 && i != 17)
+				continue;
+			int m = _colisObj->at(i).size();
+			for (int j = 0; j < m; j++)
+			{
+				if (_colisObj->at(i).at(j) != NULL)
+					_colisObj->at(i).at(j)->Draw();
+			}
+		}
+	}
+}
+
+void Map::drawIce()
+{
+	int n = _colisObj->size();
+	for (int i = 0; i < n; i++)
+	{
+		if (_colisObj->at(i).size() != 0)
+		{
+			if (i != 8 && i != 9 && i != 18 && i != 19)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)
@@ -300,7 +320,8 @@ void Map::drawMap()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (i == 6 || i == 7 || i == 16 || i == 17)
+			if (i == 6 || i == 7 || i == 16 || i == 17 ||
+				i == 8 || i == 9 || i == 18 || i == 19)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)

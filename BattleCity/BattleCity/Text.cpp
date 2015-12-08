@@ -19,17 +19,21 @@ void Text::initializeFont()
 }
 
 
-void Text::drawText(std::string Content, D3DXVECTOR3 Position, D3DCOLOR Color, int Size , UINT DT_Type, int Max_Lengh)
+void Text::drawText(std::string Content, D3DXVECTOR3 Position, D3DCOLOR Color, int Size , UINT DT_Type, int Max_Lengh, int Max_Line)
 {
 	if (Size != _fontSize)
 		setFontSize(Size);
 	RECT fRectangle;
-	int n;
+	int i,j;
 	if (Max_Lengh == 0)
-		n = Content.length();
+		i = Content.length();
 	else
-		n = Max_Lengh;
-	SetRect(&fRectangle, Position.x, Position.y, Position.x + _fontSize*n, Position.y + _fontSize);
+		i = Max_Lengh;
+	if (Max_Line == 0)
+		j = 1;
+	else
+		j = Max_Line;
+	SetRect(&fRectangle, Position.x, Position.y, Position.x + _fontSize*i, Position.y + _fontSize*j);
 	_font->DrawTextA(NULL, Content.c_str(), -1, &fRectangle, DT_Type, Color);
 }
 

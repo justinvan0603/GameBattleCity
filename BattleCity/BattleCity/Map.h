@@ -55,6 +55,7 @@ private:
 	void updatePowerItem();
 	void drawMap();
 	void drawTrees();
+	void drawIce();
 	void drawPowerUp();
 	void drawEnemy();
 	void drawRightMenu();
