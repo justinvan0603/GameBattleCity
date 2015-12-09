@@ -206,7 +206,11 @@ void PlayerTank::addLife()
 {
 	_life++;
 }
-
+void PlayerTank::SetDirection(MoveDirection direction)
+{
+	_currentDirection = direction;
+	_listSprite[_currentDirection];
+}
 PlayerTank::~PlayerTank()
 {
 

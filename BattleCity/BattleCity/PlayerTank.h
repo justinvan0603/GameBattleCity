@@ -25,7 +25,7 @@ public:
 	int getLife();
 	void addLife();
 	void update();
-	
+	void SetDirection(MoveDirection direction);
 	void Respawn();
 	void PlayerPromoted();
 	void ActivateShield();
