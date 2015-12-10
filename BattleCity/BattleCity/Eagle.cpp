@@ -11,6 +11,8 @@ Eagle::Eagle(Sprite * sprite, D3DXVECTOR3 position)
 {
 	this->_left = (int)position.x;
 	this->_top = (int)position.y;
+	this->_width = SPRITE_WIDTH;
+	this->_height = SPRITE_HEIGHT;
 	_image = sprite;
 	_status = EAGLE_STATUS::LIVE;
 }
