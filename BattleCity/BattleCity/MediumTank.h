@@ -6,7 +6,7 @@ private:
 
 public:
 	MediumTank(LPD3DXSPRITE);
-	MediumTank(LPD3DXSPRITE, D3DXVECTOR2);
+	MediumTank(LPD3DXSPRITE, D3DXVECTOR2, bool = false);
 	void Draw();
 	void Shoot();
 	void Update();

@@ -6,7 +6,7 @@ private:
 	
 public:
 	LightTank(LPD3DXSPRITE);
-	LightTank(LPD3DXSPRITE, D3DXVECTOR2);
+	LightTank(LPD3DXSPRITE, D3DXVECTOR2, bool = false);
 	void Draw();
 	void Shoot();
 	void Update();

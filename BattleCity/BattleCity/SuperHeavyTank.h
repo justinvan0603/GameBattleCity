@@ -6,7 +6,7 @@ private:
 	int _hitPoint;
 public:
 	SuperHeavyTank(LPD3DXSPRITE);
-	SuperHeavyTank(LPD3DXSPRITE, D3DXVECTOR2);
+	SuperHeavyTank(LPD3DXSPRITE, D3DXVECTOR2, bool =false);
 	int getHitPoint();
 	void lostHitPoint();
 	void Draw();

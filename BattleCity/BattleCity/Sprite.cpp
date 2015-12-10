@@ -48,14 +48,19 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, in
 void Sprite::Next()
 {
 	this->_Index = (this->_Index + 1) % this->_Count;
-	if (_Index >= _Count)
-		_Index = 0;
+
 }
 void Sprite::Next(bool& isCompleted)
 {
 	this->_Index = (this->_Index + 1) % this->_Count;
 	if (_Index == _Count -1)
 		isCompleted = true;
+}
+void Sprite::Next(int startFrame)
+{
+	this->_Index = (this->_Index + 1) % this->_Count;
+	if (this->_Index == _Count - 1)
+		this->_Index = startFrame;
 }
 void Sprite::Render(int index, D3DXVECTOR3 Location)
 {
@@ -132,4 +137,8 @@ void Sprite::setWidth(int width)
 void Sprite::setHeight(int height)
 {
 	_Height = height;
+}
+void Sprite::setStartFrame(int startFrame)
+{
+	this->_Index = startFrame;
 }

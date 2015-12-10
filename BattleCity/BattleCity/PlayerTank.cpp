@@ -52,8 +52,6 @@ void PlayerTank::Draw()
 	}
 	if (_isTerminated == false)
 	{
-
-
 		_curSprite->Render(_left, _top);
 
 		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
@@ -128,13 +126,13 @@ void PlayerTank::Shoot()
 		{
 			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 			_startTime = GetTickCount();
-			GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
+			GameSound::getInstance()->Play(ID_SOUND_FIRE);
 		}
 		 if (GameTime::RenderFrame(_startTime,_delayTime))
 		{
 			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 			isShooting = true;
-			GameSound::getInstance(0)->Play(ID_SOUND_FIRE);
+			GameSound::getInstance()->Play(ID_SOUND_FIRE);
 			return;
 		}
 		

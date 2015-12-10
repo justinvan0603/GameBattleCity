@@ -22,7 +22,7 @@ MediumTank::MediumTank(LPD3DXSPRITE spriteHandler)
 	isShooting = false;
 	this->_isTerminated = false;
 }
-MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
+MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool isBonus)
 {
 	this->_level = 1;
 	this->_id = ID_MEDIUM_TANK;
@@ -42,6 +42,7 @@ MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
 	this->_isTerminated = false;
+	_isBonusTank = isBonus;
 }
 void MediumTank::Draw()
 {
@@ -53,7 +54,6 @@ void MediumTank::Draw()
 
 
 	}
-	//ShootableObject::DrawBullet();
 }
 void MediumTank::Update()
 {
@@ -66,18 +66,15 @@ void MediumTank::Update()
 		if (_isCollied)
 			break;
 	}
-	//for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	//{
 
-	//	(*i)->Update();
-	//}
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();
-	
+	if (_isBonusTank)
+		this->_listSprite[_currentDirection]->Next();
 }
 void MediumTank::Shoot()
 {

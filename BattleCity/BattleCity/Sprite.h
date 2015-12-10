@@ -21,6 +21,8 @@ public:
 	Sprite(LPD3DXSPRITE SpriteHandler, char* Path, int Width, int Height, int Count, int SpritePerRow);
 	void Next();
 	void Next(bool &isCompleted);
+	void Next(int startFrame);
+
 	void Render(int X, int Y);
 	void Render(D3DXVECTOR3 Location);
 	
@@ -31,6 +33,7 @@ public:
 	int getHeight();
 	void setWidth(int width);
 	void setHeight(int height);
+	void setStartFrame(int startFrame);
 public:
 	~Sprite(void);
 };

@@ -23,10 +23,10 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler)
 
 }
 
-LightTank::LightTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
+LightTank::LightTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool isBonus)
 {
 	this->_id = ID_LIGHT_TANK;
-	this->_level = 1;
+	this->_level = LEVEL_ONE;
 	this->_spriteHandler = spriteHandler;
 	this->_currentDirection = RIGHT;
 	this->_left = (int)position.x; //DEFAULT_TOP_LEFT.x;
@@ -43,6 +43,9 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
 	this->_isTerminated = false;
+	_isBonusTank = isBonus;
+
+	
 }
 void LightTank:: Draw()
 {
@@ -109,6 +112,8 @@ void LightTank::Update()
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();
+	if (_isBonusTank)
+		this->_listSprite[_currentDirection]->Next();
 }
 
 LightTank::~LightTank()

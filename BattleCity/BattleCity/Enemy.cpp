@@ -38,7 +38,10 @@ void Enemy::Shoot()
 
 	}
 }
-
+bool Enemy::isBonusTank()
+{
+	return _isBonusTank;
+}
 Enemy::~Enemy()
 {
 }

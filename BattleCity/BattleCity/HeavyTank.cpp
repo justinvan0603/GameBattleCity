@@ -22,7 +22,7 @@ HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler)
 	isShooting = false;
 	this->_isTerminated = false;
 }
-HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
+HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool isBonus)
 {
 	this->_id = ID_HEAVY_TANK;
 	this->_level = LEVEL_TWO;
@@ -42,6 +42,7 @@ HeavyTank::HeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position)
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
 	this->_isTerminated = false;
+	_isBonusTank = isBonus;
 }
 void HeavyTank::Draw()
 {
@@ -64,17 +65,14 @@ void HeavyTank::Update()
 		if (_isCollied)
 			break;
 	}
-	//for (vector<Bullet*> ::iterator i = _listBullet.begin(); i != _listBullet.end(); i++)
-	//{
-
-	//	(*i)->Update();
-	//}
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;
 	}
 	Enemy::MoveWithCollision();
-	//DynamicObject::Update();
+	DynamicObject::Update();
+	if (_isBonusTank)
+		this->_listSprite[_currentDirection]->Next();
 }
 void HeavyTank::Shoot()
 {

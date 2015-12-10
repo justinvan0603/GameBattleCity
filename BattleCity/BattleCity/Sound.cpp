@@ -18,6 +18,7 @@ DSound::DSound(HWND hWnd) : _directSoundDevice(NULL), _primaryBuffer(NULL)
 	bufferDesc.dwReserved = 0;
 	bufferDesc.lpwfxFormat = NULL;
 	bufferDesc.guid3DAlgorithm = GUID_NULL;
+	
 	//Create buffer by device
 	_directSoundDevice->CreateSoundBuffer(&bufferDesc, &_primaryBuffer, NULL);
 

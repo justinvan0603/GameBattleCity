@@ -2,10 +2,10 @@
 #include "ShootableObject.h"
 class Enemy : public ShootableObject
 {
-private:
-	bool _isBonusTank;
 
-	bool _isStopped;
+protected:
+	bool _isBonusTank;
+	bool _isFreeze;
 public:
 	bool _isCollied;
 	Enemy();
@@ -15,6 +15,9 @@ public:
 	void Shoot();
 	void Update() = 0;
 	void RandomShoot();
+	bool isBonusTank();
+	void ActivateFreeze();
+	void DeactivateFreeze();
 	~Enemy();
 };
 
