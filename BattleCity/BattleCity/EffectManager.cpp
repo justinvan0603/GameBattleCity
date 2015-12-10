@@ -32,8 +32,7 @@ void EffectManager::Draw()
 		if ((*i)->_completed == false)
 		{
 			(*i)->Render();
-			if (GameTime::RenderFrame(_startTime,5))
-				(*i)->Next((*i)->_completed);
+			(*i)->Next((*i)->_completed);
 			i++;
 		}
 		else
