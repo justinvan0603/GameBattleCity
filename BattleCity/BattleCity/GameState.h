@@ -1,12 +1,8 @@
 #ifndef __GAME_STATE_H__
 #define __GAME_STATE_H__
 
-#include "Keyboard.h"
 #include "Map.h"
-#include "GameSound.h"
-#include "LightTank.h"
 #include "Text.h"
-#include "StageManager.h"
 
 #pragma region Game State
 
@@ -16,8 +12,7 @@ public:
 	
 	virtual void update() = 0;
 	virtual void draw() = 0;
-	virtual void enter() = 0;
-
+	virtual void reset() = 0;
 	static void initialize(LPD3DXSPRITE spriteHandler);
 
 	static void release();
@@ -36,8 +31,7 @@ protected:
 	static GameState*	_gameState;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;
-	static DWORD _startTime;
-
+	int _delayTime;
 };
 #pragma endregion
 
@@ -51,7 +45,7 @@ public:
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
 	static MainMenu* get();
 
@@ -78,7 +72,7 @@ public:
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
 	static Instruction* get();
 
@@ -108,7 +102,7 @@ public:
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
 	static StartingState* get();
 
@@ -119,10 +113,6 @@ private:
 private:
 	static StartingState* _instance;
 	LPDIRECT3DDEVICE9 _d3ddevice;
-	Sprite* _bgTop;
-	D3DXVECTOR3 _bgTopPos;
-	Sprite* _bgBottom;
-	D3DXVECTOR3 _bgBottomPos;
 };
 #pragma endregion
 
@@ -134,7 +124,7 @@ public:
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
 	static PlayingState* get();
 
@@ -156,7 +146,7 @@ public:
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
 	static ScoreState* get();
 
@@ -167,7 +157,6 @@ private:
 	Sprite* _iconTankScore;
 	ScoreState();
 	~ScoreState();
-	int _delayTime;
 
 private:
 	static ScoreState* _instance;
@@ -175,27 +164,53 @@ private:
 };
 #pragma endregion
 
-#pragma region Dead State
+#pragma region GameOverState
 
-class EndState : public GameState
+class GameOverState : public GameState
 {
 public:
 	virtual void update();
 
 	virtual void draw();
 
-	virtual void enter();
+	virtual void reset();
 
-	static EndState* get();
-
-private:
-	EndState();
-	~EndState();
+	static GameOverState* get();
 
 private:
-	static EndState* _instance;
-	Sprite* _endImage;
-	DWORD _timeCounter;
+	GameOverState();
+	~GameOverState();
+
+private:
+	static GameOverState* _instance;
+	Sprite* _gameOverImage;
+};
+#pragma endregion
+
+#pragma region EndGameState
+
+class EndGame : public GameState
+{
+public:
+	virtual void update();
+
+	virtual void draw();
+
+	virtual void reset();
+
+	static EndGame* get();
+
+private:
+	EndGame();
+	~EndGame();
+
+private:
+	static EndGame* _instance;
+	bool _isFlash;
+	int _score;
+	D3DCOLOR _congraColor;
+	D3DCOLOR _arrayColor[5];
+	int _colorIndex;
 };
 #pragma endregion
 

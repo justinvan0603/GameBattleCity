@@ -10,7 +10,7 @@ private:
 	GameTime *_bulletDelay;
 	GameTime *_shieldDelay;
 	Effect* _shieldEffect;
-	DWORD _shieldTime;
+	int _delayShield;
 	bool _isMoving;
 	bool _isActiveShield;
 public:
@@ -23,6 +23,7 @@ public:
 	int getLife();
 	void addLife();
 	void update();
+	void reset();
 	void SetDirection(MoveDirection direction);
 	void Respawn();
 	void PlayerPromoted();

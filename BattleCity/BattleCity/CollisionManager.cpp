@@ -525,12 +525,6 @@ int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, in
 					return i;
 				}
 			}
-
-			if (!isEnemyCollided && !isPlayerCollided)
-			{
-				return i;
-			}
-
 		}
 	}
 	return -1;

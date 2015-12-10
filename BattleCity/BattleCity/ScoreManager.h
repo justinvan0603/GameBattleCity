@@ -12,6 +12,7 @@ public:
 	int getNumTank(int typeTank);
 	int getNumTank();
 	void renewValue();
+	void reset();
 private:
 	ScoreManager();
 	~ScoreManager();

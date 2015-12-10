@@ -3,6 +3,8 @@
 #include "PlayerTank.h"
 #include "Enemy.h"
 #include <vector>
+class PowerUp;
+
 //Giai quyet van de khi object bi delete thi lam sao van update duoc dan
 //Neu ko lam class nay khi Enemy bi chet ->delete Enemy-> mat list dan -> sai!
 class BulletManager
@@ -30,6 +32,6 @@ public:
 							int level,
 							int **map, 
 							vector<vector<StaticObject*>>* listNearbyObject);
-	 void UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy);
+	 void UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem);
 };
 

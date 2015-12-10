@@ -7,7 +7,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
 	_startTime = GetTickCount();
-	_shieldTime = GetTickCount();
+	_delayShield = 5000;
 	this->_objectType = DYNAMIC_OBJECT;
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
@@ -15,8 +15,8 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_level = LEVEL_ONE;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
-	this->_left = 235;//DEFAULT_PLAYER_POSITION_X;
-	this->_top = 423;//DEFAULT_PLAYER_POSITION_Y;
+	this->_left = DEFAULT_PLAYER_POSITION_X;
+	this->_top = DEFAULT_PLAYER_POSITION_Y;
 	this->_vx = DEFAULT_PLAYER_SPEED_X;
 	this->_vy = DEFAULT_PLAYER_SPEED_Y;
 	this->_hitPoint = DEFAULT_PLAYER_HP;
@@ -26,10 +26,9 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
 	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
 	this->_shieldEffect = new Effect(_spriteHandler, EFFECT_SHIELD, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE_SHIELD, NUMB_OF_SPRITE_SHIELD);
-	_curSprite = this->_listSprite[UP];
+	_curSprite = this->_listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
-	this->_currentDirection = UP;
 	this->_isImmortal = true;
 
 }
@@ -37,7 +36,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 void PlayerTank::Draw()
 {
 
-	if (GameTime::RenderFrame(_shieldTime, PLAYER_SHIELD_TIME))
+	if (GameTime::DelayTime(_delayShield))
 	{
 		this->_isImmortal = false;
 		this->_isActiveShield = false;
@@ -168,6 +167,19 @@ void PlayerTank::Update()
 	this->_curSprite = this->_listSprite[_currentDirection];
 	
 }
+
+void PlayerTank::reset()
+{
+	this->_currentDirection = MoveDirection::UP;
+	this->_level = LEVEL_ONE;
+	this->_life = DEFAULT_PLAYER_LIFE;
+	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
+	this->_hitPoint = DEFAULT_PLAYER_HP;
+	_curSprite = this->_listSprite[_currentDirection];
+	this->_isImmortal = true;
+
+}
+
 void PlayerTank::Respawn()
 {
 	if (_isTerminated == true)
@@ -198,7 +210,7 @@ int PlayerTank::getLife()
 
 void PlayerTank::ActivateShield()
 {
-	
+	this->_delayShield = 5000;
 	this->_isActiveShield = true;
 	this->_isImmortal = true;
 }
@@ -210,7 +222,7 @@ void PlayerTank::addLife()
 void PlayerTank::SetDirection(MoveDirection direction)
 {
 	_currentDirection = direction;
-	_listSprite[_currentDirection];
+	_curSprite = _listSprite[_currentDirection];
 }
 PlayerTank::~PlayerTank()
 {

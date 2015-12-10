@@ -9,45 +9,52 @@
 #include "Water.h"
 #include "Trees.h"
 #include "Ice.h"
+#include "StageManager.h"
+#include "LightTank.h"
+#include "SteelWall.h"
+#include "GameSound.h"
 
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
-	delayEndStage = 5000;
-	delaytimeReSpanw = 0;
-	isPrepareRespawn = false;
-	_maxEnemy = MAX_ENEMY;
 	//init rectangleRespawn
 	_rectangleRespawn = new vector<MyRectangle*>;
 	for (int i = 0; i < 3;i++)
 	{
 		_rectangleRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
-	}
-	_startTime = GetTickCount();
-	_mapMatrix = new int*[NUM_ROW_TILE];
-	_steelBoundEagle = false;
-	_canUpdateEnemy = true;
-	_numEnemy = 0;
+	}	
 	_spriteHandler = spriteHandler;
 	_spriteHandler->GetDevice(&d3ddev);
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
-	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
 	_respawnEffect = _spriteItemManager->getRespawnSprite();
 	_player = new PlayerTank(_spriteHandler);
 	_listEnemy = new vector<Enemy*>;
 	_listEnemyOnMap = new vector<Enemy*>;
-	_colisObj = new vector<vector<StaticObject*>>;
-
+	_mapMatrix = new int*[NUM_ROW_TILE];
 	for (short i = 0; i < NUM_ROW_TILE; i++)
 	{
 		_mapMatrix[i] = new int[NUM_COLUMN_TILE];
 	}
+	BulletManager::getInstance();
+	EffectManager::getInstance(_spriteHandler);
 	changeStage();
 }
 
 
 void Map::changeStage()
 {
+	//
+	_colisObj = new vector<vector<StaticObject*>>;
+	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
+	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
+	delaytimeReSpanw = 0;
+	isPrepareRespawn = false;
+	_maxEnemy = MAX_ENEMY;
+	_numEnemy = 0;
+	_startTime = GetTickCount();
+	_delayFreeze = 15000;
+	_isFreeze = false;
+	//
 	int numOfTypeEnemy[4];
 	string orderAppear;
 	string stringLine;
@@ -56,8 +63,7 @@ void Map::changeStage()
 		return;
 	getline(_mapFile, stringLine);
 	tempMaxEnemy = std::stoi(stringLine);
-	if (tempMaxEnemy > _maxEnemy)
-		_maxEnemy = tempMaxEnemy;
+	_maxEnemy = tempMaxEnemy;
 	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
 	{
 		getline(_mapFile, stringLine);
@@ -85,7 +91,7 @@ void Map::changeStage()
 	_mapFile.close();
 	_player->InitMapData(_mapMatrix, _colisObj);
 	InitListEnemy(numOfTypeEnemy,orderAppear);
-	 
+	_powerUpItem->setmap(_mapMatrix);
 }
 
 void Map::InitColisObject()
@@ -98,15 +104,15 @@ void Map::InitColisObject()
 		{
 			type = _mapMatrix[i][j] % 100;
 
-			if (type == 0 || type == 1 || type == 10 || type == 11)
+			if (type == ID_BRICKWALL_0 || type == ID_BRICKWALL_1 || type == ID_BRICKWALL_10 || type == ID_BRICKWALL_11)
 				temp[type].push_back(new BrickWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-			if(type == 2 || type == 3 || type == 12 || type == 13)
+			if(type == ID_STEELWALL_2 || type == ID_STEELWALL_3 || type == ID_STEELWALL_12 || type == ID_STEELWALL_13)
 				temp[type].push_back(new SteelWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-			if (type == 4 || type == 5 || type == 14 || type == 15)
+			if (type == ID_WATER_4 || type == ID_WATER_5 || type == ID_WATER_14 || type == ID_WATER_15)
 				temp[type].push_back(new Water(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-			if (type == 6 || type == 7 || type == 16 || type == 17)
+			if (type == ID_TREES_6 || type == ID_TREES_7 || type == ID_TREES_16 || type == ID_TREES_17)
 				temp[type].push_back(new Trees(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
-			if (type == 8 || type == 9 || type == 18 || type == 19)
+			if (type == ID_ICE_8 || type == ID_ICE_9 || type == ID_ICE_18 || type == ID_ICE_19)
 				temp[type].push_back(new Ice(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 		}
 	}
@@ -124,24 +130,26 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 	//order - Thu tu xuat hien cac loai tank 
 
 	float distance = 0.0f;
-	int num = 1;
+	bool isBonusTank = false;
 	vector<MediumTank*>* listMedium = new vector<MediumTank*>;
 	vector<LightTank*>* listLight = new vector<LightTank*>;
 	vector<HeavyTank*>* listHeavy = new vector<HeavyTank*>;
 	vector<SuperHeavyTank*>* listSuper = new vector<SuperHeavyTank*>;
 	for (int i = 0; i < _maxEnemy; i++)
 	{
+		isBonusTank = false;
+		if (i == 3 || i == 10 || i == 17)
+		{
+			//set tank has powerup
+			isBonusTank = true;
+		}
 		if (distance > MAX_RESPAWN_POS_X)
 			distance = 0.0f;
 		if(numOfEnemy[ID_MEDIUM_TANK] > 0)
 		{
 			MediumTank* temp;
-			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_MEDIUM_TANK] -= 1;
-			if(num == 4 || num == 11 || num == 18)
-			{
-				//set tank has powerup
-			}
 			temp->InitMapData(_mapMatrix, _colisObj);
 			listMedium->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
@@ -150,12 +158,8 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 		if(numOfEnemy[ID_LIGHT_TANK] > 0)
 		{
 			LightTank* temp;
-			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_LIGHT_TANK] -= 1;
-			if (num == 4 || num == 11 || num == 18)
-			{
-				//set tank has powerup
-			}
 			temp->InitMapData(_mapMatrix, _colisObj);
 			listLight->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
@@ -164,12 +168,8 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 		if (numOfEnemy[ID_HEAVY_TANK] > 0)
 		{
 			HeavyTank* temp;
-			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_HEAVY_TANK] -= 1;
-			if (num == 4 || num == 11 || num == 18)
-			{
-				//set tank has powerup
-			}
 			temp->InitMapData(_mapMatrix, _colisObj);
 			listHeavy->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
@@ -178,12 +178,8 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 		if (numOfEnemy[ID_SUPER_HEAVY_TANK] > 0)
 		{
 			SuperHeavyTank* temp;
-			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y));
+			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_SUPER_HEAVY_TANK] -= 1;
-			if (num == 4 || num == 11 || num == 18)
-			{
-				//set tank has powerup
-			}
 			temp->InitMapData(_mapMatrix, _colisObj);
 			listSuper->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
@@ -271,7 +267,7 @@ void Map::drawTrees()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (i != 6 && i != 7 && i != 16 && i != 17)
+			if (i != ID_TREES_6 && i != ID_TREES_7 && i != ID_TREES_16 && i != ID_TREES_17)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)
@@ -290,7 +286,7 @@ void Map::drawIce()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (i != 8 && i != 9 && i != 18 && i != 19)
+			if (i != ID_ICE_8 && i != ID_ICE_9 && i != ID_ICE_18 && i != ID_ICE_19)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)
@@ -309,7 +305,8 @@ void Map::drawMap()
 	{
 		for (short j = 0; j < NUM_COLUMN_TILE; j++)
 		{
-			if (_mapMatrix[i][j] == -1)
+			int type = _mapMatrix[i][j] % 100;
+			if (type == ID_TREES_6 || type == ID_TREES_7 || type == ID_TREES_16 || type == ID_TREES_17 || _mapMatrix[i][j] == -1)
 			{
 				_spriteItemManager->getBackGround()->Render(0, 0, getPositionFromMapMatrix(i, j));
 			}
@@ -345,7 +342,6 @@ void Map::drawPowerUp()
 				_powerUpItem->Draw();
 			}
 		}
-		//ve tuong thep, 
 	}
 }
 
@@ -397,11 +393,7 @@ void Map::drawRightMenu()
 
 void Map::Update()
 {
-	if (Keyboard::getInstance()->IsKeyDown(DIK_1))
-	{
-		_powerUpItem->enablePowerUp();
-	}
-	updatePowerItem();
+	
 	_player->Update();
 	updateEnemy();
 	BulletManager::getInstance()->Update();
@@ -423,10 +415,11 @@ void Map::Update()
 
 	for (int i = 0; i < n; i++)
 	{
-		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i));
+		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i),_powerUpItem);
 	}
 
 	CollisionManager::CollisionWithItem(_player, _powerUpItem);
+	updatePowerItem();
 
 	ClearDestroyedEnemy();
 	checkEndGame();
@@ -434,9 +427,9 @@ void Map::Update()
 
 void Map::updateEnemy()
 {
-	if(_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME && _listEnemy->size() >= 1)
+	if (_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME && _listEnemy->size() >= 1)
 	{
-		if(_numEnemy == 0)
+		if (_numEnemy == 0)
 		{
 			respawnAfter(1000);
 		}
@@ -496,50 +489,63 @@ void Map::respawnAfter(int delaytime)
 		{
 			return;
 		}
+		if(_isFreeze)
+		{
+			_listEnemy->front()->ActivateFreeze();
+		}
 		_listEnemyOnMap->push_back(_listEnemy->front());
 		_listEnemy->erase(_listEnemy->begin());
 		_numEnemy++;
+		if (_numEnemy == 11 || _numEnemy == 18)
+		{
+			if (_powerUpItem->IsEnable())
+			{
+				_powerUpItem->disablePowerUp();
+			}
+		}
 	}
 }
 
 
 void Map::updatePowerItem()
 {
+	if (_isFreeze)
+	{
+		if (GameTime::DelayTime(_delayFreeze))
+		{
+			_delayFreeze = 15000;
+			_isFreeze = false;
+			UnFreezeEnemyOnMap();
+		}
+		return;
+	}
 	if (_powerUpItem->IsEnable())
 	{
 		if (_powerUpItem->IsEaten())
 		{
-			if (_powerUpItem->getType() == ID_POWER_FREEZE_TIME || _powerUpItem->getType() == ID_POWER_STEELWALL_EAGLE)
+
+			if (_powerUpItem->getType() == ID_POWER_FREEZE_TIME)
 			{
-				if (_powerUpItem->getType() == ID_POWER_FREEZE_TIME)
-				{
-					_canUpdateEnemy = false;
-				}
-				else
-				{
-					_steelBoundEagle = true;
-				}
+				_isFreeze = true;
+				FreezeEnemyOnMap();
 			}
-			else
+			if (_powerUpItem->getType() == ID_POWER_BOMB)
 			{
-				if (_powerUpItem->getType() == ID_POWER_BOMB)
-				{
-					//cho quai no
-				}
-				if (_powerUpItem->getType() == ID_POWER_SHEILD)
-				{
-					_player->ActivateShield();
-				}
-				if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
-				{
-					_player->addLife();
-				}
-				if (_powerUpItem->getType() == ID_POWER_STAR)
-				{
-					_player->PlayerPromoted();
-				}
-				_powerUpItem->disablePowerUp();
+				ClearEnemyOnMap();
 			}
+			if (_powerUpItem->getType() == ID_POWER_SHEILD)
+			{
+				_player->ActivateShield();
+			}
+			if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
+			{
+				_player->addLife();
+			}
+			if (_powerUpItem->getType() == ID_POWER_STAR)
+			{
+				_player->PlayerPromoted();
+			}
+			_powerUpItem->disablePowerUp();
 		}
 	}
 }
@@ -557,14 +563,20 @@ void Map::checkEndGame()
 	{
 		if (GameTime::DelayTime(delayEndStage))
 		{
+			ClearStaticObject();
+			SetDefaultPositionPlayer();
 			if (_player->getLife() == 0)
 			{
 				ScoreState::get()->setEndAfter(true);
 			}
 			else
 			{
-				//changeStage();
-			}
+				StageManager::getInstance()->nextStage();
+				if (StageManager::getInstance()->getStage() <= DEFAULT_MAX_STAGE)
+				{
+					changeStage();
+				}				
+			}		
 			GameState::switchState(ScoreState::get());
 		}
 	}
@@ -623,4 +635,72 @@ void Map::ClearDestroyedEnemy()
 			i++;
 		}
 	}
+}
+
+void Map::ClearStaticObject()
+{
+	int n = _colisObj->size();
+	for (int i = 0; i < n; i++)
+	{
+		if (_colisObj->at(i).size() != 0)
+		{
+			int m = _colisObj->at(i).size();
+			for (int j = 0; j < m; j++)
+			{
+				if (_colisObj->at(i).at(j) != NULL)
+				{
+					delete _colisObj->at(i).at(j);
+					_colisObj->at(i).at(j) = NULL;
+				}
+			}
+		}
+	}
+	delete _colisObj;
+	_colisObj = NULL;
+	SAFE_RELEASE(_eagle);
+}
+
+void Map::SetDefaultPositionPlayer()
+{
+	_player->setPositionX(DEFAULT_PLAYER_POSITION_X);
+	_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
+	_player->SetDirection(MoveDirection::UP);
+	_player->ActivateShield();
+	
+}
+
+void Map::ClearEnemyOnMap()
+{
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		_listEnemyOnMap->at(i)->_isTerminated = true;
+		D3DXVECTOR2 pos(_listEnemyOnMap->at(i)->getLeft(), _listEnemyOnMap->at(i)->getTop());
+		EffectManager::getInstance()->AddDestroyEffect(pos);
+	}
+	GameSound::getInstance()->Play(ID_SOUND_TANK_EXPLODE);
+}
+
+void Map::FreezeEnemyOnMap()
+{
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		_listEnemyOnMap->at(i)->ActivateFreeze();
+	}
+}
+
+void Map::UnFreezeEnemyOnMap()
+{
+	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		_listEnemyOnMap->at(i)->DeactivateFreeze();
+	}
+}
+
+void Map::reset()
+{
+	_player->reset();
+	changeStage();
 }

@@ -1,30 +1,18 @@
 #include "GameState.h"
-
-#include "CollisionManager.h"
-#include "EffectManager.h"
-#include "BulletManager.h"
-
-
 #include "ScoreManager.h"
+#include "StageManager.h"
 
 
 #pragma region Game State
 
-MainMenu* MainMenu::_instance = nullptr;
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
-
 Text* GameState::_text = nullptr;
-DWORD GameState::_startTime = 0;
-
 
 void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
-	_startTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
-	BulletManager::getInstance();
-	EffectManager::getInstance(_spriteHandler);
 	switchState(MainMenu::get());
 }
 
@@ -43,7 +31,6 @@ void GameState::stateUpdate()
 void GameState::switchState(GameState* newState)
 {
 	_gameState = newState;
-	_gameState->enter();
 }
 
 
@@ -64,19 +51,20 @@ void GameState::draw()
 #pragma endregion
 
 #pragma region Main Menu
+MainMenu* MainMenu::_instance = nullptr;
 MainMenu::MainMenu()
 {
-	_menuImagePosition = IMAGE_MAIN_MENU_GAME_DEFAULT_POS;
-	_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
 	//new sprite image main menu
 	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
-	enter();
+	_delayTime = 200;
+	MainMenu::reset();
 }
 
 MainMenu::~MainMenu()
 {
-	//SAFE_RELEASE(image);
+	SAFE_RELEASE(_menuImage);
+	SAFE_RELEASE(_selector);
 }
 
 void MainMenu::update()
@@ -94,8 +82,10 @@ void MainMenu::update()
 	{
 		//tao selector chuyen dong
 		
-		if (GameTime::RenderFrame(_startTime, SELECTOR_SPEED_CHANGE))
+		
+		if (GameTime::DelayTime(_delayTime))
 		{
+			_delayTime = 200;
 			_selector->Next();
 		}
 		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
@@ -134,17 +124,18 @@ void MainMenu::draw()
 	
 }
 
+void MainMenu::reset()
+{
+	_menuImagePosition = IMAGE_MAIN_MENU_GAME_DEFAULT_POS;
+	_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
+}
+
 MainMenu* MainMenu::get()
 {
 	if (_instance == nullptr)
 		_instance = new MainMenu();
 
 	return _instance;
-}
-
-void MainMenu::enter()
-{
-	
 }
 
 #pragma endregion
@@ -154,18 +145,23 @@ Instruction* Instruction::_instance = nullptr;
 
 Instruction::Instruction()
 {
-	_currentTab = 1;
 	_imageTabStory = new Sprite(_spriteHandler, IMAGE_TAB_STORY_PATH, 212, 212, 1, 1);
 	_imageTabControl = new Sprite(_spriteHandler, IMAGE_TAB_CONTROL_PATH, SPRITE_WIDTH, SPRITE_HEIGHT*7, 1, 1);
 	_imageBulletRight = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_imageTabEmies = new Sprite(_spriteHandler, IMAGE_TAB_ENEMIES_PATH, SPRITE_WIDTH, 176, 1, 1);
 	_imageTabPowerUp = new Sprite(_spriteHandler, IMAGE_TAB_POWERUP_PATH, SPRITE_WIDTH, 224, 1, 1);
 	_imageTabEnvironment = new Sprite(_spriteHandler, IMAGE_TAB_ENVIRONMENT_PATH, SPRITE_WIDTH, 224, 1, 1);
+	Instruction::reset();
 }
 
 Instruction::~Instruction()
 {
-	
+	SAFE_RELEASE(_imageTabStory);
+	SAFE_RELEASE(_imageTabControl);
+	SAFE_RELEASE(_imageBulletRight);
+	SAFE_RELEASE(_imageTabEmies);
+	SAFE_RELEASE(_imageTabPowerUp);
+	SAFE_RELEASE(_imageTabEnvironment);
 }
 
 void Instruction::update()
@@ -285,17 +281,17 @@ void Instruction::draw()
 
 }
 
+void Instruction::reset()
+{
+	_currentTab = 1;
+}
+
 Instruction* Instruction::get()
 {
 	if (_instance == nullptr)
 		_instance = new Instruction();
 
 	return _instance;
-}
-
-void Instruction::enter()
-{
-
 }
 
 #pragma endregion
@@ -306,23 +302,22 @@ void Instruction::enter()
 StartingState* StartingState::_instance = nullptr;
 
 StartingState::StartingState()
-{
-	_startTime = GetTickCount();	
+{	
 	_spriteHandler->GetDevice(&_d3ddevice);
-	//_bgTop = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
-	//_bgBottom = new Sprite(_spriteHandler, IMAGE_BG_STARTING_STATE_PATH, IMAGE_BG_STARTING_WIDTH, IMAGE_BG_STARTING_HEIGHT, 0, 1);
+	_delayTime = 5000;
 }
 
 StartingState::~StartingState()
 {
-
+	SAFE_RELEASE(_d3ddevice);
 }
 
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
-	if (GameTime::RenderFrame(_startTime, 3000))
+	if (GameTime::DelayTime(_delayTime))
 	{
+		_delayTime = 5000;
 		switchState(PlayingState::get());
 	}
 }
@@ -330,14 +325,11 @@ void StartingState::update()
 void StartingState::draw()
 {
 	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
-	//_bgTop->Render(IMAGE_BG_STARTING_TOP_POS);
-	//_bgBottom->Render(IMAGE_BG_STARTING_BOTTOM_POS);
 	_text->drawText("STAGE " + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
 }
 
-void StartingState::enter()
+void StartingState::reset()
 {
-	
 }
 
 StartingState* StartingState::get()
@@ -358,49 +350,30 @@ PlayingState* PlayingState::_instance = nullptr;
 PlayingState::PlayingState()
 {
 	_map = new Map(_spriteHandler);
-	//GameSound::getInstance(0)->PlayRepeat(1);
+	
 	
 }
 
 void PlayingState::update()
 {
 	//map, bullet, player update
-	
 	_map->Update();
-	
-	//_player->Update();
-	//switchState(ScoreState::get());
-	//_enemy->Update();
-	//CollisionManager::CollisionChangeDirection(_player, _enemy);
-	
-	//vector<Bullet*> listBullet = _player->getListBullet();
-	//for (vector<Bullet*>::iterator i = listBullet.begin(); i != listBullet.end(); i++)
-	//{
-	//	bool flag = CollisionManager::CollisionBulletWithObject(*i, _enemy);
-	//}
-	
-	
 }
 
 void PlayingState::draw()
 {
-	//draw all item in screen
-	
+	//draw all item in screen	
 	_map->Draw();
-	//_enemy->Draw();
-	//_player->Draw();
-	
-
 }
 
-void PlayingState::enter()
+void PlayingState::reset()
 {
-	
+	_map->reset();
 }
 
 PlayingState::~PlayingState()
 {
-
+	SAFE_RELEASE(_map);
 }
 
 PlayingState* PlayingState::get()
@@ -421,31 +394,31 @@ ScoreState* ScoreState::_instance = nullptr;
 
 ScoreState::ScoreState()
 {
-	_isEnd = false;
 	_delayTime = 10000;
 	_iconTankScore = new Sprite(_spriteHandler, ICON_TANK_SCORE_PATH, 48, 176, 1, 1);
+	ScoreState::reset();
 }
 
 void ScoreState::update()
 {
 	if (GameTime::DelayTime(_delayTime))
 	{
+		_delayTime = 10000;
 		ScoreManager::getInstance()->renewValue();
 		if (_isEnd)
 		{
-			GameState::switchState(EndState::get());
+			GameState::switchState(GameOverState::get());
 		}
 		else
 		{
 
-			if (StageManager::getInstance()->getStage() == DEFAULT_MAX_STAGE)
+			if (StageManager::getInstance()->getStage() > DEFAULT_MAX_STAGE)
 			{
-				//chuyen toi man hinh congration tu tao sau
-				//chuc mung diem cao, end game quay lai tu dau
+				GameState::switchState(EndGame::get());
 			}
 			else
 			{
-				StageManager::getInstance()->nextStage();
+				
 				GameState::switchState(StartingState::get());
 			}
 		}
@@ -457,7 +430,7 @@ void ScoreState::draw()
 	_text->drawText("HI-SCORE", POS_HI_SCORE, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), POS_HI_SCORE_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("STAGE", POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(StageManager::getInstance()->getStage()), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(to_string(StageManager::getInstance()->getStage() - 1), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);
@@ -475,9 +448,9 @@ void ScoreState::draw()
 	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
 }
 
-void ScoreState::enter()
+void ScoreState::reset()
 {
-
+	_isEnd = false;
 }
 
 ScoreState* ScoreState::get()
@@ -497,53 +470,130 @@ void ScoreState::setEndAfter(bool isEnd)
 
 ScoreState::~ScoreState()
 {
-
+	SAFE_RELEASE(_iconTankScore);
 }
 
 #pragma endregion
 
 
-#pragma region End State 
-EndState* EndState::_instance = nullptr;
+#pragma region GameOverState 
+GameOverState* GameOverState::_instance = nullptr;
 
-EndState::EndState()
+GameOverState::GameOverState()
 {
-	_endImage = new Sprite(_spriteHandler, ICON_END_GAME_PATH, 324, 211, 1, 1);
+	_gameOverImage = new Sprite(_spriteHandler, ICON_END_GAME_PATH, 324, 211, 1, 1);
+	_delayTime = 10000;
 }
 
-void EndState::update()
+void GameOverState::update()
 {
-	//countdown time and return to main menu
-	SleepEx(2000, false);
-	switchState(MainMenu::get());
+	if(GameTime::DelayTime(_delayTime))
+	{
+		_delayTime = 10000;
+		switchState(MainMenu::get());
+	}	
 }
 
-void EndState::draw()
+void GameOverState::draw()
 {
 	//Draw game over picture
-	_endImage->Render(POS_ICON_END);
+	_gameOverImage->Render(POS_ICON_END);
 }
 
-void EndState::enter()
+void GameOverState::reset()
 {
-	
 }
 
-EndState* EndState::get()
+GameOverState* GameOverState::get()
 {
 	if (_instance == nullptr)
 	{
-		_instance = new EndState();
+		_instance = new GameOverState();
 	}
 
 	return _instance;
 }
 
-EndState::~EndState()
+GameOverState::~GameOverState()
+{
+	SAFE_RELEASE(_gameOverImage);
+}
+#pragma endregion
+
+#pragma region End State 
+EndGame* EndGame::_instance = nullptr;
+
+EndGame::EndGame()
+{
+	_delayTime = 10000;
+	_arrayColor[0] = COLOR_RED;
+	_arrayColor[1] = COLOR_YELLOW;
+	_arrayColor[2] = COLOR_GREEN;
+	_arrayColor[3] = COLOR_BLUE;
+	_arrayColor[4] = COLOR_WHITE;
+	EndGame::reset();
+}
+
+void EndGame::update()
+{
+	_score = ScoreManager::getInstance()->getPlayerScore();
+	if (GameTime::DelayTime(_delayTime))
+	{
+		_delayTime = 10000;
+		_isFlash = true;
+	}
+	if(_colorIndex > 4)
+	{
+		_colorIndex = 0;
+	}
+	_congraColor = _arrayColor[_colorIndex];
+	_colorIndex++;
+	if (Keyboard::getInstance()->getKeyState(DIK_ESCAPE) == KEY_PRESS)
+	{
+		//reset player, score, stage, main menu, noi chung la het cac stage
+		StageManager::getInstance()->reset();
+		ScoreManager::getInstance()->reset();
+		MainMenu::get()->reset();
+		Instruction::get()->reset();
+		PlayingState::get()->reset();
+		ScoreState::get()->reset();
+		/*EndGame::get()->*/reset();
+		switchState(MainMenu::get());	
+	}
+}
+
+void EndGame::draw()
+{
+	_text->drawText("CONGRATULATION", D3DXVECTOR3(40.0f, 130.0f, 0.0f), _congraColor, 40);
+	_text->drawText("You have successfully defended the fortress \nfrom the attack of enemy tanks. You are a tank \ncommander of the best. We are very proud of you.", D3DXVECTOR3(50.0f, 230.0f, 0.0f), COLOR_SCORE_TEXT, 12,0,0,4);
+	_text->drawText("Your score: ", D3DXVECTOR3(50.0f, 300.0f, 0.0f), COLOR_SCORE_TEXT, 12);
+	_text->drawText(to_string(_score), D3DXVECTOR3(200.0f, 300.0f, 0.0f), COLOR_RED, 14);
+	if(_isFlash)
+	{
+		_text->drawText("Press ESC to return Main menu", D3DXVECTOR3(330.0f, 545.0f, 0.0f), COLOR_WHITE, 10);
+	}	
+}
+
+void EndGame::reset()
+{
+	_isFlash = false;
+	_congraColor = COLOR_WHITE;
+	_colorIndex = 0;
+}
+
+EndGame* EndGame::get()
+{
+	if (_instance == nullptr)
+	{
+		_instance = new EndGame();
+	}
+
+	return _instance;
+}
+
+EndGame::~EndGame()
 {
 
 }
-
-
 
 #pragma endregion

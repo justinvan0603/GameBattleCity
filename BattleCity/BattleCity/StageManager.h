@@ -7,6 +7,7 @@ public:
 	static StageManager* getInstance();
 	void nextStage();
 	int getStage();
+	void reset();
 private:
 	StageManager();
 	~StageManager();

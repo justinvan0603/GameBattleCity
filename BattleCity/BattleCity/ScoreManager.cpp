@@ -56,6 +56,11 @@ void ScoreManager::renewValue()
 	}
 }
 
+void ScoreManager::reset()
+{
+	_playerScore = 0;
+}
+
 int ScoreManager::getScoreTank(int typeTank)
 {
 	return _numTank[typeTank] * _scoreTank[typeTank];

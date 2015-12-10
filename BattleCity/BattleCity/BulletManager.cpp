@@ -77,7 +77,7 @@ void BulletManager::Update()
 	CleanBulletList();
 }
 
-void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy)
+void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem)
 {
 	for (vector<Bullet*> ::iterator i = _listEnemyBullet.begin(); i != _listEnemyBullet.end(); i++)
 	{
@@ -91,7 +91,13 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 
 		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, enemy);
 		if (isCollided)
+		{
+			if(enemy->isBonusTank())
+			{
+				powerUpItem->enablePowerUp();
+			}
 			break;
+		}
 	}
 
 }

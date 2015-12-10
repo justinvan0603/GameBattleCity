@@ -1,5 +1,6 @@
 #include "PowerUp.h"
 #include "GameTime.h"
+#include "Map.h"
 
 
 PowerUp::PowerUp()
@@ -9,8 +10,8 @@ PowerUp::PowerUp()
 PowerUp::PowerUp(Sprite* sprite)
 {
 	_image = sprite;
-	_isEnable = false;
-	_isEaten = false;
+	this->_width = SPRITE_WIDTH;
+	this->_height = SPRITE_WIDTH;
 }
 
 void PowerUp::Draw()
@@ -24,14 +25,14 @@ void PowerUp::Update()
 
 }
 
-bool PowerUp::IsEnable()
-{
-	return _isEnable;
-}
-
 bool PowerUp::IsEaten()
 {
 	return _isEaten;
+}
+
+bool PowerUp::IsEnable()
+{
+	return _isEnable;
 }
 
 void PowerUp::setEaten()
@@ -48,6 +49,8 @@ void PowerUp::disablePowerUp()
 {
 	_isEnable = false;
 	_isEaten = false;
+	this->_top = 0;
+	this->_left = 0;
 }
 
 void PowerUp::enablePowerUp()
@@ -55,9 +58,29 @@ void PowerUp::enablePowerUp()
 	_isEnable = true;
 	srand(time(NULL));
 	_typePower = ID_POWER_BOMB + rand() % (ID_POWER_STAR - ID_POWER_BOMB + 1);
-	
-	this->_top = 51;//0 + rand() % (100 - 0 + 1);
-	this->_left = 100;//0 + rand() % (100 - 0 + 1);
+	int col, row, type;
+	bool flag;
+	do
+	{
+		flag = false;
+		srand(time(NULL));
+		col = rand() % 49;
+		row = rand() % 49;
+		type = _mapMatrix[row][col] % 100;
+		if (type == ID_STEELWALL_2 || type == ID_STEELWALL_3 || type == ID_STEELWALL_12 || type == ID_STEELWALL_13 ||
+			type == ID_WATER_4 || type == ID_WATER_5 || type == ID_WATER_14 || type == ID_WATER_15)
+		{
+			flag = true;
+		}
+	} while ((col == 24 && row == 48) || flag);
+	D3DXVECTOR3 pos = Map::getPositionFromMapMatrix(row, col);
+	this->_top = pos.y;
+	this->_left = pos.x;
+}
+
+void PowerUp::setmap(int** map)
+{
+	_mapMatrix = map;
 }
 
 PowerUp::~PowerUp()

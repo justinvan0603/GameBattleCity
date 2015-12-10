@@ -14,13 +14,17 @@ StageManager* StageManager::getInstance()
 
 void StageManager::nextStage()
 {
-	if(_currentStage < _maxStage)
-		_currentStage++;
+	_currentStage++;
 }
 
 int StageManager::getStage()
 {
 	return _currentStage;
+}
+
+void StageManager::reset()
+{
+	_currentStage = DEFAULT_START_STAGE;
 }
 
 StageManager::StageManager()

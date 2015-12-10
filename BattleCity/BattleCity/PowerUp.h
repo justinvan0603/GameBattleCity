@@ -10,17 +10,19 @@ public:
 	PowerUp(Sprite* sprite);
 	void Draw();
 	void Update();
-	bool IsEnable();
 	bool IsEaten();
+	bool IsEnable();
 	void setEaten();
 	int getType();
 	void disablePowerUp();
 	void enablePowerUp();
+	void setmap(int** map);
 	~PowerUp();
 private:
-	int _typePower;
 	bool _isEnable;
 	bool _isEaten;
+	int _typePower;
+	int** _mapMatrix;
 };
 #endif
 
