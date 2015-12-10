@@ -8,6 +8,7 @@ Enemy::Enemy()
 	_startTime = GetTickCount();
 	_currentDirection = DOWN;
 	_isCollied = false;
+	_isFreeze = false;
 }
 
 
@@ -23,24 +24,29 @@ void Enemy::Shoot()
 {
 	D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top, _currentDirection);
 
-	//if (_listBullet.size() == 0)
+
 	if (BulletManager::getInstance()->getEnemyBulletSize() == 0)
 	{
 		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
-		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
+
 		_startTime = GetTickCount();
 	}
 	else if (GameTime::RenderFrame(_startTime, 3000))
 	{
 		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
-		//_listBullet.push_back(new Bullet(_spriteHandler, _currentDirection,  bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject));
-
-
 	}
 }
 bool Enemy::isBonusTank()
 {
 	return _isBonusTank;
+}
+void Enemy::ActivateFreeze()
+{
+	_isFreeze = true;
+}
+void Enemy::DeactivateFreeze()
+{
+	_isFreeze = false;
 }
 Enemy::~Enemy()
 {
