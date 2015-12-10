@@ -12,7 +12,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
 	this->_spriteHandler = spriteHandler;
-	this->_level = LEVEL_ONE;
+	this->_level = LEVEL_FOUR;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
 	this->_left = DEFAULT_PLAYER_POSITION_X;
@@ -21,10 +21,10 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_vy = DEFAULT_PLAYER_SPEED_Y;
 	this->_hitPoint = DEFAULT_PLAYER_HP;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
-	this->_listSprite[UP] = new Sprite(_spriteHandler, PLAYER_SPRITE_UP_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
-	this->_listSprite[LEFT] = new Sprite(_spriteHandler, PLAYER_SPRITE_LEFT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
-	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
-	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_SPRITE, PLAYER_SPRITE);
+	this->_listSprite[UP] = new Sprite(_spriteHandler, PLAYER_SPRITE_UP_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_NUMB_OF_SPRITE, PLAYER_SPRITE_PER_ROW);
+	this->_listSprite[LEFT] = new Sprite(_spriteHandler, PLAYER_SPRITE_LEFT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_NUMB_OF_SPRITE, PLAYER_SPRITE_PER_ROW);
+	this->_listSprite[DOWN] = new Sprite(_spriteHandler, PLAYER_SPRITE_DOWN_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_NUMB_OF_SPRITE, PLAYER_SPRITE_PER_ROW);
+	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, PLAYER_SPRITE_RIGHT_PATH, SPRITE_WIDTH, SPRITE_HEIGHT, PLAYER_NUMB_OF_SPRITE, PLAYER_SPRITE_PER_ROW);
 	this->_shieldEffect = new Effect(_spriteHandler, EFFECT_SHIELD, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE_SHIELD, NUMB_OF_SPRITE_SHIELD);
 	_curSprite = this->_listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
@@ -51,10 +51,10 @@ void PlayerTank::Draw()
 	}
 	if (_isTerminated == false)
 	{
-		_curSprite->Render(_left, _top);
+		//_curSprite->Render(_left, _top);
 
 		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
-				//_curSprite->Render(_level - 1, _left, _top);//
+				_curSprite->Render(_level - 1, _left, _top);//
 		ShootableObject::Draw();
 	}
 	
@@ -127,7 +127,17 @@ void PlayerTank::Shoot()
 			_startTime = GetTickCount();
 			GameSound::getInstance()->Play(ID_SOUND_FIRE);
 		}
-		 if (GameTime::RenderFrame(_startTime,_delayTime))
+		if (_level >= 3)
+		{
+			if (GameTime::RenderFrame(_startTime, _delayTime) && BulletManager::getInstance()->getPlayerBulletSize() < 2)
+			{
+				BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
+				isShooting = true;
+				GameSound::getInstance()->Play(ID_SOUND_FIRE);
+				return;
+			}
+		}
+		else if (GameTime::RenderFrame(_startTime, _delayTime))
 		{
 			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 			isShooting = true;

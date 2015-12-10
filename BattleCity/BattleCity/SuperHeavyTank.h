@@ -4,6 +4,7 @@ class SuperHeavyTank : public Enemy
 {
 private:
 	int _hitPoint;
+	int _index;
 public:
 	SuperHeavyTank(LPD3DXSPRITE);
 	SuperHeavyTank(LPD3DXSPRITE, D3DXVECTOR2, bool =false);

@@ -64,9 +64,16 @@ void Sprite::Next(int startFrame)
 }
 void Sprite::NextColumn()
 {
-	this->_Index += _SpritePerRow;
-	if (this->_Index >= _Count)
-		this->_Index -= _SpritePerRow;
+
+		this->_Index += _SpritePerRow;
+		if (this->_Index >= _Count)
+			this->_Index -= 2 * _SpritePerRow;
+	
+
+}
+void Sprite::Previous()
+{
+	this->_Index--;
 }
 void Sprite::Render(int index, D3DXVECTOR3 Location)
 {
@@ -143,6 +150,10 @@ void Sprite::setWidth(int width)
 void Sprite::setHeight(int height)
 {
 	_Height = height;
+}
+int Sprite::getIndex()
+{
+	return _Index;
 }
 void Sprite::setStartFrame(int startFrame)
 {

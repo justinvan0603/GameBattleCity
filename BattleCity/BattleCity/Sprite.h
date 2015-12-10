@@ -23,6 +23,7 @@ public:
 	void Next(bool &isCompleted);
 	void Next(int startFrame);
 	void NextColumn();
+	void Previous();
 	void Render(int X, int Y);
 	void Render(D3DXVECTOR3 Location);
 	
@@ -31,6 +32,8 @@ public:
 	void Render(int row, int col, D3DXVECTOR3 Location);
 	int getWidth();
 	int getHeight();
+	int getIndex();
+	
 	void setWidth(int width);
 	void setHeight(int height);
 	void setStartFrame(int startFrame);

@@ -1,6 +1,6 @@
 #include "SuperHeavyTank.h"
 #include "CollisionManager.h"
-
+#define SUPER_HEAVY_HP 3
 SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler)
 {
 	this->_id = ID_SUPER_HEAVY_TANK;
@@ -25,7 +25,7 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position,
 {
 	this->_id = ID_SUPER_HEAVY_TANK;
 	this->_level = LEVEL_ONE;
-	this->_hitPoint = 3;
+	this->_hitPoint = SUPER_HEAVY_HP;
 	this->_spriteHandler = spriteHandler;
 	this->_currentDirection = DOWN;
 	this->_left = (int)position.x;
@@ -33,23 +33,24 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position,
 	this->_vx = (int)DYNAMIC_OBJECT_LOW_SPEED.x;
 	this->_vy = (int)DYNAMIC_OBJECT_LOW_SPEED.y;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
-	this->_listSprite[UP] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
-	this->_listSprite[LEFT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
-	this->_listSprite[DOWN] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, 3,3);
-	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, 3, 3);
+	this->_listSprite[UP] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, SUPER_HEAVY_NUMB_OF_SPRITE, SUPER_HEAVY_SPRITE_PER_ROW);
+	this->_listSprite[LEFT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, SUPER_HEAVY_NUMB_OF_SPRITE, SUPER_HEAVY_SPRITE_PER_ROW);
+	this->_listSprite[DOWN] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, SUPER_HEAVY_NUMB_OF_SPRITE, SUPER_HEAVY_SPRITE_PER_ROW);
+	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, SUPER_HEAVY_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, SUPER_HEAVY_NUMB_OF_SPRITE, SUPER_HEAVY_SPRITE_PER_ROW);
 	_curSprite = _listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
 	this->_isTerminated = false;
 	_isBonusTank = true;
-	if (_isBonusTank)
-	{
+	
+
+		_index = _hitPoint - 1;
 		for (int i = 0; i < NUM_OF_DIRECTION; i++)
 		{
-			this->_listSprite[i]->setStartFrame(_hitPoint - 2);
+			this->_listSprite[i]->setStartFrame(_hitPoint - 1);
 		}
-	}
+
 }
 void SuperHeavyTank::Draw()
 {
@@ -57,9 +58,7 @@ void SuperHeavyTank::Draw()
 	{
 		if (!_isFreeze)
 			ShootableObject::Draw();
-		if (!_isBonusTank || _hitPoint < 3)
-			_curSprite->Render(_hitPoint - 1, _left, _top);
-		else
+
 			_curSprite->Render(_left, _top);
 
 	}
@@ -89,11 +88,19 @@ void SuperHeavyTank::Update()
 		_listSprite[_currentDirection]->Next(_hitPoint - 1);
 		_curSprite = _listSprite[_currentDirection];
 	}
-	if (!_isBonusTank || _hitPoint <3)
+	else if (!_isBonusTank || _hitPoint <3)
 	{
+		if (_index > _hitPoint - 1)
+		{
+			_index = _hitPoint - 1;
+			for (int i = 0; i < NUM_OF_DIRECTION; i++)
+				_listSprite[i]->setStartFrame(_index);
+		}
+
 		_listSprite[_currentDirection]->NextColumn();
 		_curSprite = _listSprite[_currentDirection];
 	}
+
 	
 }
 void SuperHeavyTank::Shoot()

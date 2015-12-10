@@ -24,7 +24,7 @@ MediumTank::MediumTank(LPD3DXSPRITE spriteHandler)
 }
 MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool isBonus)
 {
-	this->_level = 1;
+	this->_level = LEVEL_ONE;
 	this->_id = ID_MEDIUM_TANK;
 	this->_spriteHandler = spriteHandler;
 	this->_currentDirection = DOWN;
@@ -33,10 +33,10 @@ MediumTank::MediumTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool is
 	this->_vx = (int)DYNAMIC_OBJECT_LOW_SPEED.x;
 	this->_vy = (int)DYNAMIC_OBJECT_LOW_SPEED.y;
 	this->_listSprite = new Sprite*[MoveDirection::NUM_OF_DIRECTION];
-	this->_listSprite[UP] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[LEFT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[DOWN] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
-	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, NUMB_OF_SPRITE, SPRITE_PER_ROW);
+	this->_listSprite[UP] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_UP, SPRITE_WIDTH, SPRITE_HEIGHT, ENEMY_NORMAL_NUMB_OF_SPRITE, ENEMY_NORMAL_SPRITE_PER_ROW);
+	this->_listSprite[LEFT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_LEFT, SPRITE_WIDTH, SPRITE_HEIGHT, ENEMY_NORMAL_NUMB_OF_SPRITE, ENEMY_NORMAL_SPRITE_PER_ROW);
+	this->_listSprite[DOWN] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_DOWN, SPRITE_WIDTH, SPRITE_HEIGHT, ENEMY_NORMAL_NUMB_OF_SPRITE, ENEMY_NORMAL_SPRITE_PER_ROW);
+	this->_listSprite[RIGHT] = new Sprite(_spriteHandler, MEDIUM_TANK_RESOURCE_RIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, ENEMY_NORMAL_NUMB_OF_SPRITE, ENEMY_NORMAL_SPRITE_PER_ROW);
 	_curSprite = _listSprite[_currentDirection];
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
@@ -79,6 +79,11 @@ void MediumTank::Update()
 	if (_isBonusTank)
 	{
 		this->_listSprite[_currentDirection]->Next();
+		this->_curSprite = this->_listSprite[_currentDirection];
+	}
+	else
+	{
+		this->_listSprite[_currentDirection]->NextColumn();
 		this->_curSprite = this->_listSprite[_currentDirection];
 	}
 }

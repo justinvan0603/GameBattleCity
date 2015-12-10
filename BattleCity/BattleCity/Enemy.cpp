@@ -1,10 +1,10 @@
 #include "Enemy.h"
 #include "BulletManager.h"
-
+#define ENEMY_BULLET_DELAY 1100
 Enemy::Enemy()
 {
 	_objectType = ENEMY_OBJECT_TYPE;
-	_level = 1;
+	_level = LEVEL_ONE;
 	_startTime = GetTickCount();
 	_currentDirection = DOWN;
 	_isCollied = false;
@@ -25,13 +25,12 @@ void Enemy::Shoot()
 	D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top, _currentDirection);
 
 
-	if (BulletManager::getInstance()->getEnemyBulletSize() == 0)
-	{
-		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
-
-		_startTime = GetTickCount();
-	}
-	else if (GameTime::RenderFrame(_startTime, 3000))
+	//if (BulletManager::getInstance()->getEnemyBulletSize() == 0)
+	//{
+	//	BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
+	//	_startTime = GetTickCount();
+	//}
+	 if (GameTime::RenderFrame(_startTime, ENEMY_BULLET_DELAY))
 	{
 		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
 	}
