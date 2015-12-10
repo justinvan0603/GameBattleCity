@@ -77,7 +77,10 @@ void MediumTank::Update()
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();
 	if (_isBonusTank)
+	{
 		this->_listSprite[_currentDirection]->Next();
+		this->_curSprite = this->_listSprite[_currentDirection];
+	}
 }
 void MediumTank::Shoot()
 {

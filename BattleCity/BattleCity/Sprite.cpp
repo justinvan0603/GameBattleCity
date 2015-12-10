@@ -62,6 +62,12 @@ void Sprite::Next(int startFrame)
 	if (this->_Index == _Count - 1)
 		this->_Index = startFrame;
 }
+void Sprite::NextColumn()
+{
+	this->_Index += _SpritePerRow;
+	if (this->_Index >= _Count)
+		this->_Index -= _SpritePerRow;
+}
 void Sprite::Render(int index, D3DXVECTOR3 Location)
 {
 	this->Render(index, Location.x, Location.y);

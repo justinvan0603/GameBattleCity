@@ -22,7 +22,7 @@ public:
 	void Next();
 	void Next(bool &isCompleted);
 	void Next(int startFrame);
-
+	void NextColumn();
 	void Render(int X, int Y);
 	void Render(D3DXVECTOR3 Location);
 	

@@ -87,8 +87,14 @@ void SuperHeavyTank::Update()
 	if (_isBonusTank &&  _hitPoint == 3)
 	{
 		_listSprite[_currentDirection]->Next(_hitPoint - 1);
+		_curSprite = _listSprite[_currentDirection];
 	}
-
+	if (!_isBonusTank || _hitPoint <3)
+	{
+		_listSprite[_currentDirection]->NextColumn();
+		_curSprite = _listSprite[_currentDirection];
+	}
+	
 }
 void SuperHeavyTank::Shoot()
 {

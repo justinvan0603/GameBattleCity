@@ -53,7 +53,6 @@ void HeavyTank::Draw()
 		_curSprite->Render(_left, _top);
 
 	}
-//	ShootableObject::DrawBullet();
 }
 void HeavyTank::Update()
 {
@@ -75,7 +74,10 @@ void HeavyTank::Update()
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();
 	if (_isBonusTank)
+	{
 		this->_listSprite[_currentDirection]->Next();
+		this->_curSprite = this->_listSprite[_currentDirection];
+	}
 }
 void HeavyTank::Shoot()
 {

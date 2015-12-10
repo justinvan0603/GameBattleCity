@@ -164,6 +164,9 @@ void PlayerTank::Update()
 		}
 	}
 	DynamicObject::Update();
+	this->_listSprite[_currentDirection]->NextColumn();
+	this->_curSprite = this->_listSprite[_currentDirection];
+	
 }
 void PlayerTank::Respawn()
 {
