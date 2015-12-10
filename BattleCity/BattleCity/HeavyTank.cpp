@@ -48,7 +48,8 @@ void HeavyTank::Draw()
 {
 	if (!_isTerminated)
 	{
-		ShootableObject::Draw();
+		if (!_isFreeze)
+			ShootableObject::Draw();
 		_curSprite->Render(_left, _top);
 
 	}
@@ -56,6 +57,8 @@ void HeavyTank::Draw()
 }
 void HeavyTank::Update()
 {
+	if (_isFreeze)
+		return;
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();

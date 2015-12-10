@@ -55,7 +55,8 @@ void SuperHeavyTank::Draw()
 {
 	if (!_isTerminated)
 	{
-		ShootableObject::Draw();
+		if (!_isFreeze)
+			ShootableObject::Draw();
 		if (!_isBonusTank || _hitPoint < 3)
 			_curSprite->Render(_hitPoint - 1, _left, _top);
 		else
@@ -66,6 +67,8 @@ void SuperHeavyTank::Draw()
 }
 void SuperHeavyTank::Update()
 {
+	if (_isFreeze)
+		return;
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();

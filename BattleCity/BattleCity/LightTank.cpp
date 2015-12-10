@@ -51,9 +51,9 @@ void LightTank:: Draw()
 {
 	if (!_isTerminated)
 	{
-		ShootableObject::Draw();
+		if (!_isFreeze)
+			ShootableObject::Draw();
 		_curSprite->Render(_left, _top);	
-		
 	}
 	//ShootableObject::DrawBullet();
 }
@@ -95,7 +95,8 @@ void LightTank::Shoot()
 }
 void LightTank::Update()
 {
-	
+	if (_isFreeze)
+		return;
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();
