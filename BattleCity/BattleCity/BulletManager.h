@@ -20,6 +20,7 @@ private:
 public:
 	static BulletManager* getInstance();
 public:
+	 void ClearAllBullet();
 	 void CleanBulletList();
 	 void Draw();
 	 void Update();

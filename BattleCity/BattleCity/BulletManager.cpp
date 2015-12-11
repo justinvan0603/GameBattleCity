@@ -128,6 +128,35 @@ void BulletManager::CleanBulletList()
 			i++;
 	}
 }
+void BulletManager::ClearAllBullet()
+{
+	for (vector<Bullet*> ::iterator i = _listPlayerBullet.begin(); i != _listPlayerBullet.end();)
+	{
+		if ((*i))
+		{
+			delete *i;
+			*i = NULL;
+			i = _listPlayerBullet.erase(i);
+
+		}
+		else
+			i++;
+	}
+	for (vector<Bullet*> ::iterator i = _listEnemyBullet.begin(); i != _listEnemyBullet.end();)
+	{
+		if ((*i))
+		{
+			delete *i;
+			*i = NULL;
+			i = _listEnemyBullet.erase(i);
+
+		}
+		else
+			i++;
+	}
+	_listPlayerBullet.clear();
+	_listEnemyBullet.clear();
+}
 int BulletManager::getPlayerBulletSize()
 {
 	return _listPlayerBullet.size();

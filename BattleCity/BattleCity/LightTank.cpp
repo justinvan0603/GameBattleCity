@@ -110,6 +110,7 @@ void LightTank::Update()
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;
+		
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();

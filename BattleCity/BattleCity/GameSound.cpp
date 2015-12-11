@@ -28,63 +28,75 @@ void GameSound::Play(int id)
 	{
 	case ID_SOUND_START_GAME:
 	{
+		if(!_startGame._isPlaying)
 		_startGame.Play();
 		break;
 	}
 	case ID_SOUND_FIRE:
 	{
+		if (!_fire._isPlaying)
 		_fire.Play();
 		
 		break;
 	}
 	case ID_SOUND_BRICK_EXPLODE:
 	{
+		if (!_brickExplode._isPlaying)
 		_brickExplode.Play();
 		break;
 	}
 	case ID_SOUND_TANK_EXPLODE:
 	{
+		if (!_enemyExplode._isPlaying)
 		_enemyExplode.Play();
 		break;
 	}
 	case ID_SOUND_TANK_ENGINE:
 	{
+		if (!_tankEngine._isPlaying)
 		_tankEngine.Play();
 		break;
 	}
 	case ID_SOUND_TANK_HIT:
 	{
+		if (!_tankHit._isPlaying)
 		_tankHit.Play();
 		break;
 	}
 	case ID_SOUND_TANK_MOVE:
 	{
+		if (!_tankMove._isPlaying)
 		_tankMove.Play();
 		break;
 	}
 
 	case ID_SOUND_ALLY_EXPLODE:
 	{
+		if (!_allyExplode._isPlaying)
 		_allyExplode.Play();
 		break;
 	}
 	case ID_SOUND_ITEM_APPEAR:
 	{
+		if (!_powerAppear._isPlaying)
 		_powerAppear.Play();
 		break;
 	}
 	case ID_SOUND_ITEM_EAT:
 	{
+		if (!_eatPower._isPlaying)
 		_eatPower.Play();
 		break;
 	}
 	case ID_SOUND_LIFE_UP:
 	{
+		if (!_lifeUp._isPlaying)
 		_lifeUp.Play();
 		break;
 	}
 	case ID_SOUND_STEEL_WALL_EXPLODE:
 	{
+		if (!_steelwallExplode._isPlaying)
 		_steelwallExplode.Play();
 	}
 	default:

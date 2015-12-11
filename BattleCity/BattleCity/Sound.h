@@ -13,6 +13,7 @@ private:
 	Sound(IDirectSoundBuffer8* pSecondaryBuffer);
 	IDirectSoundBuffer8* _buffer;
 public:
+	bool _isPlaying;
 	Sound();
 	Sound(const Sound& base);
 	const Sound& operator= (const Sound& source);
