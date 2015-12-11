@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "PlayerTank.h"
 #include "Enemy.h"
+#include "Eagle.h"
 #include <vector>
 class PowerUp;
 
@@ -33,6 +34,7 @@ public:
 							int level,
 							int **map, 
 							vector<vector<StaticObject*>>* listNearbyObject);
-	 void UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem);
+	 void UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem, Eagle* eagle);
+	 
 };
 

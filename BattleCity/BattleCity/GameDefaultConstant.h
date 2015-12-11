@@ -76,7 +76,7 @@
 #define ID_ICE_9	9
 #define ID_ICE_18	18
 #define ID_ICE_19	19
-
+#define ID_EAGLE  21
 //Bullet
 #define ID_BULLET 20
 #define DEFAULT_BULLET_SPEED_X 6

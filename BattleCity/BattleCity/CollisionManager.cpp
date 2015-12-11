@@ -115,7 +115,16 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
-				//if (B->getId() == )
+				if (B->getId() == ID_EAGLE)
+				{
+					D3DXVECTOR2 pos;
+					pos.x = B->getLeft();
+					pos.y = B->getTop();
+					EffectManager::getInstance()->AddDestroyEffect(pos);
+					B->_isTerminated = true;
+					GameSound::getInstance()->Play(ID_SOUND_ALLY_EXPLODE);
+					return true;
+				}
 				if (B->getId() == ID_STEELWALL)
 				{
 					EffectManager::getInstance()->AddBulletEffect(position);
@@ -196,14 +205,14 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					pos.x = B->getLeft();
 					pos.y = B->getTop();
 					EffectManager::getInstance()->AddDestroyEffect(pos);
-					//if (B->getId() == ID_PLAYER)
-					//{
-					//	if (!B->_isImmortal)
-					//	{
-					//		//GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
-					//		B->_isTerminated = true;
-					//	}
-					//}
+					if (B->getId() == ID_PLAYER)
+					{
+						if (!B->_isImmortal)
+						{
+							GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
+							B->_isTerminated = true;
+						}
+					}
 				}
 			}
 

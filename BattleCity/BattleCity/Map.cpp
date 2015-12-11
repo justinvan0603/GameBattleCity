@@ -397,8 +397,14 @@ void Map::Update()
 	_player->Update();
 	updateEnemy();
 	BulletManager::getInstance()->Update();
-	
+	CollisionManager::CollisionPreventMove(_player, _eagle);
 	int n = _listEnemyOnMap->size();
+	for (int i = 0; i < n; i++)
+	{
+		bool isCollided = CollisionManager::CollisionPreventMove(_listEnemyOnMap->at(i), _eagle);
+		if (isCollided)
+			break;
+	}
 	for (int i = 0; i < n-1; i++)
 	{
 		for (int j = i + 1; j < n; j++)
@@ -415,12 +421,11 @@ void Map::Update()
 
 	for (int i = 0; i < n; i++)
 	{
-		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i),_powerUpItem);
+		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i),_powerUpItem,_eagle);
 	}
 
 	CollisionManager::CollisionWithItem(_player, _powerUpItem);
 	updatePowerItem();
-
 	ClearDestroyedEnemy();
 	checkEndGame();
 }

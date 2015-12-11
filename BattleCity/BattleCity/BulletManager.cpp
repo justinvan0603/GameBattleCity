@@ -77,7 +77,7 @@ void BulletManager::Update()
 	CleanBulletList();
 }
 
-void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem)
+void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* enemy, PowerUp* powerUpItem,Eagle* eagle)
 {
 	for (vector<Bullet*> ::iterator i = _listEnemyBullet.begin(); i != _listEnemyBullet.end(); i++)
 	{
@@ -85,7 +85,12 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 		if (isCollided)
 			break;
 	}
-	
+	for (vector<Bullet*> ::iterator i = _listEnemyBullet.begin(); i != _listEnemyBullet.end(); i++)
+	{
+		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, eagle);
+		if (isCollided)
+			break;
+	}
 	for (vector<Bullet*> ::iterator i = _listPlayerBullet.begin(); i != _listPlayerBullet.end(); i++)
 	{
 
@@ -96,6 +101,15 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 			{
 				powerUpItem->enablePowerUp();
 			}
+			break;
+		}
+	}
+	for (vector<Bullet*> ::iterator i = _listPlayerBullet.begin(); i != _listPlayerBullet.end(); i++)
+	{
+
+		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, eagle);
+		if (isCollided)
+		{
 			break;
 		}
 	}
