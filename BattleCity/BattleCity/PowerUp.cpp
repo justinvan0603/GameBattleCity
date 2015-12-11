@@ -16,7 +16,6 @@ PowerUp::PowerUp(Sprite* sprite)
 
 void PowerUp::Draw()
 {
-	//_image->Render(_typePower,D3DXVECTOR3((float)_left, (float)_top,0.0f));
 	_image->Render(_typePower, D3DXVECTOR3((float)this->_left,(float)this->_top,0.0f));
 }
 
@@ -64,7 +63,7 @@ void PowerUp::enablePowerUp()
 	{
 		flag = false;
 		srand(time(NULL));
-		col = rand() % 49;
+		col = rand() % 49; //52-1-3-0+1
 		row = rand() % 49;
 		type = _mapMatrix[row][col] % 100;
 		if (type == ID_STEELWALL_2 || type == ID_STEELWALL_3 || type == ID_STEELWALL_12 || type == ID_STEELWALL_13 ||
@@ -72,7 +71,7 @@ void PowerUp::enablePowerUp()
 		{
 			flag = true;
 		}
-	} while ((col == 24 && row == 48) || flag);
+	} while (((col < 30) && (col > 21) && (row < 49) && (row > 45)) || flag);  //ko cho lot vao toa do phao dai
 	D3DXVECTOR3 pos = Map::getPositionFromMapMatrix(row, col);
 	this->_top = pos.y;
 	this->_left = pos.x;

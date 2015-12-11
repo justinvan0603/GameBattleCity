@@ -81,8 +81,6 @@ void MainMenu::update()
 	else
 	{
 		//tao selector chuyen dong
-		
-		
 		if (GameTime::DelayTime(_delayTime))
 		{
 			_delayTime = 200;
@@ -119,9 +117,8 @@ void MainMenu::draw()
 	if(_menuImagePosition.y <= 0)
 	{
 		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
-
 	}
-	
+	//draw highscore
 }
 
 void MainMenu::reset()
@@ -407,18 +404,18 @@ void ScoreState::update()
 		ScoreManager::getInstance()->renewValue();
 		if (_isEnd)
 		{
+			writeFile();
 			GameState::switchState(GameOverState::get());
 		}
 		else
 		{
-
 			if (StageManager::getInstance()->getStage() > DEFAULT_MAX_STAGE)
 			{
+				writeFile();
 				GameState::switchState(EndGame::get());
 			}
 			else
-			{
-				
+			{			
 				GameState::switchState(StartingState::get());
 			}
 		}
@@ -466,6 +463,16 @@ ScoreState* ScoreState::get()
 void ScoreState::setEndAfter(bool isEnd)
 {
 	_isEnd = isEnd;
+}
+
+void ScoreState::writeFile()
+{
+	ofstream myfile("Resource\\Other\\highscore.txt");
+	if (myfile.is_open())
+	{
+		myfile << ScoreManager::getInstance()->getHighScore();
+		myfile.close();
+	}
 }
 
 ScoreState::~ScoreState()

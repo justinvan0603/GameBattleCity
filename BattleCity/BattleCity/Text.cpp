@@ -18,7 +18,6 @@ void Text::initializeFont()
 		ANTIALIASED_QUALITY, FF_DONTCARE, _fontFace, &_font);
 }
 
-
 void Text::drawText(std::string Content, D3DXVECTOR3 Position, D3DCOLOR Color, int Size , UINT DT_Type, int Max_Lengh, int Max_Line)
 {
 	if (Size != _fontSize)

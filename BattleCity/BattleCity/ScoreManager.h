@@ -1,5 +1,8 @@
 #ifndef __SCORE_MANAGER_H__
 #define __SCORE_MANAGER_H__
+#include <fstream>
+#include <string>
+using namespace std;
 class ScoreManager
 {
 public:

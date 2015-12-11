@@ -152,6 +152,8 @@ public:
 
 	void setEndAfter(bool isEnd);
 
+	void writeFile();
+
 private:
 	bool _isEnd;
 	Sprite* _iconTankScore;

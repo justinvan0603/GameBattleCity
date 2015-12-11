@@ -1,6 +1,7 @@
 #include "ScoreManager.h"
 #include "GameDefaultConstant.h"
 
+
 ScoreManager* ScoreManager::_instance = nullptr;
 
 ScoreManager* ScoreManager::getInstance()
@@ -19,6 +20,8 @@ int ScoreManager::getPlayerScore()
 
 int ScoreManager::getHighScore()
 {
+	if (_playerScore > _highScore)
+		_highScore = _playerScore;
 	return _highScore;
 }
 
@@ -76,8 +79,16 @@ ScoreManager::ScoreManager()
 	_scorePowerUp = SCORE_POWER_UP;
 	renewValue();
 	_playerScore = 0;
-	_highScore = 30000;
-	//get in file
+	string line;
+	ifstream myfile("Resource\\Other\\highscore.txt");
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			_highScore << std::stoi(line);
+		}
+		myfile.close();
+	}
 }
 
 

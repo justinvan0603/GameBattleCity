@@ -18,12 +18,13 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	//init rectangleRespawn
 	_rectangleRespawn = new vector<MyRectangle*>;
-	for (int i = 0; i < 3;i++)
+	for (int i = 0; i < NUM_RESPAWN_POS;i++)
 	{
 		_rectangleRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
 	}	
 	_spriteHandler = spriteHandler;
 	_spriteHandler->GetDevice(&d3ddev);
+	_text = new Text(_spriteHandler);
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
 	_respawnEffect = _spriteItemManager->getRespawnSprite();
@@ -47,15 +48,16 @@ void Map::changeStage()
 	_colisObj = new vector<vector<StaticObject*>>;
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
-	delaytimeReSpanw = 0;
+	delaytimeReSpanw = DEFINE_ZERO_VALUE;
 	isPrepareRespawn = false;
 	_maxEnemy = MAX_ENEMY;
-	_numEnemy = 0;
+	_numEnemy = DEFINE_ZERO_VALUE;
 	_startTime = GetTickCount();
-	_delayFreeze = 15000;
+	_delayFreeze = DELAY_FREEZE_TIME;
+	_delayDrawScorePower = DELAY_TIME_DRAW_SCORE_POWER;
 	_isFreeze = false;
 	//
-	int numOfTypeEnemy[4];
+	int numOfTypeEnemy[NUM_TYPE_ENEMY];
 	string orderAppear;
 	string stringLine;
 	int tempMaxEnemy;
@@ -116,13 +118,13 @@ void Map::InitColisObject()
 				temp[type].push_back(new Ice(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 		}
 	}
-	for (int i = 0; i < 20;i++)
+	for (int i = 0; i < MAP_NUM_OF_TYPE_OBJ;i++)
 		_colisObj->push_back(temp[i]);
 }
 
 void Map::InitListEnemy(int numOfEnemy[], string order)
 {
-	//a[]
+	//numOfEnemy[]
 	//	0 - medium tank
 	//	1 - light tank
 	//	2 - heavy  tank
@@ -186,13 +188,14 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 		}
 	}
 	int i = 0;
+	int n;
 	while(i<NUM_TYPE_ENEMY)
 	{
 		switch (order[i] - '0')
 		{
 			case ID_MEDIUM_TANK:
 			{
-				int n = listMedium->size();
+				n = listMedium->size();
 				for (int j = 0; j < n;j++)
 				{
 					_listEnemy->push_back(listMedium->at(j));
@@ -201,7 +204,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			}
 			case ID_LIGHT_TANK:
 			{
-				int n = listLight->size();
+				n = listLight->size();
 				for (int j = 0; j < n; j++)
 				{
 					_listEnemy->push_back(listLight->at(j));
@@ -210,7 +213,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			}
 			case ID_HEAVY_TANK:
 			{
-				int n = listHeavy->size();
+				n = listHeavy->size();
 				for (int j = 0; j < n; j++)
 				{
 					_listEnemy->push_back(listHeavy->at(j));
@@ -219,7 +222,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			}
 			case ID_SUPER_HEAVY_TANK:
 			{
-				int n = listSuper->size();
+				n = listSuper->size();
 				for (int j = 0; j < n; j++)
 				{
 					_listEnemy->push_back(listSuper->at(j));
@@ -242,13 +245,12 @@ bool Map::GetFileMap()
 		WARNING_BOX(WARNING_MAP_FILE_NOT_FOUND);
 		return false;
 	}
-	else
-		return true;
+	return true;
 }
 
 void Map::Draw()
 {
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, COLOR_GREY, 1.0f, 0);
 	drawRightMenu();	
 	drawMap();
 	BulletManager::getInstance()->Draw();
@@ -317,8 +319,8 @@ void Map::drawMap()
 	{
 		if (_colisObj->at(i).size() != 0)
 		{
-			if (i == 6 || i == 7 || i == 16 || i == 17 ||
-				i == 8 || i == 9 || i == 18 || i == 19)
+			if (i == ID_TREES_6 || i == ID_TREES_7 || i == ID_TREES_16 || i == ID_TREES_17 ||
+				i == ID_ICE_8 || i == ID_ICE_9 || i == ID_ICE_18 || i == ID_ICE_19)
 				continue;
 			int m = _colisObj->at(i).size();
 			for (int j = 0; j < m; j++)
@@ -341,6 +343,15 @@ void Map::drawPowerUp()
 			{
 				_powerUpItem->Draw();
 			}
+		}
+	}
+	if (posPower != DEFAULT_POS_ZERO)
+	{
+		_text->drawText(to_string(SCORE_POWER_UP),posPower,COLOR_WHITE,14);
+		if(GameTime::DelayTime(_delayDrawScorePower))
+		{
+			_delayDrawScorePower = DELAY_TIME_DRAW_SCORE_POWER;
+			posPower = DEFAULT_POS_ZERO;
 		}
 	}
 }
@@ -386,9 +397,8 @@ void Map::drawRightMenu()
 	//Draw so thu tu state hien tai
 	_spriteItemManager->getFlagIcon()->Render(0, 0, POS_FLAG_LIFE_IMAGE);
 	//Ve so
-	static Text text = Text(_spriteHandler);
-	text.drawText (to_string(StageManager::getInstance()->getStage()),POS_NUM_LEVEL,COLOR_BLACK,20);
-	text.drawText(to_string(_player->getLife()), POS_NUM_LIFE, COLOR_BLACK, 17);
+	_text->drawText (to_string(StageManager::getInstance()->getStage()),POS_NUM_LEVEL,COLOR_BLACK,20);
+	_text->drawText(to_string(_player->getLife()), POS_NUM_LIFE, COLOR_BLACK, 17);
 }
 
 void Map::Update()
@@ -436,11 +446,11 @@ void Map::updateEnemy()
 	{
 		if (_numEnemy == 0)
 		{
-			respawnAfter(1000);
+			respawnAfter(DELAY_TIME_RESPAWN_1000);
 		}
 		else
 		{
-			respawnAfter(6000);
+			respawnAfter(DELAY_TIME_RESPAWN_4000);
 		}
 	}
 	int n = _listEnemyOnMap->size();
@@ -453,7 +463,7 @@ void Map::updateEnemy()
 bool Map::checkCollisionRespawnArea()
 {
 	int index;
-	for (index = 0; index < 3; index++)
+	for (index = 0; index < NUM_RESPAWN_POS; index++)
 	{
 		if(_rectangleRespawn->at(index)->getLeft() == _listEnemy->front()->getLeft())
 			break;
@@ -474,13 +484,13 @@ bool Map::checkCollisionRespawnArea()
 void Map::respawnAfter(int delaytime)
 {
 	delaytimeReSpanw += 50;
-	if(delaytime == 1000)
+	if(delaytime == DELAY_TIME_RESPAWN_1000)
 	{
 		isPrepareRespawn = true;
 	}
 	else
 	{
-		if(delaytimeReSpanw >4000)
+		if(delaytimeReSpanw >(DELAY_TIME_RESPAWN_4000 - DELAY_TIME_RESPAWN_1000))
 		{
 			isPrepareRespawn = true;
 		}
@@ -518,7 +528,7 @@ void Map::updatePowerItem()
 	{
 		if (GameTime::DelayTime(_delayFreeze))
 		{
-			_delayFreeze = 15000;
+			_delayFreeze = DELAY_FREEZE_TIME;
 			_isFreeze = false;
 			UnFreezeEnemyOnMap();
 		}
@@ -550,6 +560,7 @@ void Map::updatePowerItem()
 			{
 				_player->PlayerPromoted();
 			}
+			posPower = D3DXVECTOR3(_powerUpItem->getLeft(), _powerUpItem->getTop(), 0.0f);
 			_powerUpItem->disablePowerUp();
 		}
 	}
@@ -570,6 +581,8 @@ void Map::checkEndGame()
 		{
 			ClearStaticObject();
 			SetDefaultPositionPlayer();
+			BulletManager::getInstance()->ClearAllBullet();
+			_powerUpItem->disablePowerUp();
 			if (_player->getLife() == 0)
 			{
 				ScoreState::get()->setEndAfter(true);

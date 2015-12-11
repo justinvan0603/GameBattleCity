@@ -8,6 +8,7 @@
 #include "PlayerTank.h"
 #include "CollisionManager.h"
 #include "PowerUp.h"
+#include "Text.h"
 using std::vector;
 
 class Map
@@ -32,8 +33,11 @@ private:
 	int delaytimeReSpanw;
 	int delayEndStage;
 	int _delayFreeze;
+	int _delayDrawScorePower;
 	bool _isFreeze;
 	DWORD _startTime;
+	Text* _text;
+	D3DXVECTOR3 posPower;
 	vector<vector<StaticObject*>>* _colisObj;
 	vector<Enemy*>* _listEnemy;
 	vector<Enemy*>* _listEnemyOnMap;
