@@ -47,6 +47,10 @@ void Eagle::setEagleStatus(EAGLE_STATUS status)
 	_status = status;
 }
 
+EAGLE_STATUS Eagle::getEagleStatus()
+{
+	return _status;
+}
 
 Eagle::~Eagle()
 {

@@ -38,6 +38,7 @@ private:
 	DWORD _startTime;
 	Text* _text;
 	D3DXVECTOR3 posPower;
+	D3DXVECTOR3 posGameOverText;
 	vector<vector<StaticObject*>>* _colisObj;
 	vector<Enemy*>* _listEnemy;
 	vector<Enemy*>* _listEnemyOnMap;
@@ -59,6 +60,8 @@ private:
 	void respawnAfter(int delaytime);
 	void updatePowerItem();
 	void drawMap();
+	void drawEagle();
+	void drawPlayer();
 	void drawTrees();
 	void drawIce();
 	void drawPowerUp();
@@ -67,9 +70,11 @@ private:
 	//Xoa enemy da bi ban ra khoi list (JT)
 	void ClearDestroyedEnemy();
 	void ClearStaticObject();
+	void ClearDynamicObject();
 	void SetDefaultPositionPlayer();
 	void ClearEnemyOnMap();
 	void FreezeEnemyOnMap();
 	void UnFreezeEnemyOnMap();
+	void CleanStage();
 };
 #endif

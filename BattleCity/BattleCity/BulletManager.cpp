@@ -89,7 +89,10 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 	{
 		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, eagle);
 		if (isCollided)
+		{
+			eagle->setEagleStatus(EAGLE_STATUS::DEAD);
 			break;
+		}
 	}
 	for (vector<Bullet*> ::iterator i = _listPlayerBullet.begin(); i != _listPlayerBullet.end(); i++)
 	{
@@ -110,6 +113,7 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, eagle);
 		if (isCollided)
 		{
+			eagle->setEagleStatus(EAGLE_STATUS::DEAD);
 			break;
 		}
 	}

@@ -47,8 +47,9 @@ void Map::changeStage()
 	//
 	_colisObj = new vector<vector<StaticObject*>>;
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
-	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
+	posGameOverText = POS_START_GAMEOVER;
 	delaytimeReSpanw = DEFINE_ZERO_VALUE;
+	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
 	isPrepareRespawn = false;
 	_maxEnemy = MAX_ENEMY;
 	_numEnemy = DEFINE_ZERO_VALUE;
@@ -253,13 +254,18 @@ void Map::Draw()
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, COLOR_GREY, 1.0f, 0);
 	drawRightMenu();	
 	drawMap();
+	drawEagle();
 	BulletManager::getInstance()->Draw();
 	drawIce();
-	_player->Draw(); 
+	drawPlayer();
 	drawEnemy();
 	drawTrees();
 	drawPowerUp();
 	EffectManager::getInstance(0)->Draw();
+	if (_player->getLife() < 0 || _eagle->getEagleStatus() == EAGLE_STATUS::DEAD)
+	{
+		_text->drawText("GAME\nOVER", posGameOverText, COLOR_RED, 30, DT_CENTER, 0, 2);
+	}
 }
 
 void Map::drawTrees()
@@ -330,7 +336,17 @@ void Map::drawMap()
 			}
 		}
 	}
+	
+}
+
+void Map::drawEagle()
+{
 	_eagle->Draw();
+}
+
+void Map::drawPlayer()
+{
+	_player->Draw();
 }
 
 void Map::drawPowerUp()
@@ -398,7 +414,10 @@ void Map::drawRightMenu()
 	_spriteItemManager->getFlagIcon()->Render(0, 0, POS_FLAG_LIFE_IMAGE);
 	//Ve so
 	_text->drawText (to_string(StageManager::getInstance()->getStage()),POS_NUM_LEVEL,COLOR_BLACK,20);
-	_text->drawText(to_string(_player->getLife()), POS_NUM_LIFE, COLOR_BLACK, 17);
+	int life = _player->getLife();
+	if (life < 0)
+		life = 0;
+	_text->drawText(to_string(life), POS_NUM_LIFE, COLOR_BLACK, 17);
 }
 
 void Map::Update()
@@ -429,9 +448,12 @@ void Map::Update()
 		CollisionManager::CollisionChangeDirection(_player, _listEnemyOnMap->at(i));
 	}
 
-	for (int i = 0; i < n; i++)
+	if (_eagle->getEagleStatus() == EAGLE_STATUS::LIVE)
 	{
-		BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i),_powerUpItem,_eagle);
+		for (int i = 0; i < n; i++)
+		{
+			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i), _powerUpItem, _eagle);
+		}
 	}
 
 	CollisionManager::CollisionWithItem(_player, _powerUpItem);
@@ -568,10 +590,19 @@ void Map::updatePowerItem()
 
 void Map::checkEndGame()
 {
-	if (_player->getLife() == 0)
+	if (_player->getLife() < 0 || _eagle->getEagleStatus() == EAGLE_STATUS::DEAD)
 	{
-		ScoreState::get()->setEndAfter(true);
-		GameState::switchState(ScoreState::get());
+		if (posGameOverText.y > POS_END_GAMEOVER_Y)
+		{
+			posGameOverText.y -= 10;
+		}
+		if (GameTime::DelayTime(delayEndStage))
+		{
+			CleanStage();
+			ScoreState::get()->setEndAfter(true);
+			GameState::switchState(ScoreState::get());
+		}
+
 		return;
 	}
 
@@ -579,22 +610,19 @@ void Map::checkEndGame()
 	{
 		if (GameTime::DelayTime(delayEndStage))
 		{
-			ClearStaticObject();
-			SetDefaultPositionPlayer();
-			BulletManager::getInstance()->ClearAllBullet();
-			_powerUpItem->disablePowerUp();
-			if (_player->getLife() == 0)
-			{
-				ScoreState::get()->setEndAfter(true);
-			}
-			else
-			{
+			CleanStage();
+			//if (_player->getLife() < 0)
+			//{
+			//	ScoreState::get()->setEndAfter(true);
+			//}
+			//else
+			//{
 				StageManager::getInstance()->nextStage();
 				if (StageManager::getInstance()->getStage() <= DEFAULT_MAX_STAGE)
 				{
 					changeStage();
 				}				
-			}		
+			//}		
 			GameState::switchState(ScoreState::get());
 		}
 	}
@@ -675,7 +703,22 @@ void Map::ClearStaticObject()
 	}
 	delete _colisObj;
 	_colisObj = NULL;
-	SAFE_RELEASE(_eagle);
+}
+
+void Map::ClearDynamicObject()
+{
+	int n = _listEnemy->size();
+	for (int i = 0; i < n;i++)
+	{
+		_listEnemy->erase(_listEnemy->begin());
+	}
+	n = _listEnemyOnMap->size();
+	{
+		for (int i = 0; i < n;i++)
+		{
+			_listEnemyOnMap->erase(_listEnemyOnMap->begin());
+		}
+	}
 }
 
 void Map::SetDefaultPositionPlayer()
@@ -715,6 +758,16 @@ void Map::UnFreezeEnemyOnMap()
 	{
 		_listEnemyOnMap->at(i)->DeactivateFreeze();
 	}
+}
+
+void Map::CleanStage()
+{
+	ClearStaticObject();
+	ClearDynamicObject();
+	SetDefaultPositionPlayer();
+	BulletManager::getInstance()->ClearAllBullet();
+	_powerUpItem->disablePowerUp();
+	_eagle->setEagleStatus(EAGLE_STATUS::LIVE);
 }
 
 void Map::reset()

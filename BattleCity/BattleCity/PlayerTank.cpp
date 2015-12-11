@@ -150,7 +150,10 @@ void PlayerTank::Shoot()
 }
 void PlayerTank::Update()
 {
-
+	if(_life < 0)
+	{
+		return;
+	}
 	
 	FindNearbyObject();
 	this->Move();
@@ -171,6 +174,12 @@ void PlayerTank::Update()
 		{
 			Respawn();
 		}
+		else
+		{
+			_life--;
+			setPositionX(0);
+			setPositionY(0);
+		}
 	}
 	DynamicObject::Update();
 	this->_listSprite[_currentDirection]->NextColumn();
@@ -187,7 +196,8 @@ void PlayerTank::reset()
 	this->_hitPoint = DEFAULT_PLAYER_HP;
 	_curSprite = this->_listSprite[_currentDirection];
 	this->_isImmortal = true;
-
+	setPositionX(DEFAULT_PLAYER_POSITION_X);
+	setPositionY(DEFAULT_PLAYER_POSITION_Y);
 }
 
 void PlayerTank::Respawn()
@@ -197,6 +207,7 @@ void PlayerTank::Respawn()
 		if (_life > 0)
 		{
 			_life--;
+			setCurrentMoveDirection(MoveDirection::UP);
 			setPositionX(DEFAULT_PLAYER_POSITION_X);
 			setPositionY(DEFAULT_PLAYER_POSITION_Y);
 			_level = LEVEL_ONE;

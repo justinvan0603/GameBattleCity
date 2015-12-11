@@ -179,6 +179,7 @@ void Instruction::update()
 	}
 	if (Keyboard::getInstance()->getKeyState(DIK_ESCAPE) == KeyState::KEY_PRESS)
 	{
+		_currentTab = 1;
 		switchState(MainMenu::get());
 	}
 }
@@ -497,6 +498,15 @@ void GameOverState::update()
 	if(GameTime::DelayTime(_delayTime))
 	{
 		_delayTime = 10000;
+		//reset player, score, stage, main menu, noi chung la het cac stage
+		StageManager::getInstance()->reset();
+		ScoreManager::getInstance()->reset();
+		MainMenu::get()->reset();
+		Instruction::get()->reset();
+		PlayingState::get()->reset();
+		ScoreState::get()->reset();
+		/*EndGame::get()->*/reset();
+		switchState(MainMenu::get());
 		switchState(MainMenu::get());
 	}	
 }

@@ -15,6 +15,7 @@ public:
 	void Draw();
 	void Init(Sprite* sprite, int type, D3DXVECTOR3 pos);
 	void setEagleStatus(EAGLE_STATUS status);
+	EAGLE_STATUS getEagleStatus();
 	~Eagle();
 private:
 	EAGLE_STATUS _status;
