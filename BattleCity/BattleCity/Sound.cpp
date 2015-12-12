@@ -12,6 +12,8 @@ DSound::DSound(HWND hWnd) : _directSoundDevice(NULL), _primaryBuffer(NULL)
 	//Set Cooperative for window
 	_directSoundDevice->SetCooperativeLevel(hWnd, DSSCL_NORMAL);
 	//Set buffer Decription
+	ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
+	ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
 	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
 	bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
 	bufferDesc.dwBufferBytes = 0;
@@ -29,7 +31,7 @@ DSound::DSound(HWND hWnd) : _directSoundDevice(NULL), _primaryBuffer(NULL)
 	waveFormat.nChannels = 2;
 	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-	waveFormat.cbSize = 0;
+	//waveFormat.cbSize = 0;
 	
 	_primaryBuffer->SetFormat(&waveFormat);
 }
@@ -66,14 +68,15 @@ Sound DSound::CreateSound(char* waveFileName)
 	fopen_s(&filePtr, waveFileName, "rb");
 
 	fread(&waveFileHeader, sizeof(waveFileHeader), 1, filePtr);
-
+	ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
+	ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nSamplesPerSec = 44100;
 	waveFormat.wBitsPerSample = 16;
 	waveFormat.nChannels = 2;
 	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-	waveFormat.cbSize = 0;
+	//waveFormat.cbSize = 0;
 	
 	waveFileHeader.dataSize = 9990000;
 

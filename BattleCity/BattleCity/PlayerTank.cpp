@@ -7,7 +7,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
 	_startTime = GetTickCount();
-	_delayShield = 5000;
+	_delayShield = PLAYER_SHIELD_TIME;
 	this->_objectType = DYNAMIC_OBJECT;
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;

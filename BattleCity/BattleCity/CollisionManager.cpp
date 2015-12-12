@@ -212,6 +212,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 							GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
 							B->_isTerminated = true;
 						}
+						else
+						{
+							B->_isTerminated = false;
+						}
 					}
 				}
 			}
