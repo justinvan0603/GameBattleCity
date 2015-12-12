@@ -519,6 +519,12 @@ bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 	{
 		ScoreManager::getInstance()->addPowerUpScore();
 		B->setEaten();
+		if (B->getType() == ID_POWER_EXTRA_LIFE)
+		{
+			GameSound::getInstance()->Play(ID_SOUND_LIFE_UP);
+		}
+		else
+			GameSound::getInstance()->Play(ID_SOUND_ITEM_EAT);
 		return true;
 	}
 	return false;

@@ -164,10 +164,10 @@ void Sound::Play(int attenuation)
 
 	// Set volume of the buffer to attn
 	_buffer->SetVolume(attenuation);
-	_isPlaying = true;
+
 	// Play the contents of the secondary sound buffer.
 	_buffer->Play(0, 0, 0);
-	_isPlaying = false;
+
 }
 
 void Sound::PlayRepeat(int attenuation)

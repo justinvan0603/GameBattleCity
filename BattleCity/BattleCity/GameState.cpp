@@ -1,7 +1,7 @@
 #include "GameState.h"
 #include "ScoreManager.h"
 #include "StageManager.h"
-
+#include "GameSound.h"
 
 #pragma region Game State
 
@@ -303,6 +303,7 @@ StartingState::StartingState()
 {	
 	_spriteHandler->GetDevice(&_d3ddevice);
 	_delayTime = 5000;
+	
 }
 
 StartingState::~StartingState()
@@ -313,11 +314,15 @@ StartingState::~StartingState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
+	if (_delayTime == 5000)
+		GameSound::getInstance()->Play(ID_SOUND_START_GAME);
 	if (GameTime::DelayTime(_delayTime))
 	{
 		_delayTime = 5000;
+
 		switchState(PlayingState::get());
 	}
+	
 }
 
 void StartingState::draw()

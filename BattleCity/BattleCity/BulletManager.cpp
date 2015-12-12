@@ -1,6 +1,6 @@
 #include "BulletManager.h"
 #include "CollisionManager.h"
-
+#include "GameSound.h"
 BulletManager* BulletManager::_instance = nullptr;
 
 BulletManager* BulletManager::getInstance()
@@ -103,6 +103,7 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Enemy* 
 			if(enemy->isBonusTank())
 			{
 				powerUpItem->enablePowerUp();
+				GameSound::getInstance()->Play(ID_SOUND_ITEM_APPEAR);
 			}
 			break;
 		}
