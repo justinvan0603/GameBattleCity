@@ -57,7 +57,7 @@ private:
 	static MainMenu* _instance;
 	Sprite* _menuImage;
 	Sprite* _selector;
-	D3DXVECTOR3 _menuImagePosition;
+	float _posYMenu;
 	D3DXVECTOR3 _selectorPosition;
 };
 #pragma endregion

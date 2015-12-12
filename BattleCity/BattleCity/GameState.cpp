@@ -70,12 +70,12 @@ MainMenu::~MainMenu()
 void MainMenu::update()
 {
 	//Kiem tra xem chon start hay instruction roi change state
-	if(_menuImagePosition.y > 0)
+	if(_posYMenu > 0)
 	{
-		_menuImagePosition.y -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
+		_posYMenu -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
 		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)
 		{
-			_menuImagePosition.y = 0;
+			_posYMenu = 0;
 		}
 	}
 	else
@@ -98,6 +98,7 @@ void MainMenu::update()
 		{
 			if (_selectorPosition == IMAGE_SELECTOR_POS_PLAY)
 			{
+				ScoreManager::getInstance()->reset();
 				switchState(StartingState::get());
 			}
 			else
@@ -113,17 +114,26 @@ void MainMenu::update()
 void MainMenu::draw()
 {
 	//ve logo main menu
-	_menuImage->Render(0, 0, _menuImagePosition);
-	if(_menuImagePosition.y <= 0)
+	
+	if(_posYMenu <= 0)
 	{
 		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
 	}
-	//draw highscore
+	float translateX = 0.0f,translateY = 0.0f;
+	_menuImage->Render(0, D3DXVECTOR3(translateX + 70.0f, _posYMenu + translateY + 110.0f, 0.0f)); //70, 110
+	_text->drawText("I-", D3DXVECTOR3(translateX + 45.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText("HI-", D3DXVECTOR3(translateX + 237.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), D3DXVECTOR3(translateX + 87.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6); //I-
+	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6);
+	_text->drawText("PLAY", D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 310.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText("INSTRUCTION", D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 344.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText("SE-UIT", D3DXVECTOR3(translateX + 270.0f, _posYMenu + translateY + 417.0f, 0.0f), COLOR_RED, 20);
+	_text->drawText("PROJECT INTRODUCTION TO \nGAME DEVELOPMENT", D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20,DT_CENTER,0,2);
 }
 
 void MainMenu::reset()
 {
-	_menuImagePosition = IMAGE_MAIN_MENU_GAME_DEFAULT_POS;
+	_posYMenu = MAIN_MENU_GAME_DEFAULT_POS_Y;
 	_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
 }
 
@@ -505,7 +515,6 @@ void GameOverState::update()
 		_delayTime = 10000;
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
-		ScoreManager::getInstance()->reset();
 		MainMenu::get()->reset();
 		Instruction::get()->reset();
 		PlayingState::get()->reset();
@@ -574,7 +583,6 @@ void EndGame::update()
 	{
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
-		ScoreManager::getInstance()->reset();
 		MainMenu::get()->reset();
 		Instruction::get()->reset();
 		PlayingState::get()->reset();

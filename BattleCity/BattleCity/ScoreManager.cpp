@@ -80,15 +80,18 @@ ScoreManager::ScoreManager()
 	renewValue();
 	_playerScore = 0;
 	string line;
-	ifstream myfile("Resource\\Other\\highscore.txt");
-	if (myfile.is_open())
+	fstream _mapFile;
+	string scoreFilePath = HI_SCORE_FILE_PATH;
+	_mapFile.open(scoreFilePath, ios::in);
+	if (!_mapFile.fail())
 	{
-		while (getline(myfile, line))
+		while (!_mapFile.eof())
 		{
-			_highScore << std::stoi(line);
+			getline(_mapFile, line);
+			_highScore = std::stoi(line);
 		}
-		myfile.close();
 	}
+	_mapFile.close();
 }
 
 
