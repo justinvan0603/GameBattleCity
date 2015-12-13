@@ -208,7 +208,8 @@ void Bullet::Update()
 	bool isCollided=  CollisionManager::CollisionWithScreen(this);
 	if (isCollided)
 	{
-		GameSound::getInstance()->Play(ID_SOUND_STEEL_WALL_EXPLODE);
+		if (_allyObject == ALLY_PLAYER)
+			GameSound::getInstance()->Play(ID_SOUND_STEEL_WALL_EXPLODE);
 		D3DXVECTOR2 pos;
 		pos.x = _left - BULLET_WIDTH;
 		pos.y = _top - BULLET_HEIGHT;
