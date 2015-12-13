@@ -28,6 +28,7 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
 	_respawnEffect = _spriteItemManager->getRespawnSprite();
+	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_player = new PlayerTank(_spriteHandler);
 	_listEnemy = new vector<Enemy*>;
 	_listEnemyOnMap = new vector<Enemy*>;
@@ -46,7 +47,6 @@ void Map::changeStage()
 {
 	//
 	_colisObj = new vector<vector<StaticObject*>>;
-	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	posGameOverText = POS_START_GAMEOVER;
 	delaytimeReSpanw = DEFINE_ZERO_VALUE;
 	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
@@ -199,8 +199,10 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 				n = listMedium->size();
 				for (int j = 0; j < n;j++)
 				{
-					_listEnemy->push_back(listMedium->at(j));
-				}				
+					_listEnemy->push_back(listMedium->front());
+					listMedium->erase(listMedium->begin());
+				}		
+				delete listMedium;
 				break;
 			}
 			case ID_LIGHT_TANK:
@@ -208,8 +210,10 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 				n = listLight->size();
 				for (int j = 0; j < n; j++)
 				{
-					_listEnemy->push_back(listLight->at(j));
+					_listEnemy->push_back(listLight->front());
+					listLight->erase(listLight->begin());
 				}
+				delete listLight;
 				break;
 			}
 			case ID_HEAVY_TANK:
@@ -217,8 +221,10 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 				n = listHeavy->size();
 				for (int j = 0; j < n; j++)
 				{
-					_listEnemy->push_back(listHeavy->at(j));
+					_listEnemy->push_back(listHeavy->front());
+					listHeavy->erase(listHeavy->begin());
 				}
+				delete listHeavy;
 				break;
 			}
 			case ID_SUPER_HEAVY_TANK:
@@ -226,14 +232,15 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 				n = listSuper->size();
 				for (int j = 0; j < n; j++)
 				{
-					_listEnemy->push_back(listSuper->at(j));
+					_listEnemy->push_back(listSuper->front());
+					listSuper->erase(listSuper->begin());
 				}
+				delete listSuper;
 				break;
 			}
 		}
 		i++;
 	}
-
 }
 
 

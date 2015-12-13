@@ -82,6 +82,16 @@ string GameSound::switchID(int id)
 		soundLink = SOUND_STEEL_WALL_EXPLODE;
 		break;
 	}
+	case ID_SOUND_COUNT_SCORE:
+	{
+		soundLink = SOUND_COUNT_SCORE;
+		break;
+	}
+	case ID_SOUND_GAME_OVER:
+	{
+		soundLink = SOUND_GAME_OVER;
+		break;
+	}
 	default:
 		break;
 	}

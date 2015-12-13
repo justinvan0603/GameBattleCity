@@ -406,8 +406,9 @@ ScoreState* ScoreState::_instance = nullptr;
 
 ScoreState::ScoreState()
 {
-	_delayTime = 10000;
+	_delayTime = DELAY_TIME_SCORE;
 	_iconTankScore = new Sprite(_spriteHandler, ICON_TANK_SCORE_PATH, 48, 176, 1, 1);
+	_numTypeEnemy = 0;
 	ScoreState::reset();
 }
 
@@ -415,7 +416,8 @@ void ScoreState::update()
 {
 	if (GameTime::DelayTime(_delayTime))
 	{
-		_delayTime = 10000;
+		_delayTime = DELAY_TIME_SCORE;
+		_numTypeEnemy = 0;
 		ScoreManager::getInstance()->renewValue();
 		if (_isEnd)
 		{
@@ -449,18 +451,28 @@ void ScoreState::draw()
 	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);
-	float a = BEGIN_X;
 	
-	for (int i = 0; i < NUM_TYPE_ENEMY;i++)
-	{
-		_text->drawText(to_string(ScoreManager::getInstance()->getScoreTank(i)), D3DXVECTOR3(SCORE_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 4);
-		_text->drawText("PTS", D3DXVECTOR3(PTS_POS_X,a , 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-		_text->drawText(to_string(ScoreManager::getInstance()->getNumTank(i)), D3DXVECTOR3(NUM_TANK_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
-		a += DISTANCE_LINE;
-	}
 	_text->drawText("______", POS_LINE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("TOTAL", POS_TOTAL_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
+
+	float a = BEGIN_X;
+	if (_delayTime % DELAY_TIME_DRAW_SCORE == 0)
+	{
+		if (_numTypeEnemy < NUM_TYPE_ENEMY)
+		{
+			_numTypeEnemy++;
+			GameSound::getInstance()->Play(ID_SOUND_COUNT_SCORE);
+			
+		}
+	}
+	for (int i = 0; i < _numTypeEnemy; i++)
+	{
+		_text->drawText(to_string(ScoreManager::getInstance()->getScoreTank(i)), D3DXVECTOR3(SCORE_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 4);
+		_text->drawText("PTS", D3DXVECTOR3(PTS_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+		_text->drawText(to_string(ScoreManager::getInstance()->getNumTank(i)), D3DXVECTOR3(NUM_TANK_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 2);
+		a += DISTANCE_LINE;
+	}
 }
 
 void ScoreState::reset()
@@ -485,7 +497,7 @@ void ScoreState::setEndAfter(bool isEnd)
 
 void ScoreState::writeFile()
 {
-	ofstream myfile("Resource\\Other\\highscore.txt");
+	ofstream myfile(FILE_HI_SCORE_PATH);
 	if (myfile.is_open())
 	{
 		myfile << ScoreManager::getInstance()->getHighScore();
@@ -506,23 +518,23 @@ GameOverState* GameOverState::_instance = nullptr;
 
 GameOverState::GameOverState()
 {
-	_gameOverImage = new Sprite(_spriteHandler, ICON_END_GAME_PATH, 324, 211, 1, 1);
-	_delayTime = 10000;
+	_gameOverImage = new Sprite(_spriteHandler, ICON_GAME_OVER_PATH, ICON_GAME_OVER_WIDTH, ICON_GAME_OVER_HEIGHT, 1, 1);
+	_delayTime = DELAY_TIME_GAMEOVER;
 }
 
 void GameOverState::update()
 {
+	if (_delayTime == DELAY_TIME_GAMEOVER)
+		GameSound::getInstance()->Play(ID_SOUND_GAME_OVER);
 	if(GameTime::DelayTime(_delayTime))
 	{
-		_delayTime = 10000;
+		_delayTime = DELAY_TIME_GAMEOVER;
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
-		Instruction::get()->reset();
 		PlayingState::get()->reset();
 		ScoreState::get()->reset();
 		/*EndGame::get()->*/reset();
-		switchState(MainMenu::get());
 		switchState(MainMenu::get());
 	}	
 }
@@ -530,7 +542,7 @@ void GameOverState::update()
 void GameOverState::draw()
 {
 	//Draw game over picture
-	_gameOverImage->Render(POS_ICON_END);
+	_gameOverImage->Render(POS_ICON_GAME_OVER);
 }
 
 void GameOverState::reset()
@@ -586,7 +598,6 @@ void EndGame::update()
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
-		Instruction::get()->reset();
 		PlayingState::get()->reset();
 		ScoreState::get()->reset();
 		/*EndGame::get()->*/reset();

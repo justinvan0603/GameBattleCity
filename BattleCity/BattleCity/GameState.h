@@ -156,6 +156,7 @@ public:
 
 private:
 	bool _isEnd;
+	int _numTypeEnemy;
 	Sprite* _iconTankScore;
 	ScoreState();
 	~ScoreState();

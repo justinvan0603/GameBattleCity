@@ -306,6 +306,7 @@
 #define TEXT_SIZE_SCORE_STATE 20
 #define POS_HIGHSCORE D3DXVECTOR3(200.0f,200.0f,0.0f)
 #define ICON_TANK_SCORE_PATH "Resource\\Other\\IconTankScore.png"
+#define FILE_HI_SCORE_PATH "Resource\\Other\\highscore.txt"
 #define POS_HI_SCORE D3DXVECTOR3(170.0f, 50.0f, 0.0f)
 #define POS_HI_SCORE_VALUE D3DXVECTOR3(370.0f, 50.0f, 0.0f)
 #define POS_STAGE_TEXT D3DXVECTOR3(240.0f, 90.0f, 0.0f)
@@ -326,10 +327,17 @@
 #define SCORE_HEAVY_TANK 300
 #define SCORE_SUPER_HEAVY_TANK 400 
 #define SCORE_POWER_UP 500
+#define DELAY_TIME_SCORE 16000
+#define DELAY_TIME_DRAW_SCORE 3000
 
-//Define End State
-#define ICON_END_GAME_PATH "Resource\\Other\\gameover.png"
-#define POS_ICON_END D3DXVECTOR3(170.0f, 170.0f,0.0f)
+//Define GameOverState
+#define ICON_GAME_OVER_PATH "Resource\\Other\\gameover.png"
+#define ICON_GAME_OVER_WIDTH 324
+#define ICON_GAME_OVER_HEIGHT 211
+#define POS_ICON_GAME_OVER D3DXVECTOR3(170.0f, 170.0f,0.0f)
+
+//Define EndGame State
+#define DELAY_TIME_GAMEOVER 10000
 
 //Resource sound path
 #define SOUND_START_GAME "Resource\\Sound\\levelstarting.wav"
@@ -344,6 +352,8 @@
 #define SOUND_ITEM_APPEAR "Resource\\Sound\\hitenemybonus.wav"
 #define SOUND_ITEM_EAT "Resource\\Sound\\eatbonus.wav"
 #define SOUND_LIFE_UP "Resource\\Sound\\eatlifebonus.wav"
+#define SOUND_COUNT_SCORE "Resource\\Sound\\scorecount.wav"
+#define SOUND_GAME_OVER "Resource\\Sound\\gameover.wav"
 
 #define ID_SOUND_START_GAME 1
 #define ID_SOUND_FIRE 2
@@ -357,6 +367,8 @@
 #define ID_SOUND_ITEM_EAT 10
 #define ID_SOUND_LIFE_UP 11
 #define ID_SOUND_STEEL_WALL_EXPLODE 12
+#define ID_SOUND_COUNT_SCORE 13
+#define ID_SOUND_GAME_OVER 14
 //20/11/2015
 //------------game effect ID--------------------
 //PATH
