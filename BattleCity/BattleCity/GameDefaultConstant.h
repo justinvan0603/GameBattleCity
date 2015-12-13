@@ -121,9 +121,15 @@
 #define IMAGE_SELECTOR_PATH		"Resource\\Other\\selector.png"
 #define IMAGE_SELECTOR_WIDTH 32
 #define IMAGE_SELECTOR_HEIGHT 32
-#define SELECTOR_SPEED_CHANGE 100
+#define SELECTOR_SPEED_CHANGE 200
 #define IMAGE_SELECTOR_POS_PLAY D3DXVECTOR3(200.0f,300.0f,0.0f)
 #define IMAGE_SELECTOR_POS_INSTRUCTION D3DXVECTOR3(200.0f,335.0f,0.0f)
+#define TEXT_PlAYER_SCORE "I-"
+#define TEXT_HI_SCORE "HI-"
+#define TEXT_PLAY "PLAY"
+#define TEXT_INSTRUCTION "INSTRUCTION"
+#define TEXT_SE_UIT "SE-UIT"
+#define TEXT_ABOUT "PROJECT INTRODUCTION TO \nGAME DEVELOPMENT"
 	//Instruction
 #define IMAGE_TAB_STORY_PATH "Resource\\Other\\Instruction\\story.png"
 #define IMAGE_TAB_CONTROL_PATH "Resource\\Other\\Instruction\\tabcontrol.png"

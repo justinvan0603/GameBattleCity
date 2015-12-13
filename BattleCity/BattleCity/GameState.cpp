@@ -57,8 +57,9 @@ MainMenu::MainMenu()
 	//new sprite image main menu
 	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
-	_delayTime = 200;
+	_delayTime = SELECTOR_SPEED_CHANGE;
 	MainMenu::reset();
+	GameSound::getInstance()->PlayRepeat(ID_SOUND_TANK_ENGINE);
 }
 
 MainMenu::~MainMenu()
@@ -83,7 +84,7 @@ void MainMenu::update()
 		//tao selector chuyen dong
 		if (GameTime::DelayTime(_delayTime))
 		{
-			_delayTime = 200;
+			_delayTime = SELECTOR_SPEED_CHANGE;
 			_selector->Next();
 		}
 		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
@@ -106,9 +107,7 @@ void MainMenu::update()
 				switchState(Instruction::get());
 			}
 		}
-	}
-	
-	
+	}	
 }
 
 void MainMenu::draw()
@@ -121,14 +120,14 @@ void MainMenu::draw()
 	}
 	float translateX = 0.0f,translateY = 0.0f;
 	_menuImage->Render(0, D3DXVECTOR3(translateX + 70.0f, _posYMenu + translateY + 110.0f, 0.0f)); //70, 110
-	_text->drawText("I-", D3DXVECTOR3(translateX + 45.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
-	_text->drawText("HI-", D3DXVECTOR3(translateX + 237.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText(TEXT_PlAYER_SCORE, D3DXVECTOR3(translateX + 45.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText(TEXT_HI_SCORE, D3DXVECTOR3(translateX + 237.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), D3DXVECTOR3(translateX + 87.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6); //I-
-	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6);
-	_text->drawText("PLAY", D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 310.0f, 0.0f), COLOR_WHITE, 20);
-	_text->drawText("INSTRUCTION", D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 344.0f, 0.0f), COLOR_WHITE, 20);
-	_text->drawText("SE-UIT", D3DXVECTOR3(translateX + 270.0f, _posYMenu + translateY + 417.0f, 0.0f), COLOR_RED, 20);
-	_text->drawText("PROJECT INTRODUCTION TO \nGAME DEVELOPMENT", D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20,DT_CENTER,0,2);
+	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6);  //HI-
+	_text->drawText(TEXT_PLAY, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 310.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText(TEXT_INSTRUCTION, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 344.0f, 0.0f), COLOR_WHITE, 20);
+	_text->drawText(TEXT_SE_UIT, D3DXVECTOR3(translateX + 270.0f, _posYMenu + translateY + 417.0f, 0.0f), COLOR_RED, 20);
+	_text->drawText(TEXT_ABOUT, D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20,DT_CENTER,0,2);
 }
 
 void MainMenu::reset()

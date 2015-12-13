@@ -15,8 +15,8 @@ enum KeyState
 class Keyboard
 {
 private:
-	LPDIRECTINPUT8       _directInputObject;
-	LPDIRECTINPUTDEVICE8 _keyboard;
+	LPDIRECTINPUT8       _directInput;
+	LPDIRECTINPUTDEVICE8 _directInputDeviceKeyboard;
 
 	BYTE _keyState[256];
 	BYTE _keyStatePrevious[256];

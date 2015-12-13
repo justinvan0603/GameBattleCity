@@ -4,32 +4,20 @@
 Keyboard* Keyboard::_instance = NULL;
 Keyboard::Keyboard()
 {
-	_directInputObject = NULL;
-	_keyboard = NULL;
+	_directInput = NULL;
+	_directInputDeviceKeyboard = NULL;
 }
 
 bool Keyboard::InitKeyboard(HINSTANCE hInstance, HWND hWnd)
 {
-	HRESULT result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&_directInputObject, NULL);
-	if (result != DI_OK)
-		return false;
-	result = _directInputObject->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL);
-	if (result != DI_OK)
-		return false;
-	_keyboard->SetDataFormat(&c_dfDIKeyboard);
-	_keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	HRESULT result = DI_OK;
+	result = result | DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&_directInput, NULL);
+	result = result | _directInput->CreateDevice(GUID_SysKeyboard, &_directInputDeviceKeyboard, NULL);
 
-	DIPROPDWORD dipdw;
-	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
-	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipdw.diph.dwObj = 0;
-	dipdw.diph.dwHow = DIPH_DEVICE;
-	dipdw.dwData = KEYBOARD_BUFFER_SIZE;
+	result = result | _directInputDeviceKeyboard->SetDataFormat(&c_dfDIKeyboard);
+	result = result | _directInputDeviceKeyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = result | _directInputDeviceKeyboard->Acquire();
 
-	result = _keyboard->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
-	if (result != DI_OK)
-		return false;
-	result = _keyboard->Acquire();
 	if (result != DI_OK)
 		return false;
 	return true;
@@ -46,13 +34,13 @@ Keyboard* Keyboard::getInstance()
 }
 Keyboard::~Keyboard()
 {
-	if (_keyboard)
+	if (_directInputDeviceKeyboard)
 	{
-		_keyboard->Unacquire();
-		_keyboard->Release();
+		_directInputDeviceKeyboard->Unacquire();
+		_directInputDeviceKeyboard->Release();
 	}
-	if (_directInputObject)
-		_directInputObject->Release();
+	if (_directInput)
+		_directInput->Release();
 
 }
 
@@ -62,12 +50,12 @@ void Keyboard::update(HWND hWnd)
 
 	HRESULT result;
 	int i = sizeof(_keyState);
-	result = _keyboard->GetDeviceState(sizeof(_keyState), (LPVOID)&_keyState);
+	result = _directInputDeviceKeyboard->GetDeviceState(sizeof(_keyState), (LPVOID)&_keyState);
 
 	if (FAILED(result))
 	{
 		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
-			_keyboard->Acquire();
+			_directInputDeviceKeyboard->Acquire();
 		else
 			WARNING_BOX(WARNING_CAN_NOT_READ_KEYBOARD);
 	}
