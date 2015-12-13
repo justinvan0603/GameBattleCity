@@ -2,7 +2,7 @@
 #include "CollisionManager.h"
 #include "BulletManager.h"
 #include "GameSound.h"
-#define PLAYER_SHIELD_TIME 4000
+
 PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 {
 	//this->_bulletDelay = new GameTime(BULLET_DELAY_FPS);
@@ -14,7 +14,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_spriteHandler = spriteHandler;
 	this->_level = LEVEL_ONE;
 	this->_life = DEFAULT_PLAYER_LIFE;
-	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
+	//this->_immortalTime = DEFAULT_IMMORTAL_TIME;
 	this->_left = DEFAULT_PLAYER_POSITION_X;
 	this->_top = DEFAULT_PLAYER_POSITION_Y;
 	this->_vx = DEFAULT_PLAYER_SPEED_X;
@@ -30,7 +30,9 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	_width = SPRITE_WIDTH;
 	_height = SPRITE_HEIGHT;
 	this->_isImmortal = true;
-
+	_isMoving = false;
+	_playTankSoundMove = 1;
+	_playTankSoundEngine = 1;
 }
 
 void PlayerTank::Draw()
@@ -61,53 +63,46 @@ void PlayerTank::Draw()
 }
 void PlayerTank::Move()
 {
-	GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
-	GameSound::getInstance()->Play(ID_SOUND_TANK_ENGINE);
+	if (_isTerminated)
+		return;
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_LEFT) && !Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 		_vx = 0;
 	if (!Keyboard::getInstance()->IsKeyDown(DIK_UP) && !Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 		_vy = 0;
 	if (Keyboard::getInstance()->IsKeyDown(DIK_UP))
 	{
-		
+		_isMoving = true;
 		this->_vy = -DEFAULT_PLAYER_SPEED_Y;
 		_curSprite = _listSprite[UP];
 		_currentDirection = UP;
-		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
-		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 	{
-
+		_isMoving = true;
 		this->_vy = PLAYER_SPEED_PROMOTED_Y;
 		_curSprite = _listSprite[DOWN];
 		_currentDirection = DOWN;
-		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
-		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	
 	if (Keyboard::getInstance()->IsKeyDown(DIK_LEFT))
 	{
-
+		_isMoving = true;
 		this->_vx = -PLAYER_SPEED_PROMOTED_X;
 		_curSprite = _listSprite[LEFT];
 		_currentDirection = LEFT;
-		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
-		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
 	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 	{
-
+		_isMoving = true;
 		this->_vx = PLAYER_SPEED_PROMOTED_X;
 		_curSprite = _listSprite[RIGHT];
 		_currentDirection = RIGHT;
-		GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
-		GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE);
 		return;
 	}
+	_isMoving = false;
 }
 void PlayerTank::Shoot()
 {
@@ -157,6 +152,28 @@ void PlayerTank::Update()
 	
 	FindNearbyObject();
 	this->Move();
+	
+	if(_isMoving)
+	{
+		if(_playTankSoundMove == 1)
+		{
+			GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+			GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE,true);
+			_playTankSoundMove++;
+			_playTankSoundEngine = 1;
+		}
+		
+	}
+	else
+	{
+		if(_playTankSoundEngine == 1)
+		{
+			GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
+			GameSound::getInstance()->Play(ID_SOUND_TANK_ENGINE,true);
+			_playTankSoundEngine++;
+			_playTankSoundMove = 1;
+		}		
+	}
 	this->Shoot();
 	
 	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
@@ -192,12 +209,15 @@ void PlayerTank::reset()
 	this->_currentDirection = MoveDirection::UP;
 	this->_level = LEVEL_ONE;
 	this->_life = DEFAULT_PLAYER_LIFE;
-	this->_immortalTime = DEFAULT_IMMORTAL_TIME;
+	//this->_immortalTime = DEFAULT_IMMORTAL_TIME;
 	this->_hitPoint = DEFAULT_PLAYER_HP;
 	_curSprite = this->_listSprite[_currentDirection];
 	this->_isImmortal = true;
 	setPositionX(DEFAULT_PLAYER_POSITION_X);
 	setPositionY(DEFAULT_PLAYER_POSITION_Y);
+	_isMoving = false;
+	_playTankSoundMove = 1;
+	_playTankSoundEngine = 1;
 }
 
 void PlayerTank::Respawn()
@@ -229,11 +249,20 @@ int PlayerTank::getLife()
 	return _life;
 }
 
-void PlayerTank::ActivateShield()
+void PlayerTank::ActivateShield(bool isFromPowerUp)
 {
-	this->_delayShield = 5000;
+	if(isFromPowerUp)
+		this->_delayShield = PLAYER_SHIELD_TIME*3;
+	else
+		this->_delayShield = PLAYER_SHIELD_TIME;
 	this->_isActiveShield = true;
 	this->_isImmortal = true;
+}
+
+void PlayerTank::TurnOffSound()
+{
+	GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+	GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
 }
 
 void PlayerTank::addLife()

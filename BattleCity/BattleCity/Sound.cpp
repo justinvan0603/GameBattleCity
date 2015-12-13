@@ -1,192 +1,130 @@
 #include "Sound.h"
-#pragma comment(lib, "dsound.lib")
-#pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "winmm.lib" )
 
-DSound::DSound(HWND hWnd) : _directSoundDevice(NULL), _primaryBuffer(NULL)
+#if MEMORY_LEAK_DEBUG == 1
+#include <vld.h>
+#endif
+
+WAVEFORMATEX Sound::bufferFormat_;
+DSBUFFERDESC Sound::bufferDescription_;
+LPDIRECTSOUND8 Sound::audioHandler_;
+HWND Sound::windowsHandler_;
+
+// -----------------------------------------------
+// Name: T6_Sound::T6_Sound()
+// Desc: Get the audio Name and Path, ready to load.
+// -----------------------------------------------
+Sound::Sound(const char* audioPath)
 {
-	DSBUFFERDESC bufferDesc;
-	WAVEFORMATEX waveFormat;
-	//Create sound Device
-	DirectSoundCreate8(NULL, &_directSoundDevice, NULL);
-	//Set Cooperative for window
-	_directSoundDevice->SetCooperativeLevel(hWnd, DSSCL_NORMAL);
-	//Set buffer Decription
-	ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
-	ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
-	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-	bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
-	bufferDesc.dwBufferBytes = 0;
-	bufferDesc.dwReserved = 0;
-	bufferDesc.lpwfxFormat = NULL;
-	bufferDesc.guid3DAlgorithm = GUID_NULL;
-	
-	//Create buffer by device
-	_directSoundDevice->CreateSoundBuffer(&bufferDesc, &_primaryBuffer, NULL);
-
-	//set buffer Wave Format
-	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-	waveFormat.nSamplesPerSec = 44100;
-	waveFormat.wBitsPerSample = 16;
-	waveFormat.nChannels = 2;
-	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
-	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-	//waveFormat.cbSize = 0;
-	
-	_primaryBuffer->SetFormat(&waveFormat);
+	loadAudio(audioPath);
 }
 
-DSound::~DSound()
+
+
+Sound::~Sound(void)
 {
-	if (_primaryBuffer)
-	{
-		_primaryBuffer->Release();
-		_primaryBuffer = NULL;
-	}
-	if (_directSoundDevice)
-	{
-		_directSoundDevice->Release();
-		_directSoundDevice = NULL;
-	}
+	soundBuffer_->Stop();
 }
 
-Sound DSound::CreateSound(char* waveFileName)
+
+// -----------------------------------------------
+// Name: T6_Sound::initializeSoundClass()
+// Desc: Initialize the basic PROPERTIESs for loading audio
+// -----------------------------------------------
+HRESULT Sound::initializeSoundClass(HWND windowsHandler)
 {
-	int error;
-	FILE* filePtr;
-	unsigned int count;
-	WaveHeaderType waveFileHeader;
-	WAVEFORMATEX waveFormat;
-	DSBUFFERDESC bufferDesc;
+	windowsHandler_ = windowsHandler;
+
 	HRESULT result;
-	IDirectSoundBuffer* tempBuffer;
-	IDirectSoundBuffer8* pSecondaryBuffer;
-	unsigned char* waveData;
-	unsigned char* bufferPtr;
-	unsigned long bufferSize;
+	result = DirectSoundCreate8(0, &audioHandler_, 0);
+	result = result | audioHandler_->SetCooperativeLevel(windowsHandler_, DSSCL_PRIORITY);
 
-	fopen_s(&filePtr, waveFileName, "rb");
+	ZeroMemory(&bufferFormat_, sizeof(WAVEFORMATEX));
+	ZeroMemory(&bufferDescription_, sizeof(DSBUFFERDESC));
 
-	fread(&waveFileHeader, sizeof(waveFileHeader), 1, filePtr);
-	ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
-	ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
-	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-	waveFormat.nSamplesPerSec = 44100;
-	waveFormat.wBitsPerSample = 16;
-	waveFormat.nChannels = 2;
-	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
-	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-	//waveFormat.cbSize = 0;
-	
-	waveFileHeader.dataSize = 9990000;
+	bufferFormat_.wFormatTag = AUDIO_FORMAT_TAG;
+	bufferFormat_.nChannels = AUDIO_NUM_OF_CHANNEL;
+	bufferFormat_.nSamplesPerSec = AUDIO_SAMPLE_SPEED;
+	bufferFormat_.wBitsPerSample = AUDIO_BITS_PER_SAMPLE;
+	bufferFormat_.nBlockAlign = AUDIO_BLOCK_ALIGN(bufferFormat_.wBitsPerSample,
+		bufferFormat_.nChannels);
+	bufferFormat_.nAvgBytesPerSec = AUDIO_AVERAGE_BPS(bufferFormat_.nSamplesPerSec,
+		bufferFormat_.nBlockAlign);
 
-	// Set the buffer description of the secondary sound buffer
-	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-	bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
-	bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
-	bufferDesc.dwReserved = 0;
-	bufferDesc.lpwfxFormat = &waveFormat;
-	bufferDesc.guid3DAlgorithm = GUID_NULL;
+	bufferDescription_.dwFlags = AUDIO_FLAGS;
+	bufferDescription_.guid3DAlgorithm = AUDIO_GUID;
+	bufferDescription_.dwSize = sizeof(DSBUFFERDESC);
 
-	//Create temporary sound buffer
-	_directSoundDevice->CreateSoundBuffer(&bufferDesc, &tempBuffer, NULL);
-
-	// Test the buffer format against the direct sound 8 interface and create the secondary buffer.
-	tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&pSecondaryBuffer);
-	// Release the temporary buffer.
-	tempBuffer->Release();
-	tempBuffer = 0;
-
-	// Move to the beginning of the wave data which starts at the end of the data chunk header.
-	fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
-
-	// Create a temporary buffer to hold the wave file data.
-	waveData = new unsigned char[waveFileHeader.dataSize];
-
-	// Read in the wave file data into the newly created buffer.
-	fread(waveData, 1, waveFileHeader.dataSize, filePtr);
-
-	// Close the file once done reading.
-	fclose(filePtr);
-
-	// Lock the secondary buffer to write wave data into it.
-	pSecondaryBuffer->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
-
-	// Copy the wave data into the buffer.
-	memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
-
-	// Unlock the secondary buffer after the data has been written to it.
-	pSecondaryBuffer->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
-
-	// Release the wave data since it was copied into the secondary buffer.
-	delete[] waveData;
-	waveData = NULL;
-
-	return Sound(pSecondaryBuffer);
+	return result;
 }
 
-Sound::Sound(IDirectSoundBuffer8* secondaryBuffer) :_buffer(secondaryBuffer)
+
+// -----------------------------------------------
+// Name: T6_Sound::releaseSoundClass()
+// Desc: Release the basic PROPERTIES after used (close game).
+// -----------------------------------------------
+HRESULT Sound::releaseSoundClass()
 {
+	if (audioHandler_ != 0)
+		return audioHandler_->Release();
+
+	return S_OK;
 }
 
-Sound::Sound() : _buffer(NULL)
-{}
 
-Sound::Sound(const Sound& base) : _buffer(base._buffer)
+// -----------------------------------------------
+// Name: T6_Sound::loadAudio()
+// Desc: Load the Audio stored in audioPath.
+// -----------------------------------------------
+HRESULT Sound::loadAudio(const char* audioPath_)
 {
-	_buffer->AddRef();
-}
+	HRESULT result;
+	CWaveFile audioObject;
+	result = audioObject.Open(LPTSTR(audioPath_), 0, 1);
 
-Sound::~Sound()
-{
-	if (_buffer)
-	{
-		_buffer->Release();
-		_buffer = NULL;
+	if (!FAILED(result)) {
+
+		bufferDescription_.dwBufferBytes = audioObject.GetSize();
+		bufferDescription_.lpwfxFormat = audioObject.m_pwfx;
+
+		result = audioHandler_->CreateSoundBuffer(&bufferDescription_, &soundBuffer_, 0);
+
+		VOID* pointerToLockedBuffer = 0;
+		DWORD lockedSize = 0;
+		result = result | (soundBuffer_)->Lock(0, AUDIO_BUFFER_SIZE, &pointerToLockedBuffer,
+			&lockedSize, 0, 0, DSBLOCK_ENTIREBUFFER);
+
+		if (!FAILED(result)) {
+			DWORD readedData = 0;
+			audioObject.ResetFile();
+			result = audioObject.Read((BYTE*)pointerToLockedBuffer, lockedSize, &readedData);
+			if (!FAILED(result)) {
+				(soundBuffer_)->Unlock(pointerToLockedBuffer, lockedSize, 0, 0);
+			}
+		}
 	}
+
+	audioObject.Close();
+	return result;
 }
 
-const Sound& Sound:: operator =(const Sound& source)
+
+// -----------------------------------------------
+// T6_Sound::play()
+// Desc: Play loaded audio, may choose loop or no.
+// -----------------------------------------------
+HRESULT Sound::play(bool isLoop, DWORD priority)
 {
-	this->~Sound();
-	_buffer = source._buffer;
-	_buffer->AddRef();
-	return source;
+	return soundBuffer_->Play(0, priority, isLoop & DSBPLAY_LOOPING);
 }
 
-void Sound::Play(int attenuation)
+
+// -----------------------------------------------
+// T6_Sound:stop()
+// Desc: Stop the audio if it is playing.
+// -----------------------------------------------
+HRESULT Sound::stop()
 {
-	attenuation = max(attenuation, DSBVOLUME_MIN);
-	HRESULT result;
-
-	// Set position at the beginning of the sound buffer.
-	_buffer->SetCurrentPosition(0);
-
-	// Set volume of the buffer to attn
-	_buffer->SetVolume(attenuation);
-
-	// Play the contents of the secondary sound buffer.
-	_buffer->Play(0, 0, 0);
-
-}
-
-void Sound::PlayRepeat(int attenuation)
-{
-	attenuation = max(attenuation, DSBVOLUME_MIN);
-	HRESULT result;
-
-	// Set position at the beginning of the sound buffer.
-	_buffer->SetCurrentPosition(0);
-
-
-	// Set volume of the buffer to attn
-	_buffer->SetVolume(attenuation);
-
-	// Play the contents of the secondary sound buffer.
-	_buffer->Play(0, 0, DSBPLAY_LOOPING);
-}
-
-void Sound::Stop()
-{
-	_buffer->Stop();
+	HRESULT result = soundBuffer_->Stop();
+	soundBuffer_->SetCurrentPosition(0);
+	return result;
 }

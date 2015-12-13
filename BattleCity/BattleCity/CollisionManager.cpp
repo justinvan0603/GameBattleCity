@@ -209,7 +209,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					{
 						if (!B->_isImmortal)
 						{
-							GameSound::getInstance(0)->Play(ID_SOUND_ALLY_EXPLODE);
+							GameSound::getInstance()->Play(ID_SOUND_ALLY_EXPLODE);
 							B->_isTerminated = true;
 						}
 						else

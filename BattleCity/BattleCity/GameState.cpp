@@ -59,7 +59,7 @@ MainMenu::MainMenu()
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
 	_delayTime = SELECTOR_SPEED_CHANGE;
 	MainMenu::reset();
-	GameSound::getInstance()->PlayRepeat(ID_SOUND_TANK_ENGINE);
+	
 }
 
 MainMenu::~MainMenu()
@@ -311,7 +311,7 @@ StartingState* StartingState::_instance = nullptr;
 StartingState::StartingState()
 {	
 	_spriteHandler->GetDevice(&_d3ddevice);
-	_delayTime = 5000;
+	_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
 	
 }
 
@@ -323,12 +323,12 @@ StartingState::~StartingState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
-	if (_delayTime == 5000)
+	if (_delayTime == DELAY_TIME_TO_START_PLAYING_STATE)
 		GameSound::getInstance()->Play(ID_SOUND_START_GAME);
 	if (GameTime::DelayTime(_delayTime))
 	{
-		_delayTime = 5000;
-
+		_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
+		//GameSound::getInstance()->Stop(ID_SOUND_START_GAME);
 		switchState(PlayingState::get());
 	}
 	
@@ -337,7 +337,7 @@ void StartingState::update()
 void StartingState::draw()
 {
 	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
-	_text->drawText("STAGE " + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
+	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
 }
 
 void StartingState::reset()
@@ -437,12 +437,15 @@ void ScoreState::update()
 	}
 }
 
+//-------------
+// Vi li do chuyen map ngay khi ket thuc playing state nen so stage phai dc - 1
+//----------
 void ScoreState::draw()
 {
 	_text->drawText("HI-SCORE", POS_HI_SCORE, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), POS_HI_SCORE_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("STAGE", POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(StageManager::getInstance()->getStage() - 1), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(to_string(StageManager::getInstance()->getStage() - !_isEnd), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);

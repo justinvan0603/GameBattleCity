@@ -32,6 +32,8 @@ bool Game::GameInit(HINSTANCE hInstance)
 		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_KEYBOARD);
 		return false;
 	}
+	GameSound::initialize(win->get_windowHandler());
+
 	GameState::initialize(win->getSpriteHandler());
 	
 	return true;

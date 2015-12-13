@@ -1,30 +1,40 @@
-#pragma once
+#ifndef __GAME_SOUND__
+#define __GAME_SOUND__
+
 #include "Sound.h"
+#include "DefaultConstant.h"
 #include "GameDefaultConstant.h"
+#include <map>
+using namespace std;
+
+typedef map<string, Sound*> SoundMap;
+typedef pair<string, Sound*> SoundPair;
+
 class GameSound
 {
-private:
-	
-	Sound _startGame;
-	Sound _fire;
-	Sound _brickExplode;
-	Sound _steelwallExplode;
-	Sound _enemyExplode;
-	Sound _allyExplode;
-	Sound _tankEngine;
-	Sound _tankMove;
-	Sound _tankHit;
-	Sound _powerAppear;
-	Sound _eatPower;
-	Sound _lifeUp;
-private:
-	GameSound(DSound* dsound);
-	~GameSound();
-	static GameSound* _instance;
 public:
-	static GameSound* getInstance(DSound* dsound= 0);
-	void Play(int id);
-	void PlayRepeat(int id);
-	void Stop(int id);
+	 static void initialize(HWND windowsHandler);
+
+	 void release();
+
+	 void Play(int id, bool repeat = false);
+
+	 void play(string soundLink, bool repeat = false, bool playFromStart = true);
+
+	 void Stop(int id);
+
+	 void stop(string soundLink);
+
+	 static GameSound* getInstance();
+
+private:
+	GameSound();
+	~GameSound();
+
+	string switchID(int id);
+private:
+	static GameSound* instance_;
+	SoundMap loadedSound_;
 };
 
+#endif // __GAME_SOUND__

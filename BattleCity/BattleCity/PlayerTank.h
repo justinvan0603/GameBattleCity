@@ -6,12 +6,14 @@ class PlayerTank: public ShootableObject
 {
 private:
 	int _life;
-	int _immortalTime;
+	//int _immortalTime;
 	GameTime *_bulletDelay;
 	GameTime *_shieldDelay;
 	Effect* _shieldEffect;
 	int _delayShield;
 	bool _isMoving;
+	int _playTankSoundMove;
+	int _playTankSoundEngine;
 	bool _isActiveShield;
 public:
 	
@@ -27,8 +29,8 @@ public:
 	void SetDirection(MoveDirection direction);
 	void Respawn();
 	void PlayerPromoted();
-	void ActivateShield();
-	
+	void ActivateShield(bool isFromPowerUp = false);
+	void TurnOffSound();
 	~PlayerTank();
 };
 

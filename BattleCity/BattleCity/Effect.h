@@ -5,7 +5,6 @@ class Effect: public Sprite
 {
 private:
 	D3DXVECTOR2 _position;
-	
 public:
 	bool _completed;
 	Effect(LPD3DXSPRITE SpriteHandler, 

@@ -82,8 +82,6 @@ bool Window::initDirectX()
 		return false;
 	}
 	D3DXCreateSprite(d3ddev, &spriteHandler);
-	_directXSound = new DSound(wndHandle);
-	GameSound::getInstance(_directXSound);
 	return true;
 }
 LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message,

@@ -1,54 +1,42 @@
-#pragma once
-#include <windows.h>
-#include <mmsystem.h>
+#ifndef __SOUND_H__
+#define __SOUND_H__
+
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "dxguid.lib")
+
 #include <dsound.h>
-#include <stdio.h>
+#include "DefaultConstant.h"
+#include "CWaveFile.h"
 
-class DSound;
-
+// -----------------------------------------------
+// Name: class TSound
+// Desc: used to load/ store/ play an audio with wav extension.
+// -----------------------------------------------
 class Sound
 {
-	friend DSound;
-private:
-	Sound(IDirectSoundBuffer8* pSecondaryBuffer);
-	IDirectSoundBuffer8* _buffer;
 public:
-	
-	Sound();
-	Sound(const Sound& base);
-	const Sound& operator= (const Sound& source);
-	void Play(int attenuation = DSBVOLUME_MAX);
-	void PlayRepeat(int attenuation = DSBVOLUME_MAX);
-	void Stop();
-	~Sound();
+	Sound(const char* audioPath);
+	~Sound(void);
+
+	static HRESULT initializeSoundClass(HWND windowsHandler);
+	static HRESULT releaseSoundClass();
+
+	HRESULT play(bool isLoop = false, DWORD priority = 0);
+	HRESULT stop();
+
+
+private:
+	HRESULT loadAudio(const char* audioPath);
+
+private:
+	static WAVEFORMATEX bufferFormat_;
+	static DSBUFFERDESC bufferDescription_;
+	static LPDIRECTSOUND8 audioHandler_;
+	static HWND windowsHandler_;
+
+	LPDIRECTSOUNDBUFFER soundBuffer_;
 };
 
 
-class DSound
-{
-private:
-	struct WaveHeaderType
-	{
-		char chunkId[4];
-		unsigned long chunkSize;
-		char format[4];
-		char subChunkId[4];
-		unsigned long subChunkSize;
-		unsigned short audioFormat;
-		unsigned short numChannels;
-		unsigned long sampleRate;
-		unsigned long bytesPerSecond;
-		unsigned short blockAlign;
-		unsigned short bitsPerSample;
-		char dataChunkId[4];
-		unsigned long dataSize;
-	};
-private:
-	IDirectSoundBuffer* _primaryBuffer;
-	IDirectSound8* _directSoundDevice;
-public:
-	DSound(){};
-	DSound(HWND hWnd); 
-	~DSound();
-	Sound CreateSound(char* waveFileName);
-};
+#endif

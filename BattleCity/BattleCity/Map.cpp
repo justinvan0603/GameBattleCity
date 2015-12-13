@@ -572,7 +572,7 @@ void Map::updatePowerItem()
 			}
 			if (_powerUpItem->getType() == ID_POWER_SHEILD)
 			{
-				_player->ActivateShield();
+				_player->ActivateShield(true);
 			}
 			if (_powerUpItem->getType() == ID_POWER_EXTRA_LIFE)
 			{
@@ -768,6 +768,7 @@ void Map::CleanStage()
 	BulletManager::getInstance()->ClearAllBullet();
 	_powerUpItem->disablePowerUp();
 	_eagle->setEagleStatus(EAGLE_STATUS::LIVE);
+	_player->TurnOffSound();
 }
 
 void Map::reset()
