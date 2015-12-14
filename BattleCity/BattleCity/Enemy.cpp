@@ -18,6 +18,7 @@ void Enemy::MoveWithCollision()
 	{
 		RandomChangeDirection();
 		//_currentDirection = RandomDirection();
+	
 		_isCollied = false;
 	}
 }

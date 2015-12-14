@@ -111,6 +111,7 @@ void LightTank::Update()
 	{
 		this->_isCollied = true;
 		
+		
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();

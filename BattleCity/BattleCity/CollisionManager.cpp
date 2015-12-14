@@ -352,7 +352,7 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
 
-		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
+		if (A->getTop() <= B->getBottom() && A->getBottom() >= B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
@@ -369,7 +369,7 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 
 			}
 		}
-		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
+		if (A->getRight() >= B->getLeft() && A->getLeft() <= B->getRight())
 		{
 			if (A->getTop() < B->getTop())
 			{
@@ -408,7 +408,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
 
-		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
+		if (A->getTop() <= B->getBottom() && A->getBottom() >= B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
@@ -451,7 +451,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 
 			}
 		}
-		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
+		if (A->getRight() >= B->getLeft() && A->getLeft() <= B->getRight())
 		{
 			if (A->getTop() < B->getTop())
 			{
@@ -494,20 +494,20 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 			}
 		}
 
-		//if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
-		//{
-		//	A->InvertDirection();
-		//	B->InvertDirection();
-		//	return true;
-		//}
-		//if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
-		//{
-		//	if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
-		//		A->InvertDirection();
-		//	else
-		//		B->InvertDirection();
-		//	return true;
-		//}
+		if (A->getCurrentMoveDirection() != B->getCurrentMoveDirection())
+		{
+			A->InvertDirection();
+			B->InvertDirection();
+			return true;
+		}
+		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+		{
+			if (A->getRight() < B->getLeft() || A->getTop() > B->getBottom())
+				A->InvertDirection();
+			else
+				B->InvertDirection();
+			return true;
+		}
 		
 	}
 	return false;
