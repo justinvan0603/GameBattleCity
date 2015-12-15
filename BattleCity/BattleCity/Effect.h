@@ -1,12 +1,13 @@
 #pragma once
 #include "Sprite.h"
 #include "GameTime.h"
+//Lop tao hieu ung no trong game
 class Effect: public Sprite
 {
 private:
-	D3DXVECTOR2 _position;
+	D3DXVECTOR2 _position; //Vi tri ve hieu ung
 public:
-	bool _completed;
+	bool _completed;	//Hieu ung da ve het sprite chua
 	Effect(LPD3DXSPRITE SpriteHandler, 
 		char* Path, 
 		int Width, 

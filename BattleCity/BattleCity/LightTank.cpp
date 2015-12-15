@@ -95,23 +95,27 @@ void LightTank::Shoot()
 }
 void LightTank::Update()
 {
+	//Kiem tra neu enemy dang o trang thai dong bang thi khong update 
 	if (_isFreeze)
 		return;
+	//Tim cac doi tuong tinh xung quanh tank add vao list de xet va cham
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();
+	//Xet va cham giua tank voi cac object tinh de ngan khong chi di chuyen
 	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
 	{
 		_isCollied = CollisionManager::CollisionPreventMove(this, *i);
+		//Chi can va cham voi 1 object trong list la co the chan di chuyen
 		if (_isCollied)
-			break;
+		{
+			Enemy::MoveWithCollision();
+		}
 	}
 
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;
-		
-		
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();

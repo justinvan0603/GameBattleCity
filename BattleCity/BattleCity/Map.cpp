@@ -441,13 +441,16 @@ void Map::Update()
 		if (isCollided)
 			break;
 	}
+	bool isCollision = false;
 	for (int i = 0; i < n-1; i++)
 	{
-		for (int j = i + 1; j < n; j++)
+		for (int j = i+1; j < n; j++)
 		{
-			bool isCollided =CollisionManager::CollisionEnemy(_listEnemyOnMap->at(i), _listEnemyOnMap->at(j));
-			if (isCollided)
-				break;
+	
+				isCollision = CollisionManager::CollisionEnemy(_listEnemyOnMap->at(i), _listEnemyOnMap->at(j));
+				if (isCollision)
+					break;
+			
 		}
 	}
 	for (int i = 0; i < n; i++)
@@ -457,10 +460,13 @@ void Map::Update()
 
 	if (_eagle->getEagleStatus() == EAGLE_STATUS::LIVE)
 	{
+		if (n == 0)
+			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _powerUpItem, _eagle);
 		for (int i = 0; i < n; i++)
 		{
-			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _listEnemyOnMap->at(i), _powerUpItem, _eagle);
+			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _powerUpItem, _eagle, _listEnemyOnMap->at(i));
 		}
+
 	}
 
 	CollisionManager::CollisionWithItem(_player, _powerUpItem);
@@ -608,6 +614,7 @@ void Map::checkEndGame()
 			CleanStage();
 			ScoreState::get()->setEndAfter(true);
 			GameState::switchState(ScoreState::get());
+			
 		}
 
 		return;

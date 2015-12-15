@@ -37,10 +37,12 @@ int MyRectangle::getLeft()
 {
 	return this->_left;
 }
+//Khi lay right thi phai tru 1 pixel do truoc do la lay duong vien cua left
 int MyRectangle::getRight()
 {
 	return this->_left + _width-1;
 }
+//Khi lay bottom thi phai tru 1 pixel do truoc do la lay duong vien cua top
 int MyRectangle::getBottom()
 {
 	return this->_top + _height-1;

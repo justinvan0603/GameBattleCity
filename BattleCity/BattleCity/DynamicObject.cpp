@@ -61,25 +61,28 @@ int DynamicObject::GetLevel()
 {
 	return this->_level;
 }
+//Muc dich tao ra ham nay la de lay chinh xac nhung object co kha nang va cham voi object dong nham tiet kiem chi phi
+//Thay vi phai for kiem tra toan bo object tinh tren map se ton rat nhieu chi phi
 void DynamicObject::FindNearbyObject()
 {
-	int currentObjectColumn = (_left - POS_MAP_TOP_LEFT_X)/ TILE_WIDTH;
-	int currentObjectRow = (_top - POS_MAP_TOP_LEFT_Y) /TILE_HEIGHT;
-	if (currentObjectRow > 52 || currentObjectColumn > 52)
+
+	int currentObjectColumn = (_left - POS_MAP_TOP_LEFT_X)/ TILE_WIDTH;	//Tinh vi tri (column)cua object hien tai tren ma tran
+	int currentObjectRow = (_top - POS_MAP_TOP_LEFT_Y) /TILE_HEIGHT;	//Tinh vi tri (row)cua object hien tai tren ma tran
+	if (currentObjectRow > 52 || currentObjectColumn > 52)	//Loai truong hop bi bug
 		return;
 	int nearbyObjectCountWidth;
 	int nearbyObjectCountHeight;
-	if (this->_id != ID_BULLET)
+	if (this->_id != ID_BULLET)	//Neu object dang xet la xe tank co kich thuoc 32x32 (4*4 tile)
 	{
-		if ((_left - POS_MAP_TOP_LEFT_X) % TILE_WIDTH == 0)
+		if ((_left - POS_MAP_TOP_LEFT_X) % TILE_WIDTH == 0)	//Neu vi tri theo truc x cua object chia het cho kich thuoc 1 tile thi lay 4 object xung quanh
 		{
 			nearbyObjectCountWidth = 4;
 		}
-		else
+		else //Neu khong chia het nghia la object nam o khoang giao giua 2 tile thi phai lay 5 object xung quanh
 		{
 			nearbyObjectCountWidth = 5;
 		}
-
+		//Tuong tu nhu truc x
 		if ((_top - POS_MAP_TOP_LEFT_Y) % TILE_HEIGHT == 0)
 		{
 			nearbyObjectCountHeight = 4;
@@ -89,11 +92,11 @@ void DynamicObject::FindNearbyObject()
 			nearbyObjectCountHeight = 5;
 		}
 	}
-	else
+	else //Neu la dan thi lay 1 object xung quanh do dan co kich thuoc = 1 tile 
 	{
 		nearbyObjectCountHeight = nearbyObjectCountWidth = 1;
 	}
-
+	//Lay cac object tinh nam o canh tren va canh duoi cua object dong
 	for (int i = currentObjectColumn - 1; i <= currentObjectColumn + nearbyObjectCountWidth; i++)
 	{
 		int value;
@@ -103,10 +106,18 @@ void DynamicObject::FindNearbyObject()
 			{
 				value = _map[currentObjectRow-1][i];
 				if (value != -1)
-				{
-					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
-						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
-						_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+				{	//Kiem tra neu object tinh la trees thi khong xet va cham
+					if (value % 100 != ID_TREES_6 && value % 100 != ID_TREES_7 && value % 100 != ID_TREES_16 && value % 100 != ID_TREES_17 &&
+						value % 100 != ID_ICE_8 && value % 100 != ID_ICE_9 && value % 100 != ID_ICE_18 && value % 100 != ID_ICE_19)
+					{
+						if (_id == ID_BULLET)
+						{
+							if (value % 100 != ID_WATER_4 && value % 100 != ID_WATER_5 && value % 100 != ID_WATER_14 && value % 100 != ID_WATER_15)
+								_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+						}
+						else
+							_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					}
 				}
 			}
 
@@ -115,15 +126,23 @@ void DynamicObject::FindNearbyObject()
 				value = _map[currentObjectRow + nearbyObjectCountHeight][i];
 				if (value != -1)
 				{
-					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
-						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
-		
-					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					if (value % 100 != ID_TREES_6 && value % 100 != ID_TREES_7 && value % 100 != ID_TREES_16 && value % 100 != ID_TREES_17 &&
+						value % 100 != ID_ICE_8 && value % 100 != ID_ICE_9 && value % 100 != ID_ICE_18 && value % 100 != ID_ICE_19)
+					{
+						if (_id == ID_BULLET)
+						{
+							if (value % 100 != ID_WATER_4 && value % 100 != ID_WATER_5 && value % 100 != ID_WATER_14 && value % 100 != ID_WATER_15)
+								_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+						}
+						else
+							_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					}
+					//_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			} 
 		}
 	}
-
+	//Lay cac object tinh xung quanh object dong o 2 ben canh trai va phai
 	for (int i = currentObjectRow; i < currentObjectRow + nearbyObjectCountHeight; i++)
 	{
 		int value;
@@ -134,10 +153,18 @@ void DynamicObject::FindNearbyObject()
 				value = _map[i][currentObjectColumn - 1];
 				if (value != -1)
 				{
-					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
-						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
-
-					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					if (value % 100 != ID_TREES_6 && value % 100 != ID_TREES_7 && value % 100 != ID_TREES_16 && value % 100 != ID_TREES_17 &&
+						value % 100 != ID_ICE_8 && value % 100 != ID_ICE_9 && value % 100 != ID_ICE_18 && value % 100 != ID_ICE_19)
+					{
+						if (_id == ID_BULLET)
+						{
+							if (value % 100 != ID_WATER_4 && value % 100 != ID_WATER_5 && value % 100 != ID_WATER_14 && value % 100 != ID_WATER_15)
+								_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+						}
+						else
+							_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					}
+				//	_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			}
 
@@ -146,10 +173,18 @@ void DynamicObject::FindNearbyObject()
 				value = _map[i][currentObjectColumn + nearbyObjectCountWidth];
 				if (value != -1)
 				{
-					if (value % 100 != 6 && value % 100 != 7 && value % 100 != 16 && value % 100 != 17 &&
-						value % 100 != 8 && value % 100 != 9 && value % 100 != 18 && value % 100 != 19)
-			
-					_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					if (value % 100 != ID_TREES_6 && value % 100 != ID_TREES_7 && value % 100 != ID_TREES_16 && value % 100 != ID_TREES_17 &&
+						value % 100 != ID_ICE_8 && value % 100 != ID_ICE_9 && value % 100 != ID_ICE_18 && value % 100 != ID_ICE_19)
+					{
+						if (_id == ID_BULLET)
+						{
+							if (value % 100 != ID_WATER_4 && value % 100 != ID_WATER_5 && value % 100 != ID_WATER_14 && value % 100 != ID_WATER_15)
+								_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+						}
+						else
+							_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
+					}
+					//_listCollisionObject.push_back((_listNearByObject)->at(value % 100).at(value / 100));
 				}
 			}
 		}

@@ -103,9 +103,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
-			A->_isTerminated = true;
+			//A->_isTerminated = true;
 			if (B->getId() == ID_BULLET)
 			{
+				A->_isTerminated = true;
 				B->_isTerminated = true;
 				return true;
 			}
@@ -117,6 +118,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			{
 				if (B->getId() == ID_EAGLE)
 				{
+					A->_isTerminated = true;
 					D3DXVECTOR2 pos;
 					pos.x = B->getLeft();
 					pos.y = B->getTop();
@@ -128,9 +130,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				if (B->getId() == ID_STEELWALL)
 				{
 					EffectManager::getInstance()->AddBulletEffect(position);
-					
+					A->_isTerminated = true;
 					if (A->GetLevel() == LEVEL_FOUR)
 					{
+
 						if (A->getAllyObject() == ALLY_PLAYER)
 							GameSound::getInstance()->Play(ID_SOUND_BRICK_EXPLODE);
 						B->_isTerminated = true;
@@ -147,16 +150,21 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				{
 
 					A->_isTerminated = false;
+					B->_isTerminated = false;
 					return true;
 				}
 				if (B->getId() == ID_BRICKWALL);
 				{
+					A->_isTerminated = true;
+					B->_isTerminated = true;
 					EffectManager::getInstance()->AddBulletEffect(position);
 					if (A->getAllyObject() == ALLY_PLAYER)
 						GameSound::getInstance()->Play(ID_SOUND_BRICK_EXPLODE);
-					B->_isTerminated = true;
+					
 					return true;
 				}
+
+	
 			}
 			else
 			{
@@ -352,7 +360,7 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
 
-		if (A->getTop() <= B->getBottom() && A->getBottom() >= B->getTop())
+		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
@@ -369,7 +377,7 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 
 			}
 		}
-		if (A->getRight() >= B->getLeft() && A->getLeft() <= B->getRight())
+		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
 		{
 			if (A->getTop() < B->getTop())
 			{
@@ -385,13 +393,13 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 				return true;
 			}
 		}
-		//if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
-		//{
-		//	if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
-		//		B->InvertDirection();
-		//	return true;
-		//}
-
+		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
+		{
+			if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
+				B->InvertDirection();
+			return true;
+		}
+		B->InvertDirection();
 		//B->RandomChangeDirection();
 		return true;
 	}
@@ -408,7 +416,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 		B->setVelocityX(SPEED_NO);
 		B->setVelocityY(SPEED_NO);
 
-		if (A->getTop() <= B->getBottom() && A->getBottom() >= B->getTop())
+		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
 			{
@@ -451,7 +459,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 
 			}
 		}
-		if (A->getRight() >= B->getLeft() && A->getLeft() <= B->getRight())
+		if (A->getRight() > B->getLeft() && A->getLeft() < B->getRight())
 		{
 			if (A->getTop() < B->getTop())
 			{

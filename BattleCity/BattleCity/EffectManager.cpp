@@ -5,7 +5,7 @@ EffectManager* EffectManager::_instance = nullptr;
 EffectManager::EffectManager(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
-	_startTime = GetTickCount();
+	//_startTime = GetTickCount();
 }
 EffectManager* EffectManager::getInstance(LPD3DXSPRITE spriteHandler)
 {

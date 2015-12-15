@@ -1,4 +1,6 @@
 #pragma once
+
+//Lop co so dinh nghia 1 hinh chu nhat bao object trong game
 class MyRectangle
 {
 protected:

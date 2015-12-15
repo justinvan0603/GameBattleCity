@@ -2,15 +2,16 @@
 #include "EffectManager.h"
 #include "CollisionManager.h"
 #include "GameSound.h"
+#define NUMB_OF_BULLET_SPRITE 1
 Bullet::Bullet(LPD3DXSPRITE spriteHandler, int ally)
 {
 	_allyObject = ally;
 	_spriteHandler = spriteHandler;
 	_listSprite = new Sprite*[NUM_OF_DIRECTION];
-	_listSprite[UP] = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
-	_listSprite[LEFT] = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
-	_listSprite[DOWN] = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
-	_listSprite[RIGHT] = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+	_listSprite[UP] = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE );
+	_listSprite[LEFT] = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE );
+	_listSprite[DOWN] = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
+	_listSprite[RIGHT] = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 	_currentDirection = UP;
 	_width = 8;
 	_height = 8;
@@ -35,25 +36,25 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction, int posX, in
 	{
 		case UP:
 		{
-			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 			_currentDirection = direction;
 			break;
 		}
 		case LEFT:
 		{
-			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 			_currentDirection = direction;
 			break;
 		}
 		case DOWN:
 		{
-			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 			_currentDirection = direction;
 			break;
 		}
 		case RIGHT:
 		{
-			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+			*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 			_currentDirection = direction;
 			break;
 		}
@@ -80,25 +81,25 @@ Bullet::Bullet(LPD3DXSPRITE spriteHandler, MoveDirection direction,D3DXVECTOR2 p
 	{
 	case UP:
 	{
-		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_UP_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 		_currentDirection = direction;
 		break;
 	}
 	case LEFT:
 	{
-		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_LEFT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 		_currentDirection = direction;
 		break;
 	}
 	case DOWN:
 	{
-		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_DOWN_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 		_currentDirection = direction;
 		break;
 	}
 	case RIGHT:
 	{
-		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
+		*_listSprite = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, NUMB_OF_BULLET_SPRITE, NUMB_OF_BULLET_SPRITE);
 		_currentDirection = direction;
 		break;
 	}
@@ -182,29 +183,36 @@ void Bullet::Move()
 }
 void Bullet::Update()
 {
+	//Tim nhung object tinh xung quanh vien dan
 	FindNearbyObject();
 	this->Move();
 	
 	D3DXVECTOR2 posInMap;
 	bool flag = false;
+	//Xet va cham dan voi cac object tinh trong list da tim o tren
 	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end();i++)
 	{
+		//Kiem tra neu object tinh chua bi huy
 		if (!(*i)->_isTerminated)
 			flag = CollisionManager::CollisionBulletWithObject(this, *i);
+		//Neu co va cham va object tinh bi dan ban huy
 		if (flag && (*i)->_isTerminated)
 		{
+			//Tim vi tri row, column cua object tinh trong ma tran map
 			posInMap = Object::getPositionObjectInMap((*i)->getLeft(), (*i)->getTop());
 			int value = _map[(int)posInMap.y][(int)posInMap.x];
+			//Tai vi tri bi huy thi set lai ma tran tai do = -1
 			_map[(int)posInMap.y][(int)posInMap.x] = -1;
 			if (value != -1)
 			{
+				//neu value != -1 tuc la doi tuong co the pha huy thi tim index cua no trong list roi delete vung nho
 				delete _listNearByObject->at(value % 100).at(value / 100);
 				_listNearByObject->at(value % 100).at(value / 100) = NULL;
 			}
 		}
 
 	}
-
+	//Xet va cham dan voi man hinh
 	bool isCollided=  CollisionManager::CollisionWithScreen(this);
 	if (isCollided)
 	{
@@ -215,6 +223,7 @@ void Bullet::Update()
 		pos.y = _top - BULLET_HEIGHT;
 		EffectManager::getInstance()->AddBulletEffect(pos);
 	}
+	//Xoa cac object xung quanh doi tuong dong de thuc hien tim kiem cho lan sau (tiet kiem bo nho)
 	DynamicObject::Update();
 	
 }

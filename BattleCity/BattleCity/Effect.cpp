@@ -19,11 +19,7 @@ Effect::Effect(LPD3DXSPRITE SpriteHandler,
 }
 void Effect::Render()
 {
-	//if (GameTime::RenderFrame(_startTime, 1000))
-	//{
-	//	this->Next();
-	//}
-	//else
+
 	this->Render((int)_position.x, (int)_position.y);
 	
 }

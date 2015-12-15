@@ -75,7 +75,9 @@ void SuperHeavyTank::Update()
 	{
 		_isCollied = CollisionManager::CollisionPreventMove(this, *i);
 		if (_isCollied)
-			break;
+		{
+			Enemy::MoveWithCollision();
+		}
 	}
 	if (CollisionManager::CollisionWithScreen(this))
 	{
