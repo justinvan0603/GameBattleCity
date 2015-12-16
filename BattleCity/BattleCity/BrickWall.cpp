@@ -1,7 +1,5 @@
 #include "BrickWall.h"
 
-
-
 BrickWall::BrickWall(Sprite* sprite, int type, D3DXVECTOR3 pos):StaticObject(sprite,type,pos)
 {
 	this->_isTerminated = false;

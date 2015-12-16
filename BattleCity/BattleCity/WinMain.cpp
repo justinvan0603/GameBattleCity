@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		{
 			frame_start = now;
 			game->GameUpdate();
-			game->GameRun();
+			game->GameDraw();
 		}
 
 		

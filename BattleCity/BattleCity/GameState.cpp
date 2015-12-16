@@ -1,7 +1,4 @@
 #include "GameState.h"
-#include "ScoreManager.h"
-#include "StageManager.h"
-#include "GameSound.h"
 
 #pragma region Game State
 
@@ -18,7 +15,9 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 
 void GameState::release()
 {
-
+	SAFE_RELEASE(_text);
+	SAFE_RELEASE(_spriteHandler);
+	SAFE_RELEASE(_gameState);
 }
 
 
@@ -27,7 +26,9 @@ void GameState::stateUpdate()
 	_gameState->update();
 }
 
-
+//----------------------------------
+// Chuyen qua lai giua cac state
+//----------------------------------
 void GameState::switchState(GameState* newState)
 {
 	_gameState = newState;
@@ -39,11 +40,17 @@ void GameState::stateDraw()
 	_gameState->draw();
 }
 
+//----------------------------------
+// Cap nhat trang thai game
+//----------------------------------
 void GameState::update()
 {
 
 }
 
+//----------------------------------
+// Ve game len man hinh
+//----------------------------------
 void GameState::draw()
 {
 
@@ -70,11 +77,10 @@ MainMenu::~MainMenu()
 
 void MainMenu::update()
 {
-	//Kiem tra xem chon start hay instruction roi change state
-	if(_posYMenu > 0)
+	if(_posYMenu > 0)	//kiem tra xem menu da chay len xong chua, neu cua thi tiep tuc chay
 	{
-		_posYMenu -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
-		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)
+		_posYMenu -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP; 
+		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)	//neu nhan Enter thi skip ko cho nua, hien ra luon
 		{
 			_posYMenu = 0;
 		}
@@ -87,24 +93,24 @@ void MainMenu::update()
 			_delayTime = SELECTOR_SPEED_CHANGE;
 			_selector->Next();
 		}
-		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
+		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))	//Chuyen xuong instruction
 		{
 			_selectorPosition = IMAGE_SELECTOR_POS_INSTRUCTION;
 		}
-		if(Keyboard::getInstance()->IsKeyDown(DIK_UP))
+		if(Keyboard::getInstance()->IsKeyDown(DIK_UP))		//Chuyen len Play
 		{
 			_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
 		}
-		if(Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)
+		if(Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS) //Nh?n Enter -> enter State
 		{
 			if (_selectorPosition == IMAGE_SELECTOR_POS_PLAY)
 			{
-				ScoreManager::getInstance()->reset();
-				switchState(StartingState::get());
+				ScoreManager::getInstance()->reset();	//Reset diem truoc khi bat dau choi moi
+				switchState(StartingState::get());		//Play
 			}
 			else
 			{
-				switchState(Instruction::get());
+				switchState(Instruction::get());		//Instruction
 			}
 		}
 	}	
@@ -112,17 +118,19 @@ void MainMenu::update()
 
 void MainMenu::draw()
 {
-	//ve logo main menu
 	
-	if(_posYMenu <= 0)
+	if(_posYMenu <= 0) //Neu menu da chay len xong, ve selector 
 	{
-		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
+		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y); 
 	}
-	float translateX = 0.0f,translateY = 0.0f;
+	//Ve cac text len man hinh
+	float translateX = 0.0f,translateY = 0.0f;	//bien dung de dich chuyen menu neu can
 	_menuImage->Render(0, D3DXVECTOR3(translateX + 70.0f, _posYMenu + translateY + 110.0f, 0.0f)); //70, 110
 	_text->drawText(TEXT_PlAYER_SCORE, D3DXVECTOR3(translateX + 45.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(TEXT_HI_SCORE, D3DXVECTOR3(translateX + 237.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
+	//Ve diem cua nguoi choi truoc
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), D3DXVECTOR3(translateX + 87.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6); //I-
+	//ve diem cao nhat
 	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6);  //HI-
 	_text->drawText(TEXT_PLAY, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 310.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(TEXT_INSTRUCTION, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 344.0f, 0.0f), COLOR_WHITE, 20);
@@ -130,6 +138,9 @@ void MainMenu::draw()
 	_text->drawText(TEXT_ABOUT, D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20,DT_CENTER,0,2);
 }
 
+//----------------------------------
+// Reset lai trang thai mac dinh cua menu
+//----------------------------------
 void MainMenu::reset()
 {
 	_posYMenu = MAIN_MENU_GAME_DEFAULT_POS_Y;
@@ -172,6 +183,7 @@ Instruction::~Instruction()
 
 void Instruction::update()
 {
+	//Chuyen qua lai giua cac tab
 	if(Keyboard::getInstance()->getKeyState(DIK_RIGHT) == KeyState::KEY_PRESS)
 	{
 		if(_currentTab < 5)
@@ -186,6 +198,7 @@ void Instruction::update()
 			_currentTab--;
 		}
 	}
+	//Nhan ESC dde thoat
 	if (Keyboard::getInstance()->getKeyState(DIK_ESCAPE) == KeyState::KEY_PRESS)
 	{
 		_currentTab = 1;
@@ -195,6 +208,7 @@ void Instruction::update()
 
 void Instruction::draw()
 {
+	//ve menu phia tren
 	_text->drawText(TEXT_TUT, POS_TUTORIAL,COLOR_WHITE,10);
 	_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_WHITE);
 	_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_WHITE);
@@ -204,7 +218,7 @@ void Instruction::draw()
 
 	switch (_currentTab)
 	{
-		case 1:
+		case 1:	//Tab Story
 		{
 			_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_RED);
 			_text->drawText(TEXT_INFO_STORY
@@ -212,7 +226,7 @@ void Instruction::draw()
 			_imageTabStory->Render(POS_IMAGE_STORY);
 			break;
 		}
-		case 2:
+		case 2:	//Tab control
 		{		
 			_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_RED);
 
@@ -230,7 +244,7 @@ void Instruction::draw()
 			_text->drawText(TEXT_TAB_CONTROL_SPACE, D3DXVECTOR3(translateX + 260.0f, translateY + 285.0f, 0.0f), COLOR_WHITE, 10);
 			break;
 		}
-		case 3: 
+		case 3:		//tab enemies
 		{
 			_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_RED);
 
@@ -247,7 +261,7 @@ void Instruction::draw()
 
 			break;
 		}
-		case 4:
+		case 4:		//tab power up
 		{
 			_text->drawText(TEXT_TAB_POWER_UP, POS_TEXT_POWER_UP, COLOR_RED);
 
@@ -265,7 +279,7 @@ void Instruction::draw()
 
 			break;
 		}
-		case 5:
+		case 5:		//tab environment
 		{
 			_text->drawText(TEXT_TAB_ENVIRONMENT, POS_TEXT_ENVIRONMENT, COLOR_RED);
 
@@ -336,7 +350,7 @@ void StartingState::update()
 
 void StartingState::draw()
 {
-	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0);
+	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0); //Clear man hinh sang mau xam trang
 	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
 }
 
@@ -368,7 +382,7 @@ PlayingState::PlayingState()
 
 void PlayingState::update()
 {
-	//map, bullet, player update
+	//map, bullet, player update...
 	_map->Update();
 }
 
@@ -378,6 +392,9 @@ void PlayingState::draw()
 	_map->Draw();
 }
 
+//----------------------------------
+// Reset khi choi thua hoac pha dao, chuyen map ve stage 1, player ve standar
+//----------------------------------
 void PlayingState::reset()
 {
 	_map->reset();
@@ -418,22 +435,22 @@ void ScoreState::update()
 	{
 		_delayTime = DELAY_TIME_SCORE;
 		_numTypeEnemy = 0;
-		ScoreManager::getInstance()->renewValue();
+		ScoreManager::getInstance()->renewValue();	//Reset gia tri so luong tank moi loai bi ban
 		if (_isEnd)
 		{
-			writeFile();
-			GameState::switchState(GameOverState::get());
+			writeFile(); //Ghi diem cao vao file
+			GameState::switchState(GameOverState::get()); //Chuyen den man gameover
 		}
 		else
 		{
-			if (StageManager::getInstance()->getStage() > DEFAULT_MAX_STAGE)
+			if (StageManager::getInstance()->getStage() > DEFAULT_MAX_STAGE) //Neu choi xong het man
 			{
 				writeFile();
-				GameState::switchState(EndGame::get());
+				GameState::switchState(EndGame::get());	//EndGame
 			}
 			else
 			{			
-				GameState::switchState(StartingState::get());
+				GameState::switchState(StartingState::get()); //Choi stage tiep theo
 			}
 		}
 	}
@@ -490,11 +507,17 @@ ScoreState* ScoreState::get()
 	return _instance;
 }
 
+//----------------------------------
+// Set Next State la GameOver
+//----------------------------------
 void ScoreState::setEndAfter(bool isEnd)
 {
 	_isEnd = isEnd;
 }
 
+//----------------------------------
+// Ghi diem cao nhat vao file txt
+//----------------------------------
 void ScoreState::writeFile()
 {
 	ofstream myfile(FILE_HI_SCORE_PATH);
@@ -570,7 +593,6 @@ EndGame* EndGame::_instance = nullptr;
 
 EndGame::EndGame()
 {
-	_delayTime = 10000;
 	_arrayColor[0] = COLOR_RED;
 	_arrayColor[1] = COLOR_YELLOW;
 	_arrayColor[2] = COLOR_GREEN;
@@ -584,7 +606,6 @@ void EndGame::update()
 	_score = ScoreManager::getInstance()->getPlayerScore();
 	if (GameTime::DelayTime(_delayTime))
 	{
-		_delayTime = 10000;
 		_isFlash = true;
 	}
 	if(_colorIndex > 4)
@@ -607,13 +628,13 @@ void EndGame::update()
 
 void EndGame::draw()
 {
-	_text->drawText("CONGRATULATION", D3DXVECTOR3(40.0f, 130.0f, 0.0f), _congraColor, 40);
-	_text->drawText("You have successfully defended the fortress \nfrom the attack of enemy tanks. You are a tank \ncommander of the best. We are very proud of you.", D3DXVECTOR3(50.0f, 230.0f, 0.0f), COLOR_SCORE_TEXT, 12,0,0,4);
-	_text->drawText("Your score: ", D3DXVECTOR3(50.0f, 300.0f, 0.0f), COLOR_SCORE_TEXT, 12);
+	_text->drawText(TEXT_CONGRA, D3DXVECTOR3(40.0f, 130.0f, 0.0f), _congraColor, 40);
+	_text->drawText(TEXT_DESC, D3DXVECTOR3(50.0f, 230.0f, 0.0f), COLOR_SCORE_TEXT, 12,0,0,4);
+	_text->drawText(TEXT_YOUR_SCORE, D3DXVECTOR3(50.0f, 300.0f, 0.0f), COLOR_SCORE_TEXT, 12);
 	_text->drawText(to_string(_score), D3DXVECTOR3(200.0f, 300.0f, 0.0f), COLOR_RED, 14);
 	if(_isFlash)
 	{
-		_text->drawText("Press ESC to return Main menu", D3DXVECTOR3(330.0f, 545.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_ESC, D3DXVECTOR3(330.0f, 545.0f, 0.0f), COLOR_WHITE, 10);
 	}	
 }
 
@@ -622,6 +643,7 @@ void EndGame::reset()
 	_isFlash = false;
 	_congraColor = COLOR_WHITE;
 	_colorIndex = 0;
+	_delayTime = DELAY_TIME_GAME_END;
 }
 
 EndGame* EndGame::get()

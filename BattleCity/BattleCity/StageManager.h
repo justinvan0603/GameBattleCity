@@ -12,8 +12,8 @@ private:
 	StageManager();
 	~StageManager();
 	static StageManager* _instance;
-	int _maxStage;
-	int _currentStage;
+	int _maxStage;					//Stage toi da
+	int _currentStage;				//Stage hien tai
 };
 #endif
 

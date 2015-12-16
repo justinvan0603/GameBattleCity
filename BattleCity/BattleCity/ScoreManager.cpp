@@ -25,22 +25,34 @@ int ScoreManager::getHighScore()
 	return _highScore;
 }
 
+//----------------------------------
+//	Cong diem khi ban chet tank theo tung loai
+//----------------------------------
 void ScoreManager::addKillTankScore(int typeTank)
 {
 	_playerScore += _scoreTank[typeTank];
 	_numTank[typeTank]++;
 }
 
+//----------------------------------
+// Cong diem khi an powerUp
+//----------------------------------
 void ScoreManager::addPowerUpScore()
 {
 	_playerScore += _scorePowerUp;
 }
 
+//----------------------------------
+// Lay so luong tank da bi ban chet theo loai
+//----------------------------------
 int ScoreManager::getNumTank(int typeTank)
 {
 	return _numTank[typeTank];
 }
 
+//----------------------------------
+// Lay so luong tank bi ban chet
+//----------------------------------
 int ScoreManager::getNumTank()
 {
 	int temp = 0;
@@ -51,6 +63,9 @@ int ScoreManager::getNumTank()
 	return temp;
 }
 
+//----------------------------------
+// Khoi tao lai gia tri ban dau khi qua stage moi
+//----------------------------------
 void ScoreManager::renewValue()
 {
 	for (int i = 0; i < NUM_TYPE_ENEMY; i++)
@@ -64,6 +79,9 @@ void ScoreManager::reset()
 	_playerScore = 0;
 }
 
+//----------------------------------
+// Lay diem dat duoc theo tung loai tank
+//----------------------------------
 int ScoreManager::getScoreTank(int typeTank)
 {
 	return _numTank[typeTank] * _scoreTank[typeTank];
@@ -79,6 +97,7 @@ ScoreManager::ScoreManager()
 	_scorePowerUp = SCORE_POWER_UP;
 	renewValue();
 	_playerScore = 0;
+	//Doc file lay diem cao nhat
 	string line;
 	fstream _mapFile;
 	string scoreFilePath = HI_SCORE_FILE_PATH;

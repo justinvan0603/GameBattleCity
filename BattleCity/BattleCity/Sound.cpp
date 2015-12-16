@@ -1,17 +1,12 @@
 #include "Sound.h"
 
-#if MEMORY_LEAK_DEBUG == 1
-#include <vld.h>
-#endif
-
-WAVEFORMATEX Sound::bufferFormat_;
-DSBUFFERDESC Sound::bufferDescription_;
-LPDIRECTSOUND8 Sound::audioHandler_;
-HWND Sound::windowsHandler_;
+WAVEFORMATEX Sound::_bufferFormat;
+DSBUFFERDESC Sound::_bufferDescription;
+LPDIRECTSOUND8 Sound::_audioHandler;
+HWND Sound::_windowsHandler;
 
 // -----------------------------------------------
-// Name: T6_Sound::T6_Sound()
-// Desc: Get the audio Name and Path, ready to load.
+// Su dung duong dan de load am thanh vao buffer
 // -----------------------------------------------
 Sound::Sound(const char* audioPath)
 {
@@ -22,58 +17,52 @@ Sound::Sound(const char* audioPath)
 
 Sound::~Sound(void)
 {
-	soundBuffer_->Stop();
+	_soundBuffer->Stop();
 }
 
 
 // -----------------------------------------------
-// Name: T6_Sound::initializeSoundClass()
-// Desc: Initialize the basic PROPERTIESs for loading audio
+// Khoi tao cac thuoc tinh de phuc vu cho viec load am thanh
 // -----------------------------------------------
 HRESULT Sound::initializeSoundClass(HWND windowsHandler)
 {
-	windowsHandler_ = windowsHandler;
+	_windowsHandler = windowsHandler;
 
 	HRESULT result;
-	result = DirectSoundCreate8(0, &audioHandler_, 0);
-	result = result | audioHandler_->SetCooperativeLevel(windowsHandler_, DSSCL_PRIORITY);
+	result = DirectSoundCreate8(0, &_audioHandler, 0);
+	result = result | _audioHandler->SetCooperativeLevel(_windowsHandler, DSSCL_PRIORITY);
 
-	ZeroMemory(&bufferFormat_, sizeof(WAVEFORMATEX));
-	ZeroMemory(&bufferDescription_, sizeof(DSBUFFERDESC));
+	ZeroMemory(&_bufferFormat, sizeof(WAVEFORMATEX));
+	ZeroMemory(&_bufferDescription, sizeof(DSBUFFERDESC));
 
-	bufferFormat_.wFormatTag = AUDIO_FORMAT_TAG;
-	bufferFormat_.nChannels = AUDIO_NUM_OF_CHANNEL;
-	bufferFormat_.nSamplesPerSec = AUDIO_SAMPLE_SPEED;
-	bufferFormat_.wBitsPerSample = AUDIO_BITS_PER_SAMPLE;
-	bufferFormat_.nBlockAlign = AUDIO_BLOCK_ALIGN(bufferFormat_.wBitsPerSample,
-		bufferFormat_.nChannels);
-	bufferFormat_.nAvgBytesPerSec = AUDIO_AVERAGE_BPS(bufferFormat_.nSamplesPerSec,
-		bufferFormat_.nBlockAlign);
+	_bufferFormat.wFormatTag = AUDIO_FORMAT_TAG;
+	_bufferFormat.nChannels = AUDIO_NUM_OF_CHANNEL;
+	_bufferFormat.nSamplesPerSec = AUDIO_SAMPLE_SPEED;
+	_bufferFormat.wBitsPerSample = AUDIO_BITS_PER_SAMPLE;
+	_bufferFormat.nBlockAlign = AUDIO_BLOCK_ALIGN(_bufferFormat.wBitsPerSample,
+		_bufferFormat.nChannels);
+	_bufferFormat.nAvgBytesPerSec = AUDIO_AVERAGE_BPS(_bufferFormat.nSamplesPerSec,
+		_bufferFormat.nBlockAlign);
 
-	bufferDescription_.dwFlags = AUDIO_FLAGS;
-	bufferDescription_.guid3DAlgorithm = AUDIO_GUID;
-	bufferDescription_.dwSize = sizeof(DSBUFFERDESC);
+	_bufferDescription.dwFlags = AUDIO_FLAGS;
+	_bufferDescription.guid3DAlgorithm = AUDIO_GUID;
+	_bufferDescription.dwSize = sizeof(DSBUFFERDESC);
 
 	return result;
 }
 
 
-// -----------------------------------------------
-// Name: T6_Sound::releaseSoundClass()
-// Desc: Release the basic PROPERTIES after used (close game).
-// -----------------------------------------------
 HRESULT Sound::releaseSoundClass()
 {
-	if (audioHandler_ != 0)
-		return audioHandler_->Release();
+	if (_audioHandler != 0)
+		return _audioHandler->Release();
 
 	return S_OK;
 }
 
 
 // -----------------------------------------------
-// Name: T6_Sound::loadAudio()
-// Desc: Load the Audio stored in audioPath.
+// Load am thanh vao buffer
 // -----------------------------------------------
 HRESULT Sound::loadAudio(const char* audioPath_)
 {
@@ -83,14 +72,14 @@ HRESULT Sound::loadAudio(const char* audioPath_)
 
 	if (!FAILED(result)) {
 
-		bufferDescription_.dwBufferBytes = audioObject.GetSize();
-		bufferDescription_.lpwfxFormat = audioObject.m_pwfx;
+		_bufferDescription.dwBufferBytes = audioObject.GetSize();
+		_bufferDescription.lpwfxFormat = audioObject.m_pwfx;
 
-		result = audioHandler_->CreateSoundBuffer(&bufferDescription_, &soundBuffer_, 0);
+		result = _audioHandler->CreateSoundBuffer(&_bufferDescription, &_soundBuffer, 0);
 
 		VOID* pointerToLockedBuffer = 0;
 		DWORD lockedSize = 0;
-		result = result | (soundBuffer_)->Lock(0, AUDIO_BUFFER_SIZE, &pointerToLockedBuffer,
+		result = result | (_soundBuffer)->Lock(0, AUDIO_BUFFER_SIZE, &pointerToLockedBuffer,
 			&lockedSize, 0, 0, DSBLOCK_ENTIREBUFFER);
 
 		if (!FAILED(result)) {
@@ -98,7 +87,7 @@ HRESULT Sound::loadAudio(const char* audioPath_)
 			audioObject.ResetFile();
 			result = audioObject.Read((BYTE*)pointerToLockedBuffer, lockedSize, &readedData);
 			if (!FAILED(result)) {
-				(soundBuffer_)->Unlock(pointerToLockedBuffer, lockedSize, 0, 0);
+				(_soundBuffer)->Unlock(pointerToLockedBuffer, lockedSize, 0, 0);
 			}
 		}
 	}
@@ -109,22 +98,20 @@ HRESULT Sound::loadAudio(const char* audioPath_)
 
 
 // -----------------------------------------------
-// T6_Sound::play()
-// Desc: Play loaded audio, may choose loop or no.
+// Choi nhac
 // -----------------------------------------------
 HRESULT Sound::play(bool isLoop, DWORD priority)
 {
-	return soundBuffer_->Play(0, priority, isLoop & DSBPLAY_LOOPING);
+	return _soundBuffer->Play(0, priority, isLoop & DSBPLAY_LOOPING);
 }
 
 
 // -----------------------------------------------
-// T6_Sound:stop()
-// Desc: Stop the audio if it is playing.
+// Dung nhac
 // -----------------------------------------------
 HRESULT Sound::stop()
 {
-	HRESULT result = soundBuffer_->Stop();
-	soundBuffer_->SetCurrentPosition(0);
+	HRESULT result = _soundBuffer->Stop();
+	_soundBuffer->SetCurrentPosition(0);
 	return result;
 }

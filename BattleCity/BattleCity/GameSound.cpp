@@ -1,7 +1,7 @@
 #include "GameSound.h"
 
 
-GameSound* GameSound::instance_ = nullptr;
+GameSound* GameSound::_instance = nullptr;
 
 
 GameSound::GameSound()
@@ -11,11 +11,14 @@ GameSound::GameSound()
 
 GameSound::~GameSound()
 {
-	FOR_A(loadedSound_.begin(), loadedSound_.end())
-		SAFE_RELEASE(i->second);
-	loadedSound_.clear();
+	FOR_A(_loadedSound.begin(), _loadedSound.end())
+		SAFE_RELEASE(i->second);	//->second: release Sound*, string(first) ko can release
+	_loadedSound.clear();
 }
 
+//----------------------------------
+// Duyet ID de tim duong dan file am thanh tuong ung
+//----------------------------------
 string GameSound::switchID(int id)
 {
 	string soundLink;
@@ -103,20 +106,23 @@ void GameSound::initialize(HWND windowsHandler)
 	Sound::initializeSoundClass(windowsHandler);
 }
 
-
+//----------------------------------
+// Chay am thanh. Duyen tren map de tim ra doi tuong Sound tuong ung vs duong dan. Neu chua co
+// thi tao 1 anh xa moi, add vao Map roi play
+//----------------------------------
 void GameSound::play(string soundLink, bool repeat /*= false*/, bool playFromStart /*= true*/)
 {
 	try
 	{
 		if (playFromStart)
-			loadedSound_.at(soundLink)->stop();
+			_loadedSound.at(soundLink)->stop();
 
-		loadedSound_.at(soundLink)->play(repeat);
+		_loadedSound.at(soundLink)->play(repeat);
 	}
 	catch (exception)
 	{
-		loadedSound_.insert(SoundPair(soundLink, new Sound(soundLink.c_str())));
-		loadedSound_.at(soundLink)->play(repeat);
+		_loadedSound.insert(SoundPair(soundLink, new Sound(soundLink.c_str())));
+		_loadedSound.at(soundLink)->play(repeat);
 	}
 }
 void GameSound::Play(int id, bool repeat)
@@ -127,17 +133,17 @@ void GameSound::Play(int id, bool repeat)
 
 GameSound* GameSound::getInstance()
 {
-	if (instance_ == nullptr)
+	if (_instance == nullptr)
 	{
-		instance_ = new GameSound();
+		_instance = new GameSound();
 	}
 
-	return instance_;
+	return _instance;
 }
 
 void GameSound::release()
 {
-	SAFE_RELEASE(instance_);
+	SAFE_RELEASE(_instance);
 	Sound::releaseSoundClass();
 }
 
@@ -146,7 +152,7 @@ void GameSound::stop(string soundLink)
 {
 	try
 	{
-		loadedSound_.at(soundLink)->stop();
+		_loadedSound.at(soundLink)->stop();
 	}
 	catch (exception)
 	{

@@ -1,26 +1,24 @@
-﻿#pragma once
+﻿#ifndef __GAME_H__
+#define __GAME_H__
+
 #include "Window.h"
-#include "GameState.h"
-#include "PlayerTank.h"
-#include "LightTank.h"
 #include "Keyboard.h"
-#include "Map.h"
-#include "CollisionManager.h"
-#include "EffectManager.h"
+#include "GameState.h"
 
 class Game
 {
 private:
-	Window* win;
+	Window* _window;
 	Keyboard* _keyboard;
 
 public:
 	Game();
 	~Game();
 
-	bool GameInit(HINSTANCE); // Khởi tạo game
-	void GameUpdate();
-	void GameRun();
-	void GameRelease();
+	bool GameInit(HINSTANCE); 
+	void GameUpdate();		
+	void GameDraw();		
+	void GameRelease();		
 };
+#endif
 

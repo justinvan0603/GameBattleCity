@@ -77,8 +77,8 @@ bool Window::initDirectX()
 		&d3dpp,
 		&d3ddev);
 
-	if (d3ddev == NULL) {
-		MessageBox(NULL, "Failed to create device", "Error", MB_OK);
+	if (d3ddev == NULL) 
+	{
 		return false;
 	}
 	D3DXCreateSprite(d3ddev, &spriteHandler);

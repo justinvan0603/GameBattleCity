@@ -32,11 +32,6 @@ Sprite * SpriteMapItemMagager::getFlagIcon()
 	return _flagIcon;
 }
 
-Sprite * SpriteMapItemMagager::getNumber()
-{
-	return _number;
-}
-
 Sprite* SpriteMapItemMagager::getPowerUpItem()
 {
 	return _powerUpItem;
@@ -55,7 +50,6 @@ SpriteMapItemMagager::SpriteMapItemMagager(LPD3DXSPRITE spriteHandler)
 	_enemyIcon = new Sprite(spriteHandler, RESOURCE_PATH_ENEMY_ICON, TILE_WIDTH * 2, TILE_HEIGHT * 2, 1, 1);
 	_tankLifeIcon = new Sprite(spriteHandler, RESOURCE_PATH_TANKLIFE_ICON, TILE_WIDTH * 4, TILE_HEIGHT * 4, 1, 1);
 	_flagIcon = new Sprite(spriteHandler, RESOURCE_PATH_FLAG_LEVEL_ICON, TILE_WIDTH * 4, TILE_HEIGHT * 4, 1, 1);
-	_number = new Sprite(spriteHandler, RESOURCE_PATH_NUMBER, TILE_WIDTH * 2, TILE_HEIGHT * 2, 10, 5);
 	_powerUpItem = new Sprite(spriteHandler, MAP_RESOURCE_PATH_POWERUP, TILE_WIDTH * 4, TILE_HEIGHT * 4, 6, 6);
 	_respawnEffect = new Sprite(spriteHandler, RESPAWN_SPRITE_PATH, TILE_WIDTH * 4, TILE_HEIGHT * 4, 10, 10);
 }

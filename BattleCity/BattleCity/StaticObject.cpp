@@ -1,6 +1,5 @@
 #include "StaticObject.h"
 
-
 void StaticObject::Init(Sprite* sprite, int type, D3DXVECTOR3 pos)
 {
 	this->_type = type;

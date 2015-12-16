@@ -57,6 +57,7 @@ void Map::changeStage()
 	_delayFreeze = DELAY_FREEZE_TIME;
 	_delayDrawScorePower = DELAY_TIME_DRAW_SCORE_POWER;
 	_isFreeze = false;
+	posPower = DEFAULT_POS_ZERO;
 	//
 	int numOfTypeEnemy[NUM_TYPE_ENEMY];
 	string orderAppear;
@@ -468,8 +469,11 @@ void Map::Update()
 		}
 
 	}
-
-	CollisionManager::CollisionWithItem(_player, _powerUpItem);
+	if(_powerUpItem->IsEnable())
+	{
+		CollisionManager::CollisionWithItem(_player, _powerUpItem);
+	}
+	
 	updatePowerItem();
 	ClearDestroyedEnemy();
 	checkEndGame();

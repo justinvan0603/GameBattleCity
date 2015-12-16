@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 #include <Windows.h>
-
-#include <Windows.h>
 #include "GameDefaultConstant.h"
 
 class Text
@@ -25,9 +23,9 @@ private:
 
 	LPD3DXSPRITE _spriteHandler;
 	LPDIRECT3DDEVICE9 _d3dDevice;
-	ID3DXFont *_font;
-	LPCTSTR _fontFace;
-	int _fontSize;
+	ID3DXFont *_font;				//Doi tuong font dung de ve
+	LPCTSTR _fontFace;				//Loai font chu
+	int _fontSize;					//Kich co chu
 };
 #endif
 

@@ -20,11 +20,11 @@ private:
 	ScoreManager();
 	~ScoreManager();
 	static ScoreManager* _instance;
-	int _playerScore;
-	int _highScore;
-	int _scoreTank[4];
-	int _scorePowerUp;
-	int _numTank[4];
+	int _playerScore;		//Diem cua nguoi choi
+	int _highScore;			//Diem cao nhat
+	int _scoreTank[4];		//Diem tung loai tank
+	int _scorePowerUp;		//Diem powerUp
+	int _numTank[4];		//So luong tank bi ban chet trong 1 man choi (stage)
 };
 #endif
  

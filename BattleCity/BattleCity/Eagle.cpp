@@ -28,11 +28,11 @@ void Eagle::Draw()
 	D3DXVECTOR3 position((float)this->_left, (float) this->_top, 0.0f);
 	if (_status == EAGLE_STATUS::LIVE)
 	{
-		_image->Render(0, 0, position);
+		_image->Render(0, 0, position);	//s?ng
 	}
 	else
 	{
-		_image->Render(0, 1, position);
+		_image->Render(0, 1, position);	//ch?t
 	}
 		
 }
@@ -42,11 +42,17 @@ void Eagle::Init(Sprite* sprite, int type, D3DXVECTOR3 pos)
 
 }
 
+//---------------------------------------
+// Set tr?ng thái live hay dead cho eagle
+//---------------------------------------
 void Eagle::setEagleStatus(EAGLE_STATUS status)
 {
 	_status = status;
 }
 
+//----------------------------------
+// L?y tr?ng thái c?a eagle
+//----------------------------------
 EAGLE_STATUS Eagle::getEagleStatus()
 {
 	return _status;

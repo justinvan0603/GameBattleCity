@@ -9,10 +9,6 @@
 #include "DefaultConstant.h"
 #include "CWaveFile.h"
 
-// -----------------------------------------------
-// Name: class TSound
-// Desc: used to load/ store/ play an audio with wav extension.
-// -----------------------------------------------
 class Sound
 {
 public:
@@ -25,17 +21,16 @@ public:
 	HRESULT play(bool isLoop = false, DWORD priority = 0);
 	HRESULT stop();
 
-
 private:
 	HRESULT loadAudio(const char* audioPath);
 
 private:
-	static WAVEFORMATEX bufferFormat_;
-	static DSBUFFERDESC bufferDescription_;
-	static LPDIRECTSOUND8 audioHandler_;
-	static HWND windowsHandler_;
+	static WAVEFORMATEX _bufferFormat;
+	static DSBUFFERDESC _bufferDescription;
+	static LPDIRECTSOUND8 _audioHandler;
+	static HWND _windowsHandler;
 
-	LPDIRECTSOUNDBUFFER soundBuffer_;
+	LPDIRECTSOUNDBUFFER _soundBuffer;
 };
 
 

@@ -7,8 +7,8 @@
 #include <map>
 using namespace std;
 
-typedef map<string, Sound*> SoundMap;
-typedef pair<string, Sound*> SoundPair;
+typedef map<string, Sound*> SoundMap;		//Lien ket ten am thanh vs object am thanh tuong ung
+typedef pair<string, Sound*> SoundPair;		//Ham khoi tao cua map SoundMap
 
 class GameSound
 {
@@ -33,8 +33,8 @@ private:
 
 	string switchID(int id);
 private:
-	static GameSound* instance_;
-	SoundMap loadedSound_;
+	static GameSound* _instance;
+	SoundMap _loadedSound;
 };
 
 #endif // __GAME_SOUND__

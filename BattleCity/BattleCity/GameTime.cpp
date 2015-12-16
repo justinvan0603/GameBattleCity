@@ -30,6 +30,9 @@ bool GameTime::RenderFrame(DWORD& startTime, float delayTime)
 	return false;
 }
 
+//----------------------------------
+// Set khoang thoi gian delay de chay 1 ham nao do
+//----------------------------------
 bool GameTime::DelayTime(int& delayTime)
 {
 	delayTime -= 50;

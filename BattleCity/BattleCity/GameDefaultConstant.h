@@ -241,6 +241,7 @@
 #define ID_POWER_FREEZE_TIME 2 
 #define ID_POWER_EXTRA_LIFE 3
 #define ID_POWER_STAR 4
+#define NUM_POWER_PER_MAP 3
 
 //Default enemy position
 #define DEFAULT_TOP_LEFT D3DXVECTOR2(0.0f,200.0f)
@@ -335,10 +336,14 @@
 #define ICON_GAME_OVER_WIDTH 324
 #define ICON_GAME_OVER_HEIGHT 211
 #define POS_ICON_GAME_OVER D3DXVECTOR3(170.0f, 170.0f,0.0f)
-
-//Define EndGame State
 #define DELAY_TIME_GAMEOVER 10000
+//Define EndGame State
+#define DELAY_TIME_GAME_END 10000
+#define TEXT_CONGRA "CONGRATULATION"
+#define TEXT_DESC "You have successfully defended the fortress \nfrom the attack of enemy tanks. You are a tank \ncommander of the best. We are very proud of you."
+#define TEXT_YOUR_SCORE "Your score: "
 
+#define TEXT_ESC "Press ESC to return Main menu"
 //Resource sound path
 #define SOUND_START_GAME "Resource\\Sound\\levelstarting.wav"
 #define SOUND_FIRE "Resource\\Sound\\shoot.wav"

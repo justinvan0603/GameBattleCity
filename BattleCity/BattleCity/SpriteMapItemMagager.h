@@ -11,20 +11,18 @@ public:
 	Sprite* getEnemyIcon();
 	Sprite* getTankLifeIcon();
 	Sprite* getFlagIcon();
-	Sprite* getNumber();
 	Sprite* getPowerUpItem();
 	Sprite* getRespawnSprite();
 	SpriteMapItemMagager(LPD3DXSPRITE spriteHandler);
 	~SpriteMapItemMagager();
 private:
-	Sprite* _environment;
-	Sprite* _eagle;
-	Sprite* _backGround;
-	Sprite* _enemyIcon;
-	Sprite* _tankLifeIcon;
-	Sprite* _flagIcon;
-	Sprite* _number;
-	Sprite* _powerUpItem;
-	Sprite* _respawnEffect;
+	Sprite* _environment;		//gach, thep, rung ...
+	Sprite* _eagle;				//Dai bang
+	Sprite* _backGround;		//Nen den
+	Sprite* _enemyIcon;			//icon dich ben goc phai
+	Sprite* _tankLifeIcon;		//hinh di kem so mang
+	Sprite* _flagIcon;			// la co di kem so stage
+	Sprite* _powerUpItem;		//item powerup
+	Sprite* _respawnEffect;		//HU hoi sinh
 };
 #endif

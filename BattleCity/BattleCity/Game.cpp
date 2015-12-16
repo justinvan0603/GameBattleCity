@@ -1,9 +1,8 @@
 ﻿#include "Game.h"
 
-
 Game::Game()
 {
-	win = new Window();
+	_window = new Window();
 }
 
 
@@ -11,50 +10,68 @@ Game::~Game()
 {
 }
 
+//----------------------------------
+// Khởi tạo game
+//----------------------------------
 bool Game::GameInit(HINSTANCE hInstance)
 {
 	// Khởi tạo cửa sổ game
-	if (!win->initWindow(hInstance))
+	if (!_window->initWindow(hInstance))
 	{
 		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_WINDOW);
 		return false;
 	}
 	// Khởi tạo directX
-	if (!win->initDirectX())
+	if (!_window->initDirectX())
 	{
 		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_D3D);
 		return false;
 	}	
 	//Khoi tao keyboard
 	_keyboard = Keyboard::getInstance();
-	if (!_keyboard->InitKeyboard(win->get_hInstance(), win->get_windowHandler()))
+	if (!_keyboard->InitKeyboard(_window->get_hInstance(), _window->get_windowHandler()))
 	{
 		WARNING_BOX(WARNING_GAME_CAN_NOT_INIT_KEYBOARD);
 		return false;
 	}
-	GameSound::initialize(win->get_windowHandler());
-
-	GameState::initialize(win->getSpriteHandler());
+	//Khoi tao am thanh
+	GameSound::initialize(_window->get_windowHandler());
+	//Khoi tao GameState quan li cac trang thai cua game
+	GameState::initialize(_window->getSpriteHandler());
 	
 	return true;
 }
 
+//----------------------------------
+//Cập nhật game
+//----------------------------------
 void Game::GameUpdate()
 {
-	_keyboard->update(win->get_windowHandler());
+	//Cap nhat trang thai cua ban phim
+	_keyboard->update(_window->get_windowHandler());
+	//Update gamestate
 	GameState::stateUpdate();
 }
 
-void Game::GameRun()
+//----------------------------------
+//Vẽ Game
+//----------------------------------
+void Game::GameDraw()
 {
-	if(win->startDraw())
+	if(_window->startDraw())
 	{
 		GameState::stateDraw();
-		win->stopDraw();
+		_window->stopDraw();
 	}	
 }
 
+//----------------------------------
+//Giải phóng tài nguyên game
+//----------------------------------
 void Game::GameRelease()
 {
-	//write code here
+	SAFE_RELEASE(_window);
+	SAFE_RELEASE(_keyboard);
+	GameSound::getInstance()->release();
+	GameState::release();
 }
