@@ -43,6 +43,7 @@ private:
 	vector<Enemy*>* _listEnemy;
 	vector<Enemy*>* _listEnemyOnMap;
 	vector<MyRectangle*>* _rectangleRespawn;
+	vector<MyRectangle*>* _playerRespawnPos;
 	fstream _mapFile;
 	SpriteMapItemMagager* _spriteItemManager;
 	Eagle* _eagle;

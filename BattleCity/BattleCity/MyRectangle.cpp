@@ -82,10 +82,7 @@ void MyRectangle::setPositionY(int newY)
 	_top = newY;
 }
 
-void MyRectangle::setRelativeVelocity(MyRectangle* moveObject)
-{
 
-}
 MyRectangle::~MyRectangle()
 {
 }

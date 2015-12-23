@@ -18,10 +18,22 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	//init rectangleRespawn
 	_rectangleRespawn = new vector<MyRectangle*>;
+	_playerRespawnPos = new vector<MyRectangle*>;
 	for (int i = 0; i < NUM_RESPAWN_POS;i++)
 	{
 		_rectangleRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
 	}	
+	for (int i = 0; i < NUM_RESPAWN_POS - 1; i++)
+	{
+		if (i == 0)
+		{
+			_playerRespawnPos->push_back(new MyRectangle(DEFAULT_PLAYER_POSITION_Y, DEFAULT_PLAYER_POSITION_X, SPRITE_WIDTH, SPRITE_HEIGHT));
+		}
+		else if (i == 1)
+		{
+			_playerRespawnPos->push_back(new MyRectangle(DEFAULT_PLAYER_POSITION_Y, DEFAULT_PLAYER_POSITION_X_2, SPRITE_WIDTH, SPRITE_HEIGHT));
+		}
+	}
 	_spriteHandler = spriteHandler;
 	_spriteHandler->GetDevice(&d3ddev);
 	_text = new Text(_spriteHandler);
@@ -474,6 +486,23 @@ void Map::Update()
 		CollisionManager::CollisionWithItem(_player, _powerUpItem);
 	}
 	
+	if (_player->_isTerminated)
+	{
+		int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, 0, _listEnemyOnMap);
+		if (pos == 0)
+		{
+			_player->Respawn(DEFAULT_PLAYER_POSITION_X, DEFAULT_PLAYER_POSITION_Y);
+		}
+		else if (pos == 1)
+		{
+			_player->Respawn(DEFAULT_PLAYER_POSITION_X_2, DEFAULT_PLAYER_POSITION_Y);
+		}
+		else
+		{
+			_player->setPositionX(0);
+			_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
+		}
+	}
 	updatePowerItem();
 	ClearDestroyedEnemy();
 	checkEndGame();

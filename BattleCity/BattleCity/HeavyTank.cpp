@@ -48,6 +48,7 @@ void HeavyTank::Draw()
 {
 	if (!_isTerminated)
 	{
+		//Neu dang o trang thai dong bang thi khong cong toa do
 		if (!_isFreeze)
 			ShootableObject::Draw();
 		_curSprite->Render(_left, _top);

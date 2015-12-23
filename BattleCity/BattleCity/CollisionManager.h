@@ -24,6 +24,7 @@ public:
 	static bool CollisionEnemy(DynamicObject* A, DynamicObject* B);	//Xet va cham giua 2 enemy
 	static bool CollisionWithItem(PlayerTank* A, PowerUp *B);	//Xet va cham giua player va item
 	static int FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, PlayerTank* A, vector<Enemy*>* enemyOnMap);
+	static int FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, vector<Enemy*>* enemyOnMap);
 	//Tim vi tri xuat hien cua enemy ma tai do khong co bat ky object nao dang dung tai vi tri do
 
 	~CollisionManager();

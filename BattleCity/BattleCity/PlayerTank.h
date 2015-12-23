@@ -15,6 +15,7 @@ private:
 	int _playTankSoundMove;
 	int _playTankSoundEngine;
 	bool _isActiveShield;
+
 public:
 	
 	PlayerTank(LPD3DXSPRITE);
@@ -24,10 +25,10 @@ public:
 	void Shoot();
 	int getLife();
 	void addLife();
-	void update();
 	void reset();
 	void SetDirection(MoveDirection direction);
 	void Respawn();
+	void Respawn(int posX, int posY);
 	void PlayerPromoted();
 	void ActivateShield(bool isFromPowerUp = false);
 	void TurnOffSound();

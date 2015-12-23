@@ -144,7 +144,7 @@ void Bullet::Move()
 	{
 		this->_vx = SPEED_NO;
 		
-		if (_level == 1)
+		if (_level == LEVEL_ONE)
 		{
 			this->_vy = -DEFAULT_BULLET_SPEED_Y;
 		}
@@ -155,7 +155,7 @@ void Bullet::Move()
 	if (_currentDirection == MoveDirection::DOWN)
 	{
 		this->_vx = SPEED_NO;
-		if (_level == 1)
+		if (_level == LEVEL_ONE)
 			this->_vy = DEFAULT_BULLET_SPEED_Y;
 		else
 			this->_vy = BULLET_PROMOTED_SPEED_Y;
@@ -164,7 +164,7 @@ void Bullet::Move()
 	if (_currentDirection == MoveDirection::LEFT)
 	{
 		this->_vy = SPEED_NO;
-		if (_level == 1)
+		if (_level == LEVEL_ONE)
 			this->_vx = -DEFAULT_BULLET_SPEED_X;
 		else
 			this->_vx = -BULLET_PROMOTED_SPEED_X;
@@ -173,7 +173,7 @@ void Bullet::Move()
 	if (_currentDirection == MoveDirection:: RIGHT)
 	{
 		this->_vy = SPEED_NO;
-		if (_level == 1)
+		if (_level == LEVEL_ONE)
 			this->_vx = DEFAULT_BULLET_SPEED_X;
 		else
 			this->_vx = BULLET_PROMOTED_SPEED_X;

@@ -1,5 +1,8 @@
 #pragma once
 #include "Enemy.h"
+//Dac diem: Tank yeu nhat game
+//Toc do di chuyen: 2
+//Toc do bay cua dan: 6
 class MediumTank: public Enemy
 {
 private:

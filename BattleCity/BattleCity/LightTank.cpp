@@ -59,6 +59,8 @@ void LightTank:: Draw()
 }
 void LightTank::Move()
 {
+	//Note: Sau khi biet nguoi dung bam phim nao thi xu ly van toc va return ra ngay de tranh viec
+			//Di chuyen theo duong cheo
 	if (_currentDirection != LEFT && _currentDirection != RIGHT)
 		_vx = 0;
 	if (_currentDirection != UP && _currentDirection != DOWN)
@@ -112,18 +114,22 @@ void LightTank::Update()
 			Enemy::MoveWithCollision();
 		}
 	}
-
+	//Kiem tra va cham voi man hinh
 	if (CollisionManager::CollisionWithScreen(this))
 	{
 		this->_isCollied = true;
 	}
+	//Neu co va cham thi chuyen huong
 	Enemy::MoveWithCollision();
+	//Xoa list object xung quanh lighttank
 	DynamicObject::Update();
+	//Neu tank o trang thai la bonus thi goi ham sprite->Next de thay doi mau sac cua tank
 	if (_isBonusTank)
 	{
 		this->_listSprite[_currentDirection]->Next();
 		this->_curSprite = this->_listSprite[_currentDirection];
 	}
+	//Neu khong o trang thai bonus thi chuyen giua cot de tao hieu ung cuon banh xe
 	else
 	{
 		this->_listSprite[_currentDirection]->NextColumn();

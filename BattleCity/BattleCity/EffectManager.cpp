@@ -25,16 +25,19 @@ void EffectManager::AddDestroyEffect(D3DXVECTOR2 position)
 	effectPosition.y = position.y - 17;
 	this->_listEffect.push_back(new Effect(_spriteHandler, EFFECT_SPECIAL_EXPLODE, SPRITE_WIDTH * 2, SPRITE_HEIGHT * 2, 1, 1,effectPosition));
 }
+//Ve hieu ung len man hinh
 void EffectManager::Draw()
 {
 	for (vector<Effect*>::iterator i = _listEffect.begin(); i != _listEffect.end();)
 	{
+		//Neu hieu ung chua ve het frame thi tiep tuc ve sau do goi ham next();
 		if ((*i)->_completed == false)
 		{
 			(*i)->Render();
 			(*i)->Next((*i)->_completed);
 			i++;
 		}
+		//Da ve xong thi xoa ra khoi list
 		else
 		{
 			delete *i;

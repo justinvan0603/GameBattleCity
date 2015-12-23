@@ -43,8 +43,6 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position,
 	isShooting = false;
 	this->_isTerminated = false;
 	_isBonusTank = true;
-	
-
 		_index = _hitPoint - 1;
 		for (int i = 0; i < NUM_OF_DIRECTION; i++)
 		{
@@ -85,20 +83,23 @@ void SuperHeavyTank::Update()
 	}
 	Enemy::MoveWithCollision();
 	DynamicObject::Update();
+	//Neu superheavy la bonus tank hoac hp full
 	if (_isBonusTank &&  _hitPoint == 3)
 	{
+		//Ve sprite mau xanh la + sprite do bonus
 		_listSprite[_currentDirection]->Next(_hitPoint - 1);
 		_curSprite = _listSprite[_currentDirection];
 	}
+	//Ney khong phai bonus hoac la bi ban trung dan
 	else if (!_isBonusTank || _hitPoint <3)
 	{
 		if (_index > _hitPoint - 1)
-		{
+		{//Set lai frame row 1 dung voi HP
 			_index = _hitPoint - 1;
 			for (int i = 0; i < NUM_OF_DIRECTION; i++)
 				_listSprite[i]->setStartFrame(_index);
 		}
-
+		//Next column de tao chuyen dong cho banh xe
 		_listSprite[_currentDirection]->NextColumn();
 		_curSprite = _listSprite[_currentDirection];
 	}

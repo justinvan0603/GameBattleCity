@@ -25,12 +25,6 @@ void Enemy::Shoot()
 {
 	D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top, _currentDirection); // Tinh vi tri xuat hien cua vien dan theo huong di chuyen
 
-
-	//if (BulletManager::getInstance()->getEnemyBulletSize() == 0)
-	//{
-	//	BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);
-	//	_startTime = GetTickCount();
-	//}
 	 if (GameTime::RenderFrame(_startTime, ENEMY_BULLET_DELAY))	//Kiem tra khoang thoi gian giua 2 lan ban
 	{
 		BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_ENEMY, _level, _map, _listNearByObject);

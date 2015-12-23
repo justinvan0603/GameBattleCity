@@ -25,7 +25,7 @@ MyRectangle CollisionManager::BroadphaseRectWithRelativeSpeed(Object *A, Object*
 	height = A->getHeight() + abs(vyA);
 	return MyRectangle(y, x, width, height);
 }
-
+//Tao hinh chu nhat broad-phasing
 MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 {
 
@@ -41,7 +41,7 @@ MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 
 	return MyRectangle(y, x, width, height);
 }
-
+//Xet va cham giua doi tuong dong va doi tuong tinh
 bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 {
 	MyRectangle broadphase = BroadphaseRect(A);
@@ -49,6 +49,7 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 	{
 		A->setVelocityX(SPEED_NO);
 		A->setVelocityY(SPEED_NO);
+		//Set lai vi tri sau khi phat hien va cham de ngan khong cho doi tuong di chuyen lun vao
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
@@ -98,13 +99,15 @@ void CollisionManager::CollisionStopMoving(Object* A, Object* B)
 			enemy->InvertDirection();
 	}
 }
+//Xet va cham giua dan va cac object
 bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 {
 	MyRectangle broadphase = BroadphaseRect(A);
 	if (AABBCheck(&broadphase, B))
 	{
 			//A->_isTerminated = true;
-			if (B->getId() == ID_BULLET)
+			//Dan player va enemy va cham se bi huy
+			if (B->getId() == ID_BULLET && A->getAllyObject() == ALLY_PLAYER)
 			{
 				A->_isTerminated = true;
 				B->_isTerminated = true;
@@ -113,9 +116,10 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			D3DXVECTOR2 position;
 			position.x = A->getLeft() - SPRITE_WIDTH/2;
 			position.y = A->getTop() - SPRITE_HEIGHT/2;
-			
+			//Neu dan va cham voi doi tuong tinh
 			if (B->getObjectType() == STATIC_OBJECT)
 			{
+				//Dan va cham voi dai bang
 				if (B->getId() == ID_EAGLE)
 				{
 					A->_isTerminated = true;
@@ -127,10 +131,12 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					GameSound::getInstance()->Play(ID_SOUND_ALLY_EXPLODE);
 					return true;
 				}
+				//Dan va cham voi tuong thep
 				if (B->getId() == ID_STEELWALL)
 				{
 					EffectManager::getInstance()->AddBulletEffect(position);
 					A->_isTerminated = true;
+					//De pha huy tuong thep thi dan phai dat level 4
 					if (A->GetLevel() == LEVEL_FOUR)
 					{
 
@@ -146,6 +152,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					return true;
 
 				}
+				//Dan khong bi huy khi va cham voi nuoc
 				if (B->getId() == ID_WATER)
 				{
 
@@ -153,6 +160,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 					B->_isTerminated = false;
 					return true;
 				}
+				//Dan va cham voi gach
 				if (B->getId() == ID_BRICKWALL);
 				{
 					A->_isTerminated = true;
@@ -168,14 +176,17 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 			}
 			else
 			{
+				//Neu dan do player ban ra
 				if (A->getAllyObject() == ALLY_PLAYER)
 				{
+					//Doi tuong trung dan la enemy
 					if (B->getObjectType() == ENEMY_OBJECT_TYPE)
 					{
 						D3DXVECTOR2 pos;
 						pos.x = B->getLeft();
 						pos.y = B->getTop();
 						//B->_isTerminated = true;
+						//Neu khong phai super heavy tank thi chet ngay
 						if (B->getId() != ID_SUPER_HEAVY_TANK)
 						{
 							GameSound::getInstance()->Play(ID_SOUND_TANK_EXPLODE);
@@ -184,6 +195,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 							EffectManager::getInstance()->AddDestroyEffect(pos);
 							B->_isTerminated = true;
 						}
+						//Nguoc lai la superheavytank thi phai kiem tra mau
 						else
 						{
 							SuperHeavyTank* superHeavy = dynamic_cast<SuperHeavyTank*>(B);
@@ -207,21 +219,26 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 						}
 					}
 				}
+				//Neu dan do enemy ban ra 
 				else
 				{
 					D3DXVECTOR2 pos;
 					pos.x = B->getLeft();
 					pos.y = B->getTop();
-					EffectManager::getInstance()->AddDestroyEffect(pos);
+					A->_isTerminated = true;
+					//Neu dan trung player
 					if (B->getId() == ID_PLAYER)
 					{
+						//Player dang khong o trang thai bat tu
 						if (!B->_isImmortal)
 						{
+							EffectManager::getInstance()->AddDestroyEffect(pos);
 							GameSound::getInstance()->Play(ID_SOUND_ALLY_EXPLODE);
 							B->_isTerminated = true;
 						}
 						else
 						{
+							EffectManager::getInstance()->AddBulletEffect(pos);
 							B->_isTerminated = false;
 						}
 					}
@@ -232,6 +249,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 	}
 	return false;
 }
+//Xet va cham giua doi tuong dong voi man hinh
 bool CollisionManager::CollisionWithScreen(Object* A)
 {
 	MyRectangle collisionRect = BroadphaseRect(A);
@@ -301,16 +319,6 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 		}
 	}
 
-
-
-	//if (A->getTop()<= POS_MAP_TOP_LEFT_Y)
-	//	return true;
-	//if (A->getBottom()  >= POS_MAP_TOP_LEFT_Y + MAP_HEIGHT)
-	//	return true;
-	//if (A->getLeft() <= POS_MAP_TOP_LEFT_X)
-	//	return true;
-	//if (A->getRight() >= POS_MAP_TOP_LEFT_X + MAP_WIDTH)
-	//	return true;
 	return false;
 	
 	//MyRectangle collisionRect = BroadphaseRect(A);
@@ -346,6 +354,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 
 	//return false;
 }
+//Kiem tra va cham player va enemy
 bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject *B)
 {
 
@@ -405,6 +414,7 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 	}
 	return false;
 }
+//Kiem tra va cham giua enemy vs enemy
 bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 {
 	MyRectangle broadphaseA = BroadphaseRect(A);
@@ -520,6 +530,7 @@ bool CollisionManager::CollisionEnemy(DynamicObject* A, DynamicObject* B)
 	}
 	return false;
 }
+//Kiem tra va cham voi item
 bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 {
 	MyRectangle broadphaseRectA = BroadphaseRect(A);
@@ -537,7 +548,51 @@ bool CollisionManager::CollisionWithItem(PlayerTank* A,PowerUp* B)
 	}
 	return false;
 }
-
+int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, vector<Enemy*>* enemyOnMap)
+{
+	bool isEnemyCollided = false;
+	int length = enemyOnMap->size();
+	for (int i = 0; i < length; i++)
+	{
+		MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap->at(i));
+		if (AABBCheck(&enemyBroadphase, listposition->at(currentposition)))
+		{
+			isEnemyCollided = true;
+			break;
+		}
+	}
+	if (!isEnemyCollided)
+	{
+		return currentposition;
+	}
+	else
+	{
+		isEnemyCollided = false;
+		int size = listposition->size();
+		for (int i = 0; i < size; i++)
+		{
+			if (i != currentposition)
+			{
+	
+				for (int j = 0; j < length; j++)
+				{
+					MyRectangle enemyBroadphase = BroadphaseRect(enemyOnMap->at(j));
+					if (AABBCheck(&enemyBroadphase, listposition->at(i)))
+					{
+						isEnemyCollided = true;
+						break;
+					}
+				}
+				if (!isEnemyCollided)
+				{
+					return i;
+				}
+			}
+		}
+	}
+	return -1;
+}
+//Tim vi tri hoi sinh
 int CollisionManager::FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, PlayerTank* A, vector<Enemy*>* enemyOnMap)
 {
 	MyRectangle playerBroadphaseRect = BroadphaseRect(A);

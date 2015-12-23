@@ -27,7 +27,7 @@ public:
 	void setPositionY(int newY);
 	void setVelocityX(int vx);
 	void setVelocityY(int vy);
-	void setRelativeVelocity(MyRectangle* moveObject);
+	
 	~MyRectangle();
 };
 

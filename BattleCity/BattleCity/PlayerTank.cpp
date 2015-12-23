@@ -33,33 +33,35 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	_isMoving = false;
 	_playTankSoundMove = 1;
 	_playTankSoundEngine = 1;
+
 }
 
 void PlayerTank::Draw()
 {
+	if (!_isTerminated)
+	{
+		if (GameTime::DelayTime(_delayShield))
+		{
+			this->_isImmortal = false;
+			this->_isActiveShield = false;
+		}
+		else
+		{
+			this->_shieldEffect->Next();
+		}
+		if (_isImmortal == true)
+		{
+			this->_shieldEffect->Render(_left, _top);
+		}
+		if (_isTerminated == false)
+		{
+			//_curSprite->Render(_left, _top);
 
-	if (GameTime::DelayTime(_delayShield))
-	{
-		this->_isImmortal = false;
-		this->_isActiveShield = false;
+			////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
+			_curSprite->Render(_level - 1, _left, _top);//
+			ShootableObject::Draw();
+		}
 	}
-	else
-	{
-		this->_shieldEffect->Next();
-	}
-	if (_isImmortal == true)
-	{
-		this->_shieldEffect->Render(_left, _top);
-	}
-	if (_isTerminated == false)
-	{
-		//_curSprite->Render(_left, _top);
-
-		////Sau khi cat sprite theo level su dung ham nay de ve player theo level an duoc//
-				_curSprite->Render(_level - 1, _left, _top);//
-		ShootableObject::Draw();
-	}
-	
 }
 void PlayerTank::Move()
 {
@@ -145,62 +147,66 @@ void PlayerTank::Shoot()
 }
 void PlayerTank::Update()
 {
-	if(_life < 0)
+	if (!_isTerminated)
 	{
-		return;
-	}
-	
-	FindNearbyObject();
-	this->Move();
-	
-	if(_isMoving)
-	{
-		if(_playTankSoundMove == 1)
+		if (_life < 0)
 		{
-			GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
-			GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE,true);
-			_playTankSoundMove++;
-			_playTankSoundEngine = 1;
+			return;
 		}
-		
-	}
-	else
-	{
-		if(_playTankSoundEngine == 1)
-		{
-			GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
-			GameSound::getInstance()->Play(ID_SOUND_TANK_ENGINE,true);
-			_playTankSoundEngine++;
-			_playTankSoundMove = 1;
-		}		
-	}
-	this->Shoot();
-	
-	for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
-	{
-		if (CollisionManager::CollisionPreventMove(this, *i))
-		{
-			break;
-		}	
-	}
 
-	CollisionManager::CollisionWithScreen(this);
-	if (_isTerminated)
-	{
-		if (_life > 0)
+		FindNearbyObject();
+		this->Move();
+
+		if (_isMoving)
 		{
-			Respawn();
+			if (_playTankSoundMove == 1)
+			{
+				GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
+				GameSound::getInstance()->Play(ID_SOUND_TANK_MOVE, true);
+				_playTankSoundMove++;
+				_playTankSoundEngine = 1;
+			}
+
 		}
 		else
 		{
-			_life--;
-			setPositionX(0);
-			setPositionY(0);
+			if (_playTankSoundEngine == 1)
+			{
+				GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
+				GameSound::getInstance()->Play(ID_SOUND_TANK_ENGINE, true);
+				_playTankSoundEngine++;
+				_playTankSoundMove = 1;
+			}
 		}
+		this->Shoot();
+
+		for (vector<Object*>::iterator i = _listCollisionObject.begin(); i != _listCollisionObject.end(); i++)
+		{
+			if (CollisionManager::CollisionPreventMove(this, *i))
+			{
+				break;
+			}
+		}
+
+		CollisionManager::CollisionWithScreen(this);
+		DynamicObject::Update();
+		this->_listSprite[_currentDirection]->NextColumn();
+		this->_curSprite = this->_listSprite[_currentDirection];
 	}
-	DynamicObject::Update();
-	this->_listSprite[_currentDirection]->NextColumn();
-	this->_curSprite = this->_listSprite[_currentDirection];
+	//if (_isTerminated)
+	//{
+	//	if (_life > 0)
+	//	{
+	//		Respawn();
+	//	}
+	//	else
+	//	{
+	//		_life--;
+	//		setPositionX(0);
+	//		setPositionY(0);
+	//	}
+	//}
+
 	
 }
 
@@ -230,6 +236,22 @@ void PlayerTank::Respawn()
 			setCurrentMoveDirection(MoveDirection::UP);
 			setPositionX(DEFAULT_PLAYER_POSITION_X);
 			setPositionY(DEFAULT_PLAYER_POSITION_Y);
+			_level = LEVEL_ONE;
+			_isTerminated = false;
+			ActivateShield();
+		}
+	}
+}
+void PlayerTank::Respawn(int posX, int posY)
+{
+	if (_isTerminated == true)
+	{
+		if (_life > 0)
+		{
+			_life--;
+			setCurrentMoveDirection(MoveDirection::UP);
+			setPositionX(posX);
+			setPositionY(posY);
 			_level = LEVEL_ONE;
 			_isTerminated = false;
 			ActivateShield();

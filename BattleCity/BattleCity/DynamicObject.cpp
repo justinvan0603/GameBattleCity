@@ -106,10 +106,11 @@ void DynamicObject::FindNearbyObject()
 			{
 				value = _map[currentObjectRow-1][i];
 				if (value != -1)
-				{	//Kiem tra neu object tinh la trees thi khong xet va cham
+				{	//Kiem tra neu object tinh la trees, ice thi khong xet va cham
 					if (value % 100 != ID_TREES_6 && value % 100 != ID_TREES_7 && value % 100 != ID_TREES_16 && value % 100 != ID_TREES_17 &&
 						value % 100 != ID_ICE_8 && value % 100 != ID_ICE_9 && value % 100 != ID_ICE_18 && value % 100 != ID_ICE_19)
 					{
+						//Neu la dan thi khong lay water
 						if (_id == ID_BULLET)
 						{
 							if (value % 100 != ID_WATER_4 && value % 100 != ID_WATER_5 && value % 100 != ID_WATER_14 && value % 100 != ID_WATER_15)
@@ -195,7 +196,7 @@ void DynamicObject::Update()
 {
 	_listCollisionObject.clear();
 }
-
+//Gan tham chieu ma tran map va list Object tinh cho doi tuong
 void DynamicObject::InitMapData(int** map, vector<vector<StaticObject*>>* listNearByObject)
 {
 	_map = map;
@@ -233,6 +234,7 @@ MoveDirection DynamicObject::RandomDirection()
 	srand(time(0));
 	return static_cast<MoveDirection>(rand() % NUM_OF_DIRECTION);
 }
+//Random lay ra vi tri khac voi vi tri ban dau luc truyen vao
 void DynamicObject::RandomChangeDirection()
 {
 	MoveDirection newDirection = _currentDirection;

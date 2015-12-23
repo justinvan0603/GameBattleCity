@@ -32,6 +32,7 @@ private:
 	~GameSound();
 
 	string switchID(int id);
+	//Sound _gameOver;
 private:
 	static GameSound* _instance;
 	SoundMap _loadedSound;
