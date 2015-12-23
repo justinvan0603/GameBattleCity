@@ -488,7 +488,7 @@ void Map::Update()
 	
 	if (_player->_isTerminated)
 	{
-		int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, 0, _listEnemyOnMap);
+		int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, DEFINE_ZERO_VALUE, _listEnemyOnMap);
 		if (pos == 0)
 		{
 			_player->Respawn(DEFAULT_PLAYER_POSITION_X, DEFAULT_PLAYER_POSITION_Y);
@@ -499,7 +499,7 @@ void Map::Update()
 		}
 		else
 		{
-			_player->setPositionX(0);
+			_player->setPositionX(DEFINE_ZERO_VALUE);
 			_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
 		}
 	}

@@ -179,6 +179,7 @@ bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 				//Neu dan do player ban ra
 				if (A->getAllyObject() == ALLY_PLAYER)
 				{
+					A->_isTerminated = true;
 					//Doi tuong trung dan la enemy
 					if (B->getObjectType() == ENEMY_OBJECT_TYPE)
 					{
