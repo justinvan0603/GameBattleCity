@@ -1,6 +1,6 @@
 #include "Enemy.h"
 #include "BulletManager.h"
-#define ENEMY_BULLET_DELAY 1100
+#define ENEMY_BULLET_DELAY 1200
 Enemy::Enemy()
 {
 	_objectType = ENEMY_OBJECT_TYPE;

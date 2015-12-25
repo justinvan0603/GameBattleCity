@@ -68,7 +68,7 @@ void DynamicObject::FindNearbyObject()
 
 	int currentObjectColumn = (_left - POS_MAP_TOP_LEFT_X)/ TILE_WIDTH;	//Tinh vi tri (column)cua object hien tai tren ma tran
 	int currentObjectRow = (_top - POS_MAP_TOP_LEFT_Y) /TILE_HEIGHT;	//Tinh vi tri (row)cua object hien tai tren ma tran
-	if (currentObjectRow > 52 || currentObjectColumn > 52)	//Loai truong hop bi bug
+	if (currentObjectRow > 52 || currentObjectColumn > 52 || currentObjectRow <0 || currentObjectColumn <0)	//Loai truong hop bi bug
 		return;
 	int nearbyObjectCountWidth;
 	int nearbyObjectCountHeight;
