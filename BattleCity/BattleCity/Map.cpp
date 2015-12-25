@@ -504,6 +504,7 @@ void Map::Update()
 				_player->setPositionX(DEFINE_ZERO_VALUE);
 				_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
 			}
+
 		}
 		else
 		{
