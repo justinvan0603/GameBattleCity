@@ -69,6 +69,7 @@ void MediumTank::Update()
 		if (_isCollied)
 		{
 			Enemy::MoveWithCollision();
+			break;
 		}
 	}
 

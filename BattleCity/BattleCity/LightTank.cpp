@@ -112,6 +112,7 @@ void LightTank::Update()
 		if (_isCollied)
 		{
 			Enemy::MoveWithCollision();
+			break;
 		}
 	}
 	//Kiem tra va cham voi man hinh
