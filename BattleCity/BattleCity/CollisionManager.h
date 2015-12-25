@@ -13,7 +13,6 @@ class CollisionManager
 public:
 	CollisionManager();
 	static MyRectangle BroadphaseRect(Object *A);	//Ham tao hinh chu nhat broadphase trong thuat toan broad-phasing
-	static MyRectangle BroadphaseRectWithRelativeSpeed(Object* A, Object* B);
 	static bool isCollision(Object* A, Object* B);	
 	static bool AABBCheck(MyRectangle* A, MyRectangle* B);	//Xet va cham AABB
 	static bool CollisionPreventMove(Object* A, Object* B);	//Xet va cham voi object tinh va ngan chan di chuyen

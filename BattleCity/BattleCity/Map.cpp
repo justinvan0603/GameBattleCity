@@ -488,19 +488,28 @@ void Map::Update()
 	
 	if (_player->_isTerminated)
 	{
-		int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, DEFINE_ZERO_VALUE, _listEnemyOnMap);
-		if (pos == 0)
+		if (_player->getLife() > 0)
 		{
-			_player->Respawn(DEFAULT_PLAYER_POSITION_X, DEFAULT_PLAYER_POSITION_Y);
-		}
-		else if (pos == 1)
-		{
-			_player->Respawn(DEFAULT_PLAYER_POSITION_X_2, DEFAULT_PLAYER_POSITION_Y);
+			int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, DEFINE_ZERO_VALUE, _listEnemyOnMap);
+			if (pos == 0)
+			{
+				_player->Respawn(DEFAULT_PLAYER_POSITION_X, DEFAULT_PLAYER_POSITION_Y);
+			}
+			else if (pos == 1)
+			{
+				_player->Respawn(DEFAULT_PLAYER_POSITION_X_2, DEFAULT_PLAYER_POSITION_Y);
+			}
+			else
+			{
+				_player->setPositionX(DEFINE_ZERO_VALUE);
+				_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
+			}
 		}
 		else
 		{
+			_player->setLife(-1);
 			_player->setPositionX(DEFINE_ZERO_VALUE);
-			_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
+			_player->setPositionY(DEFINE_ZERO_VALUE);
 		}
 	}
 	updatePowerItem();

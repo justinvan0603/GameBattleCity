@@ -265,6 +265,10 @@ void PlayerTank::PlayerPromoted()
 		_level++;
 	}
 }
+void PlayerTank::setLife(int life)
+{
+	_life = life;
+}
 
 int PlayerTank::getLife()
 {

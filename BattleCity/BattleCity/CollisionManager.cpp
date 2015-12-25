@@ -9,22 +9,7 @@
 CollisionManager::CollisionManager()
 {
 }
-MyRectangle CollisionManager::BroadphaseRectWithRelativeSpeed(Object *A, Object* B)
-{
-	int vxA, vyA;
-	vxA = A->getVelocityX() - B->getVelocityX();
-	vyA = A->getVelocityY() - B->getVelocityY();
-	int x, y, width, height;
-	x = A->getPositionX();
-	if (A->getVelocityX() < 0)
-		x = A->getPositionX() + vxA;
-	y = A->getPositionY();
-	if (A->getVelocityY() < 0)
-		y = A->getPositionY() + vyA;
-	width = A->getWidth() + abs(vxA);
-	height = A->getHeight() + abs(vyA);
-	return MyRectangle(y, x, width, height);
-}
+
 //Tao hinh chu nhat broad-phasing
 MyRectangle  CollisionManager::BroadphaseRect(Object *A)
 {

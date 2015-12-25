@@ -32,6 +32,7 @@ public:
 	void PlayerPromoted();
 	void ActivateShield(bool isFromPowerUp = false);
 	void TurnOffSound();
+	void setLife(int life);
 	~PlayerTank();
 };
 
