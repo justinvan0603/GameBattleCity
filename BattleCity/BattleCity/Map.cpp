@@ -103,6 +103,7 @@ void Map::changeStage()
 		}
 		i++;
 	}
+
 	InitColisObject();
 	_mapFile.close();
 	_player->InitMapData(_mapMatrix, _colisObj);
@@ -489,7 +490,7 @@ void Map::Update()
 	if (_player->_isTerminated)
 	{
 		if (_player->getLife() > 0)
-		{
+	 	{
 			int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, DEFINE_ZERO_VALUE, _listEnemyOnMap);
 			if (pos == 0)
 			{

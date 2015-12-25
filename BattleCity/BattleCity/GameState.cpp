@@ -5,9 +5,11 @@
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
 Text* GameState::_text = nullptr;
+DWORD GameState::_delayTime = 0;
 
 void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
+	_delayTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
 	switchState(MainMenu::get());
@@ -31,6 +33,7 @@ void GameState::stateUpdate()
 //----------------------------------
 void GameState::switchState(GameState* newState)
 {
+	_delayTime = GetTickCount();
 	_gameState = newState;
 }
 
@@ -64,7 +67,7 @@ MainMenu::MainMenu()
 	//new sprite image main menu
 	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
-	_delayTime = SELECTOR_SPEED_CHANGE;
+	//_delayTime = SELECTOR_SPEED_CHANGE;
 	MainMenu::reset();
 	
 }
@@ -88,9 +91,9 @@ void MainMenu::update()
 	else
 	{
 		//tao selector chuyen dong
-		if (GameTime::DelayTime(_delayTime))
+		if (GameTime::RenderFrame(_delayTime, SELECTOR_SPEED_CHANGE))
 		{
-			_delayTime = SELECTOR_SPEED_CHANGE;
+			//_delayTime = SELECTOR_SPEED_CHANGE;
 			_selector->Next();
 		}
 		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))	//Chuyen xuong instruction
@@ -325,7 +328,7 @@ StartingState* StartingState::_instance = nullptr;
 StartingState::StartingState()
 {	
 	_spriteHandler->GetDevice(&_d3ddevice);
-	_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
+	//_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
 	
 }
 
@@ -337,11 +340,11 @@ StartingState::~StartingState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
-	if (_delayTime == DELAY_TIME_TO_START_PLAYING_STATE)
-		GameSound::getInstance()->Play(ID_SOUND_START_GAME);
-	if (GameTime::DelayTime(_delayTime))
+	/*if (_delayTime == DELAY_TIME_TO_START_PLAYING_STATE)
+		GameSound::getInstance()->Play(ID_SOUND_START_GAME);*/
+	if (GameTime::RenderFrame(_delayTime, 2000/*DELAY_TIME_TO_START_PLAYING_STATE*/))
 	{
-		_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
+		//_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
 		//GameSound::getInstance()->Stop(ID_SOUND_START_GAME);
 		switchState(PlayingState::get());
 	}
@@ -352,6 +355,7 @@ void StartingState::draw()
 {
 	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0); //Clear man hinh sang mau xam trang
 	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
+	_text->drawText(to_string(_delayTime), D3DXVECTOR3(0.0f, 0.0f, 0.0f), COLOR_BLACK);
 }
 
 void StartingState::reset()
@@ -423,7 +427,7 @@ ScoreState* ScoreState::_instance = nullptr;
 
 ScoreState::ScoreState()
 {
-	_delayTime = DELAY_TIME_SCORE;
+	//_delayTime = DELAY_TIME_SCORE;
 	_iconTankScore = new Sprite(_spriteHandler, ICON_TANK_SCORE_PATH, 48, 176, 1, 1);
 	_numTypeEnemy = 0;
 	ScoreState::reset();
@@ -431,9 +435,9 @@ ScoreState::ScoreState()
 
 void ScoreState::update()
 {
-	if (GameTime::DelayTime(_delayTime))
+	if (GameTime::RenderFrame(_delayTime, 5000/*DELAY_TIME_SCORE*/))
 	{
-		_delayTime = DELAY_TIME_SCORE;
+		//_delayTime = DELAY_TIME_SCORE;
 		_numTypeEnemy = 0;
 		ScoreManager::getInstance()->renewValue();	//Reset gia tri so luong tank moi loai bi ban
 		if (_isEnd)
@@ -542,16 +546,16 @@ GameOverState* GameOverState::_instance = nullptr;
 GameOverState::GameOverState()
 {
 	_gameOverImage = new Sprite(_spriteHandler, ICON_GAME_OVER_PATH, ICON_GAME_OVER_WIDTH, ICON_GAME_OVER_HEIGHT, 1, 1);
-	_delayTime = DELAY_TIME_GAMEOVER;
+	//_delayTime = DELAY_TIME_GAMEOVER;
 }
 
 void GameOverState::update()
 {
-	if (_delayTime == DELAY_TIME_GAMEOVER)
-		GameSound::getInstance()->Play(ID_SOUND_GAME_OVER);
-	if(GameTime::DelayTime(_delayTime))
+	/*if (_delayTime == DELAY_TIME_GAMEOVER)
+		GameSound::getInstance()->Play(ID_SOUND_GAME_OVER);*/
+	if(GameTime::RenderFrame(_delayTime, DELAY_TIME_GAMEOVER))
 	{
-		_delayTime = DELAY_TIME_GAMEOVER;
+		//_delayTime = DELAY_TIME_GAMEOVER;
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
@@ -604,7 +608,7 @@ EndGame::EndGame()
 void EndGame::update()
 {
 	_score = ScoreManager::getInstance()->getPlayerScore();
-	if (GameTime::DelayTime(_delayTime))
+	if (GameTime::RenderFrame(_delayTime, DELAY_TIME_GAME_END))
 	{
 		_isFlash = true;
 	}
@@ -643,7 +647,7 @@ void EndGame::reset()
 	_isFlash = false;
 	_congraColor = COLOR_WHITE;
 	_colorIndex = 0;
-	_delayTime = DELAY_TIME_GAME_END;
+	//_delayTime = DELAY_TIME_GAME_END;
 }
 
 EndGame* EndGame::get()

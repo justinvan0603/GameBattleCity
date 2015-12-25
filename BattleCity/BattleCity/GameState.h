@@ -33,7 +33,7 @@ protected:
 	static GameState*	_gameState;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;		//Doi tuong ve chu len man hinh
-	int _delayTime;			//Khoang thoi gian delay giua cac State
+	static DWORD _delayTime;			//Khoang thoi gian delay giua cac State
 };
 #pragma endregion
 

@@ -26,7 +26,7 @@ bool GameTime::RenderFrame(DWORD& startTime, float delayTime)
 bool GameTime::DelayTime(int& delayTime)
 {
 	delayTime -= 50;
-	if(delayTime < 0)
+	if(delayTime <= 0)
 		return true;
 	return false;
 }
