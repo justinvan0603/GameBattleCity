@@ -13,7 +13,7 @@ typedef pair<string, Sound*> SoundPair;		//Ham khoi tao cua map SoundMap
 class GameSound
 {
 public:
-	 static void initialize(HWND windowsHandler);
+	 static bool initialize(HWND windowsHandler);
 
 	 void release();
 

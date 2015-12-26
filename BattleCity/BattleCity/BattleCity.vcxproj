@@ -93,6 +93,9 @@
     <ClInclude Include="Water.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E853C792-E339-460B-B80A-11DD69C92C1E}</ProjectGuid>
     <RootNamespace>BattleCity</RootNamespace>

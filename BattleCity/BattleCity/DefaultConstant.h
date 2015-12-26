@@ -15,7 +15,8 @@
 #define WARNING_GAME_CAN_NOT_INIT_D3D "Init Direct3D fail!\n"
 #define WARNING_GAME_CAN_NOT_INIT_KEYBOARD "Init Keyboard fail!\n"
 #define WARNING_CAN_NOT_READ_KEYBOARD	"Unable to read keyboard status.\n"
-#define CAN_NOT_INIT_TEXT "Init Text fail!\n"
+#define WARNING_CAN_NOT_INIT_SOUND "Init Sound fail!\n"
+
 // Default audio setting.
 #define AUDIO_FORMAT_TAG		WAVE_FORMAT_PCM
 #define	AUDIO_NUM_OF_CHANNEL	2

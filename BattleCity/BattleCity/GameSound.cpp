@@ -101,9 +101,12 @@ string GameSound::switchID(int id)
 	return soundLink;
 }
 
-void GameSound::initialize(HWND windowsHandler)
+bool GameSound::initialize(HWND windowsHandler)
 {
-	Sound::initializeSoundClass(windowsHandler);
+	HRESULT result = Sound::initializeSoundClass(windowsHandler);
+	if (result == S_OK)
+		return true;
+	return false;
 }
 
 //----------------------------------

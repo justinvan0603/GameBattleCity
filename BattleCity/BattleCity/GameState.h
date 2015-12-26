@@ -11,7 +11,7 @@
 class GameState		//Base Object
 {
 public:
-	
+
 	virtual void update() = 0;
 	virtual void draw() = 0;
 	virtual void reset() = 0;
@@ -33,7 +33,7 @@ protected:
 	static GameState*	_gameState;
 	static LPD3DXSPRITE _spriteHandler;
 	static Text* _text;		//Doi tuong ve chu len man hinh
-	static DWORD _delayTime;			//Khoang thoi gian delay giua cac State
+	int _delayTime;			//Khoang thoi gian delay giua cac State
 };
 #pragma endregion
 
@@ -81,7 +81,7 @@ private:
 
 private:
 	static Instruction* _instance;
-	
+
 	int _currentTab;			//Tab duoc chon
 	Sprite* _imageTabStory;
 	Sprite* _imageTabControl;

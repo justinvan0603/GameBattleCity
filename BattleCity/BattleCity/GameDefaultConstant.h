@@ -237,6 +237,7 @@
 
 //ID power up 
 #define MAP_RESOURCE_PATH_POWERUP "Resource\\Other\\powerup.png"
+#define DELAY_TIME_DRAW_POWERUP 200
 #define ID_POWER_BOMB 0
 #define ID_POWER_SHEILD 1 
 #define ID_POWER_FREEZE_TIME 2 

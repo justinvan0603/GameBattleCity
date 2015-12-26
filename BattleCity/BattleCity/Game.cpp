@@ -35,7 +35,12 @@ bool Game::GameInit(HINSTANCE hInstance)
 		return false;
 	}
 	//Khoi tao am thanh
-	GameSound::initialize(_window->get_windowHandler());
+	if(!GameSound::initialize(_window->get_windowHandler()))
+	{
+		WARNING_BOX(WARNING_CAN_NOT_INIT_SOUND);
+		return false;
+	}
+
 	//Khoi tao GameState quan li cac trang thai cua game
 	GameState::initialize(_window->getSpriteHandler());
 	

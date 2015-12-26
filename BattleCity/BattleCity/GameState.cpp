@@ -5,11 +5,9 @@
 GameState* GameState::_gameState = nullptr;
 LPD3DXSPRITE GameState::_spriteHandler = nullptr;
 Text* GameState::_text = nullptr;
-DWORD GameState::_delayTime = 0;
 
 void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
-	_delayTime = GetTickCount();
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
 	switchState(MainMenu::get());
@@ -33,7 +31,6 @@ void GameState::stateUpdate()
 //----------------------------------
 void GameState::switchState(GameState* newState)
 {
-	_delayTime = GetTickCount();
 	_gameState = newState;
 }
 
@@ -67,9 +64,9 @@ MainMenu::MainMenu()
 	//new sprite image main menu
 	_menuImage = new Sprite(_spriteHandler, IMAGE_MAIN_MENU_GAME_PATH, IMAGE_MAIN_MENU_GAME_WIDTH, IMAGE_MAIN_MENU_GAME_HEIGHT, 1, 1);
 	_selector = new Sprite(_spriteHandler, IMAGE_SELECTOR_PATH, IMAGE_SELECTOR_WIDTH, IMAGE_SELECTOR_HEIGHT, 2, 2);
-	//_delayTime = SELECTOR_SPEED_CHANGE;
+	_delayTime = SELECTOR_SPEED_CHANGE;
 	MainMenu::reset();
-	
+
 }
 
 MainMenu::~MainMenu()
@@ -80,9 +77,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::update()
 {
-	if(_posYMenu > 0)	//kiem tra xem menu da chay len xong chua, neu cua thi tiep tuc chay
+	if (_posYMenu > 0)	//kiem tra xem menu da chay len xong chua, neu cua thi tiep tuc chay
 	{
-		_posYMenu -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP; 
+		_posYMenu -= IMAGE_MAIN_MENU_GAME_DEFAULT_SPEED_UP;
 		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS)	//neu nhan Enter thi skip ko cho nua, hien ra luon
 		{
 			_posYMenu = 0;
@@ -91,20 +88,20 @@ void MainMenu::update()
 	else
 	{
 		//tao selector chuyen dong
-		if (GameTime::RenderFrame(_delayTime, SELECTOR_SPEED_CHANGE))
+		if (GameTime::DelayTime(_delayTime))
 		{
-			//_delayTime = SELECTOR_SPEED_CHANGE;
+			_delayTime = SELECTOR_SPEED_CHANGE;
 			_selector->Next();
 		}
-		if(Keyboard::getInstance()->IsKeyDown(DIK_DOWN))	//Chuyen xuong instruction
+		if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))	//Chuyen xuong instruction
 		{
 			_selectorPosition = IMAGE_SELECTOR_POS_INSTRUCTION;
 		}
-		if(Keyboard::getInstance()->IsKeyDown(DIK_UP))		//Chuyen len Play
+		if (Keyboard::getInstance()->IsKeyDown(DIK_UP))		//Chuyen len Play
 		{
 			_selectorPosition = IMAGE_SELECTOR_POS_PLAY;
 		}
-		if(Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS) //Nh?n Enter -> enter State
+		if (Keyboard::getInstance()->getKeyState(DIK_RETURN) == KeyState::KEY_PRESS) //Nh?n Enter -> enter State
 		{
 			if (_selectorPosition == IMAGE_SELECTOR_POS_PLAY)
 			{
@@ -116,29 +113,29 @@ void MainMenu::update()
 				switchState(Instruction::get());		//Instruction
 			}
 		}
-	}	
+	}
 }
 
 void MainMenu::draw()
 {
-	
-	if(_posYMenu <= 0) //Neu menu da chay len xong, ve selector 
+
+	if (_posYMenu <= 0) //Neu menu da chay len xong, ve selector 
 	{
-		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y); 
+		_selector->Render((int)_selectorPosition.x, (int)_selectorPosition.y);
 	}
 	//Ve cac text len man hinh
-	float translateX = 0.0f,translateY = 0.0f;	//bien dung de dich chuyen menu neu can
+	float translateX = 0.0f, translateY = 0.0f;	//bien dung de dich chuyen menu neu can
 	_menuImage->Render(0, D3DXVECTOR3(translateX + 70.0f, _posYMenu + translateY + 110.0f, 0.0f)); //70, 110
 	_text->drawText(TEXT_PlAYER_SCORE, D3DXVECTOR3(translateX + 45.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(TEXT_HI_SCORE, D3DXVECTOR3(translateX + 237.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20);
 	//Ve diem cua nguoi choi truoc
-	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), D3DXVECTOR3(translateX + 87.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6); //I-
-	//ve diem cao nhat
-	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20,DT_RIGHT,6);  //HI-
+	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), D3DXVECTOR3(translateX + 87.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20, DT_RIGHT, 6); //I-
+																																													//ve diem cao nhat
+	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), D3DXVECTOR3(translateX + 304.0f, _posYMenu + translateY + 58.0f, 0.0f), COLOR_WHITE, 20, DT_RIGHT, 6);  //HI-
 	_text->drawText(TEXT_PLAY, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 310.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(TEXT_INSTRUCTION, D3DXVECTOR3(translateX + 240.0f, _posYMenu + translateY + 344.0f, 0.0f), COLOR_WHITE, 20);
 	_text->drawText(TEXT_SE_UIT, D3DXVECTOR3(translateX + 270.0f, _posYMenu + translateY + 417.0f, 0.0f), COLOR_RED, 20);
-	_text->drawText(TEXT_ABOUT, D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20,DT_CENTER,0,2);
+	_text->drawText(TEXT_ABOUT, D3DXVECTOR3(translateX + -70.0f, _posYMenu + translateY + 454.0f, 0.0f), COLOR_WHITE, 20, DT_CENTER, 0, 2);
 }
 
 //----------------------------------
@@ -166,7 +163,7 @@ Instruction* Instruction::_instance = nullptr;
 Instruction::Instruction()
 {
 	_imageTabStory = new Sprite(_spriteHandler, IMAGE_TAB_STORY_PATH, 212, 212, 1, 1);
-	_imageTabControl = new Sprite(_spriteHandler, IMAGE_TAB_CONTROL_PATH, SPRITE_WIDTH, SPRITE_HEIGHT*7, 1, 1);
+	_imageTabControl = new Sprite(_spriteHandler, IMAGE_TAB_CONTROL_PATH, SPRITE_WIDTH, SPRITE_HEIGHT * 7, 1, 1);
 	_imageBulletRight = new Sprite(_spriteHandler, BULLET_SPRITE_RIGHT_PATH, BULLET_WIDTH, BULLET_HEIGHT, 1, 1);
 	_imageTabEmies = new Sprite(_spriteHandler, IMAGE_TAB_ENEMIES_PATH, SPRITE_WIDTH, 176, 1, 1);
 	_imageTabPowerUp = new Sprite(_spriteHandler, IMAGE_TAB_POWERUP_PATH, SPRITE_WIDTH, 224, 1, 1);
@@ -187,14 +184,14 @@ Instruction::~Instruction()
 void Instruction::update()
 {
 	//Chuyen qua lai giua cac tab
-	if(Keyboard::getInstance()->getKeyState(DIK_RIGHT) == KeyState::KEY_PRESS)
+	if (Keyboard::getInstance()->getKeyState(DIK_RIGHT) == KeyState::KEY_PRESS)
 	{
-		if(_currentTab < 5)
+		if (_currentTab < 5)
 		{
 			_currentTab++;
 		}
 	}
-	if(Keyboard::getInstance()->getKeyState(DIK_LEFT) == KeyState::KEY_PRESS)
+	if (Keyboard::getInstance()->getKeyState(DIK_LEFT) == KeyState::KEY_PRESS)
 	{
 		if (_currentTab > 1)
 		{
@@ -212,7 +209,7 @@ void Instruction::update()
 void Instruction::draw()
 {
 	//ve menu phia tren
-	_text->drawText(TEXT_TUT, POS_TUTORIAL,COLOR_WHITE,10);
+	_text->drawText(TEXT_TUT, POS_TUTORIAL, COLOR_WHITE, 10);
 	_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_WHITE);
 	_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_WHITE);
 	_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_WHITE);
@@ -221,87 +218,87 @@ void Instruction::draw()
 
 	switch (_currentTab)
 	{
-		case 1:	//Tab Story
-		{
-			_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_RED);
-			_text->drawText(TEXT_INFO_STORY
-				, POS_TEXT_INFO_STORY, COLOR_WHITE, 10,0,0,9);
-			_imageTabStory->Render(POS_IMAGE_STORY);
-			break;
-		}
-		case 2:	//Tab control
-		{		
-			_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_RED);
-
-			float translateX = 100.0f, translateY = 100.0f;
-			_text->drawText(TEXT_TAB_CONTROL_ACTION, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12,DT_CENTER,9);
-			_text->drawText(TEXT_TAB_CONTROL_KEY, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f , 0.0f), COLOR_WHITE, 12);
-		
-			_imageTabControl->Render(0, D3DXVECTOR3(translateX + 140.0f,translateY + 80.0f,0.0f));
-			_imageBulletRight->Render(0, D3DXVECTOR3(translateX + 175.0f, translateY + 285.0f, 0.0f));
-
-			_text->drawText(TEXT_TAB_CONTROL_UP, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 12);
-			_text->drawText(TEXT_TAB_CONTROL_RIGHT, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_CONTROL_DOWN, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_CONTROL_LEFT, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_CONTROL_SPACE, D3DXVECTOR3(translateX + 260.0f, translateY + 285.0f, 0.0f), COLOR_WHITE, 10);
-			break;
-		}
-		case 3:		//tab enemies
-		{
-			_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_RED);
-
-			float translateX = 0.0f, translateY = 100.0f;
-			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
-			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
-
-			_imageTabEmies->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
-
-			_text->drawText(TEXT_TAB_ENEMIES_INFO_BASIC, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_ENEMIES_INFO_FAST, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_ENEMIES_INFO_POWER, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_ENEMIES_INFO_SHEILD, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
-
-			break;
-		}
-		case 4:		//tab power up
-		{
-			_text->drawText(TEXT_TAB_POWER_UP, POS_TEXT_POWER_UP, COLOR_RED);
-
-			float translateX = -100.0f, translateY = 100.0f;
-			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
-			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
-
-			_imageTabPowerUp->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
-
-			_text->drawText(TEXT_TAB_POWER_UP_GRENADE, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_POWER_UP_HELMET, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_POWER_UP_TIMER, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_POWER_UP_TANK, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
-			_text->drawText(TEXT_TAB_POWER_UP_STAR, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 3);
-
-			break;
-		}
-		case 5:		//tab environment
-		{
-			_text->drawText(TEXT_TAB_ENVIRONMENT, POS_TEXT_ENVIRONMENT, COLOR_RED);
-
-			float translateX = -100.0f, translateY = 100.0f;
-			_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
-			_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
-
-			_imageTabEnvironment->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
-
-			_text->drawText(TEXT_TAB_ENVIRONMENT_BRICK, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_ENVIRONMENT_STEEL, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_ENVIRONMENT_TREES, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_ENVIRONMENT_WATER, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-			_text->drawText(TEXT_TAB_ENVIRONMENT_ICE, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
-
-			break;
-		}
+	case 1:	//Tab Story
+	{
+		_text->drawText(TEXT_TAB_STORY, POS_TEXT_STORY, COLOR_RED);
+		_text->drawText(TEXT_INFO_STORY
+			, POS_TEXT_INFO_STORY, COLOR_WHITE, 10, 0, 0, 9);
+		_imageTabStory->Render(POS_IMAGE_STORY);
+		break;
 	}
-		
+	case 2:	//Tab control
+	{
+		_text->drawText(TEXT_TAB_CONTROL, POS_TEXT_CONTROL, COLOR_RED);
+
+		float translateX = 100.0f, translateY = 100.0f;
+		_text->drawText(TEXT_TAB_CONTROL_ACTION, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+		_text->drawText(TEXT_TAB_CONTROL_KEY, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+		_imageTabControl->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+		_imageBulletRight->Render(0, D3DXVECTOR3(translateX + 175.0f, translateY + 285.0f, 0.0f));
+
+		_text->drawText(TEXT_TAB_CONTROL_UP, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 12);
+		_text->drawText(TEXT_TAB_CONTROL_RIGHT, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_CONTROL_DOWN, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_CONTROL_LEFT, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_CONTROL_SPACE, D3DXVECTOR3(translateX + 260.0f, translateY + 285.0f, 0.0f), COLOR_WHITE, 10);
+		break;
+	}
+	case 3:		//tab enemies
+	{
+		_text->drawText(TEXT_TAB_ENEMIES, POS_TEXT_ENEMIES, COLOR_RED);
+
+		float translateX = 0.0f, translateY = 100.0f;
+		_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+		_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+		_imageTabEmies->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+		_text->drawText(TEXT_TAB_ENEMIES_INFO_BASIC, D3DXVECTOR3(translateX + 260.0f, translateY + 93.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_ENEMIES_INFO_FAST, D3DXVECTOR3(translateX + 260.0f, translateY + 140.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_ENEMIES_INFO_POWER, D3DXVECTOR3(translateX + 260.0f, translateY + 185.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_ENEMIES_INFO_SHEILD, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+
+		break;
+	}
+	case 4:		//tab power up
+	{
+		_text->drawText(TEXT_TAB_POWER_UP, POS_TEXT_POWER_UP, COLOR_RED);
+
+		float translateX = -100.0f, translateY = 100.0f;
+		_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+		_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+		_imageTabPowerUp->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+		_text->drawText(TEXT_TAB_POWER_UP_GRENADE, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_POWER_UP_HELMET, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_POWER_UP_TIMER, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_POWER_UP_TANK, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10);
+		_text->drawText(TEXT_TAB_POWER_UP_STAR, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 3);
+
+		break;
+	}
+	case 5:		//tab environment
+	{
+		_text->drawText(TEXT_TAB_ENVIRONMENT, POS_TEXT_ENVIRONMENT, COLOR_RED);
+
+		float translateX = -100.0f, translateY = 100.0f;
+		_text->drawText(TEXT_TAB_ENEMIES_TYPETANK, D3DXVECTOR3(translateX + 105.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12, DT_CENTER, 9);
+		_text->drawText(TEXT_TAB_ENEMIES_TANKINFO, D3DXVECTOR3(translateX + 260.0f, translateY + 60.0f, 0.0f), COLOR_WHITE, 12);
+
+		_imageTabEnvironment->Render(0, D3DXVECTOR3(translateX + 140.0f, translateY + 80.0f, 0.0f));
+
+		_text->drawText(TEXT_TAB_ENVIRONMENT_BRICK, D3DXVECTOR3(translateX + 258.0f, translateY + 88.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_ENVIRONMENT_STEEL, D3DXVECTOR3(translateX + 258.0f, translateY + 136.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_ENVIRONMENT_TREES, D3DXVECTOR3(translateX + 258.0f, translateY + 179.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_ENVIRONMENT_WATER, D3DXVECTOR3(translateX + 260.0f, translateY + 235.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+		_text->drawText(TEXT_TAB_ENVIRONMENT_ICE, D3DXVECTOR3(translateX + 258.0f, translateY + 278.0f, 0.0f), COLOR_WHITE, 10, 0, 0, 2);
+
+		break;
+	}
+	}
+
 
 }
 
@@ -326,10 +323,10 @@ Instruction* Instruction::get()
 StartingState* StartingState::_instance = nullptr;
 
 StartingState::StartingState()
-{	
+{
 	_spriteHandler->GetDevice(&_d3ddevice);
-	//_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
-	
+	_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
+
 }
 
 StartingState::~StartingState()
@@ -340,22 +337,21 @@ StartingState::~StartingState()
 void StartingState::update()
 {
 	//dem du thoi gian roi thi chuyen qua playing state
-	/*if (_delayTime == DELAY_TIME_TO_START_PLAYING_STATE)
-		GameSound::getInstance()->Play(ID_SOUND_START_GAME);*/
-	if (GameTime::RenderFrame(_delayTime, 2000/*DELAY_TIME_TO_START_PLAYING_STATE*/))
+	if (_delayTime == DELAY_TIME_TO_START_PLAYING_STATE)
+		GameSound::getInstance()->Play(ID_SOUND_START_GAME);
+	if (GameTime::DelayTime(_delayTime))
 	{
-		//_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
+		_delayTime = DELAY_TIME_TO_START_PLAYING_STATE;
 		//GameSound::getInstance()->Stop(ID_SOUND_START_GAME);
 		switchState(PlayingState::get());
 	}
-	
+
 }
 
 void StartingState::draw()
 {
-	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99,99,99), 1.0f, 0); //Clear man hinh sang mau xam trang
-	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS , COLOR_BLACK);
-	_text->drawText(to_string(_delayTime), D3DXVECTOR3(0.0f, 0.0f, 0.0f), COLOR_BLACK);
+	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99, 99, 99), 1.0f, 0); //Clear man hinh sang mau xam trang
+	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS, COLOR_BLACK);
 }
 
 void StartingState::reset()
@@ -380,8 +376,8 @@ PlayingState* PlayingState::_instance = nullptr;
 PlayingState::PlayingState()
 {
 	_map = new Map(_spriteHandler);
-	
-	
+
+
 }
 
 void PlayingState::update()
@@ -427,7 +423,7 @@ ScoreState* ScoreState::_instance = nullptr;
 
 ScoreState::ScoreState()
 {
-	//_delayTime = DELAY_TIME_SCORE;
+	_delayTime = DELAY_TIME_SCORE;
 	_iconTankScore = new Sprite(_spriteHandler, ICON_TANK_SCORE_PATH, 48, 176, 1, 1);
 	_numTypeEnemy = 0;
 	ScoreState::reset();
@@ -435,9 +431,9 @@ ScoreState::ScoreState()
 
 void ScoreState::update()
 {
-	if (GameTime::RenderFrame(_delayTime, 5000/*DELAY_TIME_SCORE*/))
+	if (GameTime::DelayTime(_delayTime))
 	{
-		//_delayTime = DELAY_TIME_SCORE;
+		_delayTime = DELAY_TIME_SCORE;
 		_numTypeEnemy = 0;
 		ScoreManager::getInstance()->renewValue();	//Reset gia tri so luong tank moi loai bi ban
 		if (_isEnd)
@@ -453,7 +449,7 @@ void ScoreState::update()
 				GameState::switchState(EndGame::get());	//EndGame
 			}
 			else
-			{			
+			{
 				GameState::switchState(StartingState::get()); //Choi stage tiep theo
 			}
 		}
@@ -470,12 +466,12 @@ void ScoreState::draw()
 	_text->drawText("STAGE", POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(StageManager::getInstance()->getStage() - !_isEnd), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE,DT_CENTER,6);
+	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE, DT_CENTER, 6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);
-	
+
 	_text->drawText("______", POS_LINE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText("TOTAL", POS_TOTAL_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE,DT_RIGHT,2);
+	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 2);
 
 	float a = BEGIN_X;
 	if (_delayTime % DELAY_TIME_DRAW_SCORE == 0)
@@ -484,7 +480,7 @@ void ScoreState::draw()
 		{
 			_numTypeEnemy++;
 			GameSound::getInstance()->Play(ID_SOUND_COUNT_SCORE);
-			
+
 		}
 	}
 	for (int i = 0; i < _numTypeEnemy; i++)
@@ -546,16 +542,16 @@ GameOverState* GameOverState::_instance = nullptr;
 GameOverState::GameOverState()
 {
 	_gameOverImage = new Sprite(_spriteHandler, ICON_GAME_OVER_PATH, ICON_GAME_OVER_WIDTH, ICON_GAME_OVER_HEIGHT, 1, 1);
-	//_delayTime = DELAY_TIME_GAMEOVER;
+	_delayTime = DELAY_TIME_GAMEOVER;
 }
 
 void GameOverState::update()
 {
-	/*if (_delayTime == DELAY_TIME_GAMEOVER)
-		GameSound::getInstance()->Play(ID_SOUND_GAME_OVER);*/
-	if(GameTime::RenderFrame(_delayTime, DELAY_TIME_GAMEOVER))
+	if (_delayTime == DELAY_TIME_GAMEOVER)
+		GameSound::getInstance()->Play(ID_SOUND_GAME_OVER);
+	if (GameTime::DelayTime(_delayTime))
 	{
-		//_delayTime = DELAY_TIME_GAMEOVER;
+		_delayTime = DELAY_TIME_GAMEOVER;
 		//reset player, score, stage, main menu, noi chung la het cac stage
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
@@ -563,7 +559,7 @@ void GameOverState::update()
 		ScoreState::get()->reset();
 		/*EndGame::get()->*/reset();
 		switchState(MainMenu::get());
-	}	
+	}
 }
 
 void GameOverState::draw()
@@ -608,11 +604,11 @@ EndGame::EndGame()
 void EndGame::update()
 {
 	_score = ScoreManager::getInstance()->getPlayerScore();
-	if (GameTime::RenderFrame(_delayTime, DELAY_TIME_GAME_END))
+	if (GameTime::DelayTime(_delayTime))
 	{
 		_isFlash = true;
 	}
-	if(_colorIndex > 4)
+	if (_colorIndex > 4)
 	{
 		_colorIndex = 0;
 	}
@@ -626,20 +622,20 @@ void EndGame::update()
 		PlayingState::get()->reset();
 		ScoreState::get()->reset();
 		/*EndGame::get()->*/reset();
-		switchState(MainMenu::get());	
+		switchState(MainMenu::get());
 	}
 }
 
 void EndGame::draw()
 {
 	_text->drawText(TEXT_CONGRA, D3DXVECTOR3(40.0f, 130.0f, 0.0f), _congraColor, 40);
-	_text->drawText(TEXT_DESC, D3DXVECTOR3(50.0f, 230.0f, 0.0f), COLOR_SCORE_TEXT, 12,0,0,4);
+	_text->drawText(TEXT_DESC, D3DXVECTOR3(50.0f, 230.0f, 0.0f), COLOR_SCORE_TEXT, 12, 0, 0, 4);
 	_text->drawText(TEXT_YOUR_SCORE, D3DXVECTOR3(50.0f, 300.0f, 0.0f), COLOR_SCORE_TEXT, 12);
 	_text->drawText(to_string(_score), D3DXVECTOR3(200.0f, 300.0f, 0.0f), COLOR_RED, 14);
-	if(_isFlash)
+	if (_isFlash)
 	{
 		_text->drawText(TEXT_ESC, D3DXVECTOR3(330.0f, 545.0f, 0.0f), COLOR_WHITE, 10);
-	}	
+	}
 }
 
 void EndGame::reset()
@@ -647,7 +643,7 @@ void EndGame::reset()
 	_isFlash = false;
 	_congraColor = COLOR_WHITE;
 	_colorIndex = 0;
-	//_delayTime = DELAY_TIME_GAME_END;
+	_delayTime = DELAY_TIME_GAME_END;
 }
 
 EndGame* EndGame::get()

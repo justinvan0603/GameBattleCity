@@ -1,4 +1,4 @@
-#include "Map.h"
+﻿#include "Map.h"
 #include <complex>
 #include "GameState.h"
 #include "MediumTank.h"
@@ -17,11 +17,11 @@
 Map::Map(LPD3DXSPRITE spriteHandler)
 {
 	//init rectangleRespawn
-	_rectangleRespawn = new vector<MyRectangle*>;
+	_rectangleEnemyRespawn = new vector<MyRectangle*>;
 	_playerRespawnPos = new vector<MyRectangle*>;
 	for (int i = 0; i < NUM_RESPAWN_POS;i++)
 	{
-		_rectangleRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
+		_rectangleEnemyRespawn->push_back(new MyRectangle(POS_RESPAWN_Y, POS_RESPAWN_X + i*DISTANCE_RESPAWN_POS_X, SPRITE_WIDTH, SPRITE_WIDTH, 0, 0));
 	}	
 	for (int i = 0; i < NUM_RESPAWN_POS - 1; i++)
 	{
@@ -35,10 +35,10 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 		}
 	}
 	_spriteHandler = spriteHandler;
-	_spriteHandler->GetDevice(&d3ddev);
+	_spriteHandler->GetDevice(&_d3ddev);
 	_text = new Text(_spriteHandler);
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
-	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem());
+	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem(),_text);
 	_respawnEffect = _spriteItemManager->getRespawnSprite();
 	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
 	_player = new PlayerTank(_spriteHandler);
@@ -54,22 +54,24 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 	changeStage();
 }
 
-
+//----------------------------------
+//dùng để chuyển từ stage này sang stage khác; reset một số thuộc tính về giá trị mặc định; 
+//đọc file map và lấy các thông tin cần thiết như ma trận map, số lượng tank địch, ..; 
+//tạo danh sách tank địch sẽ xuất hiện trên map, tạo danh sách các đối tượng tĩnh như gạch, thép, 
+//rừng, ..; đưa ma trận map vào cho _player để hỗ trợ xét va chạm
+//----------------------------------
 void Map::changeStage()
 {
 	//
-	_colisObj = new vector<vector<StaticObject*>>;
-	posGameOverText = POS_START_GAMEOVER;
-	delaytimeReSpanw = DEFINE_ZERO_VALUE;
-	delayEndStage = DELAY_TIME_END_PLAYING_STATE;
-	isPrepareRespawn = false;
+	_listStaticObject = new vector<vector<StaticObject*>>;
+	_posGameOverText = POS_START_GAMEOVER;
+	_delaytimeReSpawn = DEFINE_ZERO_VALUE;
+	_delayEndStage = DELAY_TIME_END_PLAYING_STATE;
+	_isPrepareRespawn = false;
 	_maxEnemy = MAX_ENEMY;
 	_numEnemy = DEFINE_ZERO_VALUE;
-	_startTime = GetTickCount();
 	_delayFreeze = DELAY_FREEZE_TIME;
-	_delayDrawScorePower = DELAY_TIME_DRAW_SCORE_POWER;
 	_isFreeze = false;
-	posPower = DEFAULT_POS_ZERO;
 	//
 	int numOfTypeEnemy[NUM_TYPE_ENEMY];
 	string orderAppear;
@@ -103,15 +105,17 @@ void Map::changeStage()
 		}
 		i++;
 	}
-
-	InitColisObject();
+	InitStaticObject();
 	_mapFile.close();
-	_player->InitMapData(_mapMatrix, _colisObj);
+	_player->InitMapData(_mapMatrix, _listStaticObject);
 	InitListEnemy(numOfTypeEnemy,orderAppear);
 	_powerUpItem->setmap(_mapMatrix);
 }
 
-void Map::InitColisObject()
+//---------------------------------------
+//dựa vào ma trận map để tạo ra các đối tượng tĩnh như gạch, thép, rừng,..;
+//--------------------------------------
+void Map::InitStaticObject()
 {
 	vector<StaticObject*> temp[MAP_NUM_OF_TYPE_OBJ];
 	int type;
@@ -134,9 +138,12 @@ void Map::InitColisObject()
 		}
 	}
 	for (int i = 0; i < MAP_NUM_OF_TYPE_OBJ;i++)
-		_colisObj->push_back(temp[i]);
+		_listStaticObject->push_back(temp[i]);
 }
 
+//---------------------------------------
+// tạo ra danh sách các tank địch sẽ xuất hiện trong stage tiếp 
+//--------------------------------------
 void Map::InitListEnemy(int numOfEnemy[], string order)
 {
 	//numOfEnemy[]
@@ -167,7 +174,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			MediumTank* temp;
 			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_MEDIUM_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _colisObj);
+			temp->InitMapData(_mapMatrix, _listStaticObject);
 			listMedium->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
@@ -177,7 +184,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			LightTank* temp;
 			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_LIGHT_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _colisObj);
+			temp->InitMapData(_mapMatrix, _listStaticObject);
 			listLight->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
@@ -187,7 +194,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			HeavyTank* temp;
 			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_HEAVY_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _colisObj);
+			temp->InitMapData(_mapMatrix, _listStaticObject);
 			listHeavy->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
 			continue;
@@ -197,7 +204,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 			SuperHeavyTank* temp;
 			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
 			numOfEnemy[ID_SUPER_HEAVY_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _colisObj);
+			temp->InitMapData(_mapMatrix, _listStaticObject);
 			listSuper->push_back(temp);
 			distance += DISTANCE_RESPAWN_POS_X;
 		}
@@ -257,7 +264,9 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 	}
 }
 
-
+//---------------------------------------
+//Mở file map định dạng txt
+//--------------------------------------
 bool Map::GetFileMap()
 {
 	string mapPath = MAP_PATH + std::to_string(StageManager::getInstance()->getStage()) + MAP_FILE_EXTENSION;
@@ -270,9 +279,10 @@ bool Map::GetFileMap()
 	return true;
 }
 
+
 void Map::Draw()
 {
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, COLOR_GREY, 1.0f, 0);
+	_d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, COLOR_GREY, 1.0f, 0);
 	drawRightMenu();	
 	drawMap();
 	drawEagle();
@@ -285,48 +295,60 @@ void Map::Draw()
 	EffectManager::getInstance(0)->Draw();
 	if (_player->getLife() < 0 || _eagle->getEagleStatus() == EAGLE_STATUS::DEAD)
 	{
-		_text->drawText("GAME\nOVER", posGameOverText, COLOR_RED, 30, DT_CENTER, 0, 2);
+		_text->drawText("GAME\nOVER", _posGameOverText, COLOR_RED, 30, DT_CENTER, 0, 2);
 	}
 }
 
+//---------------------------------------
+// duyệt _listStaticObject và vẽ các đối tượng thuộc loại rừng lên map 
+//--------------------------------------
 void Map::drawTrees()
 {
-	int n = _colisObj->size();
+	int n = _listStaticObject->size();
 	for (int i = 0; i < n; i++)
 	{
-		if (_colisObj->at(i).size() != 0)
+		if (_listStaticObject->at(i).size() != 0)
 		{
 			if (i != ID_TREES_6 && i != ID_TREES_7 && i != ID_TREES_16 && i != ID_TREES_17)
 				continue;
-			int m = _colisObj->at(i).size();
+			int m = _listStaticObject->at(i).size();
 			for (int j = 0; j < m; j++)
 			{
-				if (_colisObj->at(i).at(j) != NULL)
-					_colisObj->at(i).at(j)->Draw();
+				if (_listStaticObject->at(i).at(j) != NULL)
+					_listStaticObject->at(i).at(j)->Draw();
 			}
 		}
 	}
 }
 
+//---------------------------------------
+// duyệt _listStaticObject và vẽ các đối tượng thuộc loại băng lên map
+//--------------------------------------
 void Map::drawIce()
 {
-	int n = _colisObj->size();
+	int n = _listStaticObject->size();
 	for (int i = 0; i < n; i++)
 	{
-		if (_colisObj->at(i).size() != 0)
+		if (_listStaticObject->at(i).size() != 0)
 		{
 			if (i != ID_ICE_8 && i != ID_ICE_9 && i != ID_ICE_18 && i != ID_ICE_19)
 				continue;
-			int m = _colisObj->at(i).size();
+			int m = _listStaticObject->at(i).size();
 			for (int j = 0; j < m; j++)
 			{
-				if (_colisObj->at(i).at(j) != NULL)
-					_colisObj->at(i).at(j)->Draw();
+				if (_listStaticObject->at(i).at(j) != NULL)
+					_listStaticObject->at(i).at(j)->Draw();
 			}
 		}
 	}
 }
 
+//---------------------------------------
+//vẽ các đối tượng tĩnh trong _listStaticObject lên map game, 
+//nơi nào không có đối tượng thì vẽ nền màu đen. Nhưng có điều 
+//đặc biệt là trong hàm này ta chỉ vẻ gạch, thép, sông. Rừng và 
+//băng sẽ được vẽ sau vì độ sâu của nền của các đối tượng này khác nhau. 
+//--------------------------------------
 void Map::drawMap()
 {
 	//ve map
@@ -341,63 +363,57 @@ void Map::drawMap()
 			}
 		}
 	}
-	int n = _colisObj->size();
+	int n = _listStaticObject->size();
 	for (int i = 0; i < n; i++)
 	{
-		if (_colisObj->at(i).size() != 0)
+		if (_listStaticObject->at(i).size() != 0)
 		{
 			if (i == ID_TREES_6 || i == ID_TREES_7 || i == ID_TREES_16 || i == ID_TREES_17 ||
 				i == ID_ICE_8 || i == ID_ICE_9 || i == ID_ICE_18 || i == ID_ICE_19)
 				continue;
-			int m = _colisObj->at(i).size();
+			int m = _listStaticObject->at(i).size();
 			for (int j = 0; j < m; j++)
 			{
-				if (_colisObj->at(i).at(j) != NULL)
-					_colisObj->at(i).at(j)->Draw();
+				if (_listStaticObject->at(i).at(j) != NULL)
+					_listStaticObject->at(i).at(j)->Draw();
 			}
 		}
 	}
 	
 }
 
+//---------------------------------------
+// vẽ căn cứ lên map
+//--------------------------------------
 void Map::drawEagle()
 {
 	_eagle->Draw();
 }
 
+//---------------------------------------
+// vẽ tank của người chơi lên map
+//--------------------------------------
 void Map::drawPlayer()
 {
 	_player->Draw();
 }
 
+//---------------------------------------
+// vẽ power lên màn hình nếu nó được kích hoạt bởi việc bắn chết tank địch có nháy đỏ
+//--------------------------------------
 void Map::drawPowerUp()
 {
-	if (_powerUpItem->IsEnable())
-	{
-		if (_powerUpItem->IsEaten() == false)
-		{
-			if (GameTime::RenderFrame(_startTime, 500))
-			{
-				_powerUpItem->Draw();
-			}
-		}
-	}
-	if (posPower != DEFAULT_POS_ZERO)
-	{
-		_text->drawText(to_string(SCORE_POWER_UP),posPower,COLOR_WHITE,14);
-		if(GameTime::DelayTime(_delayDrawScorePower))
-		{
-			_delayDrawScorePower = DELAY_TIME_DRAW_SCORE_POWER;
-			posPower = DEFAULT_POS_ZERO;
-		}
-	}
+	_powerUpItem->Draw();
 }
 
+//---------------------------------------
+// Vẽ các xe tank địch lên map. Ở những xe tank địch chuẩn bị xuất hiện sẽ vẽ thêm hiệu ứng nhấp nháy 
+//--------------------------------------
 void Map::drawEnemy()
 {
-	if (isPrepareRespawn)
+	if (_isPrepareRespawn)
 	{
-		if(delaytimeReSpanw % 100 == 0)
+		if(_delaytimeReSpawn % 100 == 0)
 		{
 			_respawnEffect->Render(_listEnemy->front()->getLeft(), _listEnemy->front()->getTop());
 			_respawnEffect->Next();
@@ -410,6 +426,10 @@ void Map::drawEnemy()
 	}
 }
 
+//---------------------------------------
+// vẽ số lượng tank địch còn lại chưa xuất hiện trên map. 
+// Vẽ số thứ tự của stage hiện tại, số mạng còn lại của người chơi. 
+//--------------------------------------
 void Map::drawRightMenu()
 {
 	///////////Draw khung enemy goc phai
@@ -441,6 +461,9 @@ void Map::drawRightMenu()
 	_text->drawText(to_string(life), POS_NUM_LIFE, COLOR_BLACK, 17);
 }
 
+//---------------------------------------
+
+//--------------------------------------
 void Map::Update()
 {
 	
@@ -482,15 +505,12 @@ void Map::Update()
 		}
 
 	}
-	if(_powerUpItem->IsEnable())
-	{
-		CollisionManager::CollisionWithItem(_player, _powerUpItem);
-	}
-	
+
+	CollisionManager::CollisionWithItem(_player, _powerUpItem);
 	if (_player->_isTerminated)
 	{
 		if (_player->getLife() > 0)
-	 	{
+		{
 			int pos = CollisionManager::FindRespawnPosition(_playerRespawnPos, DEFINE_ZERO_VALUE, _listEnemyOnMap);
 			if (pos == 0)
 			{
@@ -519,6 +539,10 @@ void Map::Update()
 	checkEndGame();
 }
 
+//---------------------------------------
+//cập nhật các đối tượng tank địch trên map. Nếu số lượng tank địch trên map < 4 
+//thì cho thêm tank địch xuất hiện và đảm bảo số lượng tank địch luôn <= 4. 
+//--------------------------------------
 void Map::updateEnemy()
 {
 	if (_listEnemyOnMap->size() < MAX_ENEMY_ONE_TIME && _listEnemy->size() >= 1)
@@ -539,20 +563,24 @@ void Map::updateEnemy()
 	}
 }
 
+//---------------------------------------
+//kiểm tra vị trí sắp xuất hiện của tank địch có đối tượng nào đang đứng ở đó không, 
+//nếu có thì chuyển hướng xuất hiện qua 1 trong 2 vị trí còn lại, nếu không thì xuất hiện bình thường
+//--------------------------------------
 bool Map::checkCollisionRespawnArea()
 {
 	int index;
-	for (index = 0; index < NUM_RESPAWN_POS; index++)
+	for (index = 0; index < NUM_RESPAWN_POS; index++)	//Lay vi tri chuan bi xuat hien
 	{
-		if(_rectangleRespawn->at(index)->getLeft() == _listEnemy->front()->getLeft())
+		if(_rectangleEnemyRespawn->at(index)->getLeft() == _listEnemy->front()->getLeft())
 			break;
 	}
-	int colli = CollisionManager::FindRespawnPosition(_rectangleRespawn, index, _player, _listEnemyOnMap);
+	int colli = CollisionManager::FindRespawnPosition(_rectangleEnemyRespawn, index, _player, _listEnemyOnMap); //kiem tra co bị va cham tại vi tri xuat hien hay khong, tra ve vi tri co the xuat hien
 	if ( colli != index)
 	{
 		if(colli != -1)
 		{
-			_listEnemy->front()->setPositionX(_rectangleRespawn->at(colli)->getLeft());
+			_listEnemy->front()->setPositionX(_rectangleEnemyRespawn->at(colli)->getLeft());
 			return false;
 		}
 		return true;
@@ -560,25 +588,31 @@ bool Map::checkCollisionRespawnArea()
 	return false;
 }
 
+//---------------------------------------
+// phân phối thời gian xuất hiện tank định một cách hợp lí. 
+//Nếu powerup Freeze đang được kích hoạt thì cho tank địch chuẩn bị xuất 
+//hiện cũng bị ảnh hưởng bới powerup này. Nếu tank địch thứ 11 hoặc 
+//18 xuất hiện mà powerup vẫn chưa ăn thì powerup sẽ biến mất.
+//--------------------------------------
 void Map::respawnAfter(int delaytime)
 {
-	delaytimeReSpanw += 50;
+	_delaytimeReSpawn += 50;
 	if(delaytime == DELAY_TIME_RESPAWN_1000)
 	{
-		isPrepareRespawn = true;
+		_isPrepareRespawn = true;
 	}
 	else
 	{
-		if(delaytimeReSpanw >(DELAY_TIME_RESPAWN_4000 - DELAY_TIME_RESPAWN_1000))
+		if(_delaytimeReSpawn >(DELAY_TIME_RESPAWN_4000 - DELAY_TIME_RESPAWN_1000))
 		{
-			isPrepareRespawn = true;
+			_isPrepareRespawn = true;
 		}
 	}
-	if (delaytimeReSpanw > delaytime)
+	if (_delaytimeReSpawn > delaytime)
 	{
 
-		isPrepareRespawn = false;
-		delaytimeReSpanw = 0;
+		_isPrepareRespawn = false;
+		_delaytimeReSpawn = 0;
 		if(checkCollisionRespawnArea())
 		{
 			return;
@@ -600,7 +634,12 @@ void Map::respawnAfter(int delaytime)
 	}
 }
 
-
+//---------------------------------------
+// Nếu powerup bị người chơi ăn thì kích hoạt chức năng của powerup. 
+//Tuỳ theo từng loại powerup mà có các chức năng khác nhau. 
+//Nếu chức năng đóng băng di chuyển tank địch đã được kích hoạt thì kiểm tra thời gian đóng 
+//băng đã hết chưa để đưa tank địch về lại trạng thái bình thường.
+//--------------------------------------
 void Map::updatePowerItem()
 {
 	if (_isFreeze)
@@ -639,57 +678,56 @@ void Map::updatePowerItem()
 			{
 				_player->PlayerPromoted();
 			}
-			posPower = D3DXVECTOR3(_powerUpItem->getLeft(), _powerUpItem->getTop(), 0.0f);
 			_powerUpItem->disablePowerUp();
 		}
 	}
 }
 
+//---------------------------------------
+// kiểm tra kết thúc game. Nếu người chơi hết mạng hoặc căn cứ bị phá huỷ thì vẽ dòng chữ “GAMEOVER”, 
+//game sẽ kết thúc sau màn ScoreState (ScoreState::get()->setEndAfter(true)). Nếu người chơi đã tiêu diệt 
+//hết tank địch thì game sẽ chuyển tới stage StartingState sau màn ScoreState. Trước khi chuyển state, phải 
+//gọi hàm CleanStage() để xoá các đối tượng của stage vừa mới chơi xong
+//--------------------------------------
 void Map::checkEndGame()
 {
 	if (_player->getLife() < 0 || _eagle->getEagleStatus() == EAGLE_STATUS::DEAD)
 	{
-		if (posGameOverText.y > POS_END_GAMEOVER_Y)
+		if (_posGameOverText.y > POS_END_GAMEOVER_Y)
 		{
-			posGameOverText.y -= 10;
+			_posGameOverText.y -= 10;
 		}
-		if (GameTime::DelayTime(delayEndStage))
+		if (GameTime::DelayTime(_delayEndStage))
 		{
 			CleanStage();
 			ScoreState::get()->setEndAfter(true);
-			GameState::switchState(ScoreState::get());
-			
+			GameState::switchState(ScoreState::get());	
 		}
-
 		return;
 	}
 
   	if (_numEnemy == _maxEnemy && _listEnemyOnMap->size() == 0)
 	{
-		if (GameTime::DelayTime(delayEndStage))
+		if (GameTime::DelayTime(_delayEndStage))
 		{
 			CleanStage();
-			//if (_player->getLife() < 0)
-			//{
-			//	ScoreState::get()->setEndAfter(true);
-			//}
-			//else
-			//{
-				StageManager::getInstance()->nextStage();
-				if (StageManager::getInstance()->getStage() <= DEFAULT_MAX_STAGE)
-				{
-					changeStage();
-				}				
-			//}		
+			StageManager::getInstance()->nextStage();
+			if (StageManager::getInstance()->getStage() <= DEFAULT_MAX_STAGE)
+			{
+				changeStage();
+			}
 			GameState::switchState(ScoreState::get());
 		}
 	}
 
 }
 
-vector<vector<StaticObject*>>* Map::getColisObject()
+//---------------------------------------
+//trả về _listStaticObject
+//--------------------------------------
+vector<vector<StaticObject*>>* Map::getStaticObject()
 {
-	return _colisObj;
+	return _listStaticObject;
 }
 
 Eagle * Map::getEagleObject()
@@ -706,6 +744,9 @@ int** Map::getMapMatrix()
 	return this->_mapMatrix;
 }
 
+//---------------------------------------
+//đưa vào vị trí trong ma trận map để lấy ra vi trí thực trên màn hình chơi.
+//--------------------------------------
 D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 {
 	D3DXVECTOR3 vector;
@@ -715,7 +756,9 @@ D3DXVECTOR3 Map::getPositionFromMapMatrix(int row, int column)
 	return vector;
 }
 
-
+//---------------------------------------
+//đưa vào toạ độ trên màn hình chơi để lấy ra vị trí trong ma trận map
+//--------------------------------------
 D3DXVECTOR2 Map::getPositionObjectInMapMatrix(int x, int y)
 {
 	D3DXVECTOR2 position;
@@ -724,6 +767,10 @@ D3DXVECTOR2 Map::getPositionObjectInMapMatrix(int x, int y)
 	return position;
 }
 
+//---------------------------------------
+// Vì khi xét va chạm không huỷ liền đối tượng mà chỉ xét thuộc tính _isTerminated = true 
+//vậy nên cần có hàm này để xoá các đối tượng bị terminated. 
+//--------------------------------------
 void Map::ClearDestroyedEnemy()
 {
 	for (vector<Enemy*>::iterator i = _listEnemyOnMap->begin(); i != _listEnemyOnMap->end();)
@@ -741,28 +788,35 @@ void Map::ClearDestroyedEnemy()
 	}
 }
 
+//---------------------------------------
+// Sau khi hoàn thành 1 stage, trước khi chuyển qua ScoreState thì cần phải dọn dẹp 
+// các đối tượng tĩnh chưa bị phá huỷ trên map để nạp vào các đối tượng tĩnh của stage sau, đó chính là mục đích của hàm này.
+//--------------------------------------
 void Map::ClearStaticObject()
 {
-	int n = _colisObj->size();
+	int n = _listStaticObject->size();
 	for (int i = 0; i < n; i++)
 	{
-		if (_colisObj->at(i).size() != 0)
+		if (_listStaticObject->at(i).size() != 0)
 		{
-			int m = _colisObj->at(i).size();
+			int m = _listStaticObject->at(i).size();
 			for (int j = 0; j < m; j++)
 			{
-				if (_colisObj->at(i).at(j) != NULL)
+				if (_listStaticObject->at(i).at(j) != NULL)
 				{
-					delete _colisObj->at(i).at(j);
-					_colisObj->at(i).at(j) = NULL;
+					delete _listStaticObject->at(i).at(j);
+					_listStaticObject->at(i).at(j) = NULL;
 				}
 			}
 		}
 	}
-	delete _colisObj;
-	_colisObj = NULL;
+	delete _listStaticObject;
+	_listStaticObject = NULL;
 }
 
+//---------------------------------------
+// nếu người chơi bị thua cuộc, danh sách tank địch cần phải được xoá để nạp lại danh sách mới chuẩn bị cho người chơi sau. 
+//--------------------------------------
 void Map::ClearDynamicObject()
 {
 	int n = _listEnemy->size();
@@ -779,6 +833,9 @@ void Map::ClearDynamicObject()
 	}
 }
 
+//---------------------------------------
+// Đưa tank của người chơi về vị trí mặc định
+//--------------------------------------
 void Map::SetDefaultPositionPlayer()
 {
 	_player->setPositionX(DEFAULT_PLAYER_POSITION_X);
@@ -788,6 +845,9 @@ void Map::SetDefaultPositionPlayer()
 	
 }
 
+//---------------------------------------
+// Huỷ tất cả các đối tượng tank địch hiện có trên map
+//--------------------------------------
 void Map::ClearEnemyOnMap()
 {
 	int n = _listEnemyOnMap->size();
@@ -800,6 +860,9 @@ void Map::ClearEnemyOnMap()
 	GameSound::getInstance()->Play(ID_SOUND_TANK_EXPLODE);
 }
 
+//---------------------------------------
+// “Đóng băng”(ngưng di chuyển) tất cả các đối tượng tank địch hiện có trên map.
+//--------------------------------------
 void Map::FreezeEnemyOnMap()
 {
 	int n = _listEnemyOnMap->size();
@@ -809,6 +872,9 @@ void Map::FreezeEnemyOnMap()
 	}
 }
 
+//---------------------------------------
+// đưa tank địch về trạng thái di chuyển bình thường.
+//--------------------------------------
 void Map::UnFreezeEnemyOnMap()
 {
 	int n = _listEnemyOnMap->size();
@@ -818,6 +884,9 @@ void Map::UnFreezeEnemyOnMap()
 	}
 }
 
+//---------------------------------------
+
+//--------------------------------------
 void Map::CleanStage()
 {
 	ClearStaticObject();
@@ -829,6 +898,9 @@ void Map::CleanStage()
 	_player->TurnOffSound();
 }
 
+//---------------------------------------
+// Dọn dẹp map game để chuẩn bị load map sau.
+//--------------------------------------
 void Map::reset()
 {
 	_player->reset();
