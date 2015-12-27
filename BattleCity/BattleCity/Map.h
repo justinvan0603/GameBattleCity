@@ -69,7 +69,7 @@ private:
 	void ClearDestroyedEnemy();
 	void ClearStaticObject();
 	void ClearDynamicObject();
-	void SetDefaultPositionPlayer();
+	void SetDefaultValuePlayer();
 	void ClearEnemyOnMap();
 	void FreezeEnemyOnMap();
 	void UnFreezeEnemyOnMap();

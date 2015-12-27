@@ -39,7 +39,7 @@ Map::Map(LPD3DXSPRITE spriteHandler)
 	_spriteItemManager = new SpriteMapItemMagager(_spriteHandler);
 	_powerUpItem = new PowerUp(_spriteItemManager->getPowerUpItem(),_text);
 	_respawnEffect = _spriteItemManager->getRespawnSprite();
-	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_X, POS_EAGLE_IN_MATRIX_Y));
+	_eagle = new Eagle(_spriteItemManager->getEagleSprite(), getPositionFromMapMatrix(POS_EAGLE_IN_MATRIX_ROW, POS_EAGLE_IN_MATRIX_COL));
 	_player = new PlayerTank(_spriteHandler);
 	_listEnemy = new vector<Enemy*>;
 	_listEnemyOnMap = new vector<Enemy*>;
@@ -857,13 +857,13 @@ void Map::ClearDynamicObject()
 //---------------------------------------
 // Đưa tank của người chơi về vị trí mặc định
 //--------------------------------------
-void Map::SetDefaultPositionPlayer()
+void Map::SetDefaultValuePlayer()
 {
 	_player->setPositionX(DEFAULT_PLAYER_POSITION_X);
 	_player->setPositionY(DEFAULT_PLAYER_POSITION_Y);
 	_player->SetDirection(MoveDirection::UP);
 	_player->ActivateShield();
-	
+	_player->TurnOffSound();
 }
 
 //---------------------------------------
@@ -912,11 +912,11 @@ void Map::CleanStage()
 {
 	ClearStaticObject();
 	ClearDynamicObject();
-	SetDefaultPositionPlayer();
+	SetDefaultValuePlayer();
 	BulletManager::getInstance()->ClearAllBullet();
 	_powerUpItem->clearPowerUp();
 	_eagle->setEagleStatus(EAGLE_STATUS::LIVE);
-	_player->TurnOffSound();
+	
 }
 
 //---------------------------------------

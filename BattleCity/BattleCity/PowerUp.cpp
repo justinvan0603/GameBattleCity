@@ -62,6 +62,7 @@ bool PowerUp::IsEnable()
 void PowerUp::setEaten()
 {
 	_isEaten = true;
+	_posPower = D3DXVECTOR3(static_cast<float>(this->_left), static_cast<float>(this->_top), 0.0f);
 }
 
 int PowerUp::getType()
@@ -73,7 +74,6 @@ void PowerUp::disablePowerUp()
 {
 	_isEnable = false;
 	_isEaten = false;
-	_posPower = D3DXVECTOR3(static_cast<float>(this->_left), static_cast<float>(this->_top), 0.0f);
 	this->_top = 0;
 	this->_left = 0;
 }
@@ -139,7 +139,7 @@ void PowerUp::setmap(int** map)
 			{
 				flag = true;
 			}
-		} while (((col < 30) && (col > 21) && (row < 49) && (row > 45)) || flag);  //ko cho lot vao toa do phao dai
+		} while (((col < 30) && (col > 21) && (row < 52) && (row > 45)) || flag);  //ko cho lot vao toa do phao dai
 		D3DXVECTOR3 pos = Map::getPositionFromMapMatrix(row, col);	//lay vi tri tu ma tran map
 		x[i] = pos.x;
 		y[i] = pos.y;

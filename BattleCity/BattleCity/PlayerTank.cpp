@@ -12,7 +12,7 @@ PlayerTank::PlayerTank(LPD3DXSPRITE spriteHandler)
 	this->_id = ID_PLAYER;
 	this->_currentDirection = MoveDirection::UP;
 	this->_spriteHandler = spriteHandler;
-	this->_level = LEVEL_ONE;
+	this->_level = LEVEL_FOUR;
 	this->_life = DEFAULT_PLAYER_LIFE;
 	//this->_immortalTime = DEFAULT_IMMORTAL_TIME;
 	this->_left = DEFAULT_PLAYER_POSITION_X;
@@ -292,6 +292,7 @@ void PlayerTank::TurnOffSound()
 {
 	GameSound::getInstance()->Stop(ID_SOUND_TANK_ENGINE);
 	GameSound::getInstance()->Stop(ID_SOUND_TANK_MOVE);
+	_playTankSoundEngine = 1;
 }
 
 void PlayerTank::addLife()

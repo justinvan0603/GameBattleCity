@@ -192,8 +192,8 @@
 #define TILE_HEIGHT		8
 #define MAP_WIDTH 417
 #define MAP_HEIGHT 417
-#define POS_EAGLE_IN_MATRIX_X 48
-#define POS_EAGLE_IN_MATRIX_Y 24
+#define POS_EAGLE_IN_MATRIX_ROW 48
+#define POS_EAGLE_IN_MATRIX_COL 24
 #define NUM_TILE_PER_SPRITE 4
 #define MAP_PATH "Resource\\Map\\Level\\lv"
 #define MAP_FILE_EXTENSION ".txt"

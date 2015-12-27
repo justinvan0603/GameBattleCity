@@ -25,7 +25,7 @@ private:
 	D3DXVECTOR3 _posPower;		//lưu vị trí của powerup để hỗ trợ việc vẽ điểm của powerup sau khi ăn
 	bool _isEnable;
 	bool _isEaten;
-	int _delayTime;
+	int _delayTime;				//Khoảng thời gian giãn cách nhấp nháy
 	int _typePower;
 	int** _mapMatrix;
 	int _delayDrawScorePower;	//khoảng thời gian điểm đạt được khi ăn powerup được vẽ ra tại vị trí powerup

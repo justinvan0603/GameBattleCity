@@ -11,8 +11,8 @@ Eagle::Eagle(Sprite * sprite, D3DXVECTOR3 position)
 {
 	this->_id = ID_EAGLE;
 	this->_objectType = STATIC_OBJECT;
-	this->_left = (int)position.x;
-	this->_top = (int)position.y;
+	this->_left = static_cast<int>(position.x);
+	this->_top = static_cast<int>(position.y);
 	this->_width = SPRITE_WIDTH;
 	this->_height = SPRITE_HEIGHT;
 	_image = sprite;

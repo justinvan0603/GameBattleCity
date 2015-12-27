@@ -1,4 +1,4 @@
-#ifndef __WATER_H__
+﻿#ifndef __WATER_H__
 #define __WATER_H__ 
 #include "StaticObject.h"
 
@@ -12,8 +12,8 @@ public:
 	void Init(Sprite* sprite, int type, D3DXVECTOR3 pos);
 	~Water();
 private:
-	int _delayTime;
-	int _indexDistance;
+	int _delayTime;			//Thời gian chuyển index sprite, giúp tạo hiệu ứng động
+	int _indexDistance;		//Khoảng cách các index
 };
 #endif
 
