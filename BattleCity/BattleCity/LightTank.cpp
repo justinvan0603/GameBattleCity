@@ -99,7 +99,14 @@ void LightTank::Update()
 {
 	//Kiem tra neu enemy dang o trang thai dong bang thi khong update 
 	if (_isFreeze)
+	{
+		if (_isBonusTank)
+		{
+			this->_listSprite[_currentDirection]->Next();
+			this->_curSprite = this->_listSprite[_currentDirection];
+		}
 		return;
+	}
 	//Tim cac doi tuong tinh xung quanh tank add vao list de xet va cham
 	FindNearbyObject();
 	this->Move();

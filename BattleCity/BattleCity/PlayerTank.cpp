@@ -120,9 +120,12 @@ void PlayerTank::Shoot()
 		D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top,_currentDirection);
 		if (BulletManager::getInstance()->getPlayerBulletSize() == 0)
 		{
-			BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
-			_startTime = GetTickCount();
-			GameSound::getInstance()->Play(ID_SOUND_FIRE);
+			if (GameTime::RenderFrame(_startTime, 100))
+			{
+				BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
+				_startTime = GetTickCount();
+				GameSound::getInstance()->Play(ID_SOUND_FIRE);
+			}
 		}
 		if (_level >= 3)
 		{

@@ -16,7 +16,6 @@ public:
 	static bool isCollision(Object* A, Object* B);	
 	static bool AABBCheck(MyRectangle* A, MyRectangle* B);	//Xet va cham AABB
 	static bool CollisionPreventMove(Object* A, Object* B);	//Xet va cham voi object tinh va ngan chan di chuyen
-	static void CollisionStopMoving(Object* A, Object* B);
 	static bool CollisionBulletWithObject(Bullet* A, Object* B);	//Xet va cham dan voi object
 	static bool CollisionWithScreen(Object* A);	//Xet va cham object dong voi man hinh
 	static bool CollisionChangeDirection(DynamicObject *A, DynamicObject *B);	//Xet va cham giua player- enemy neu co va cham chuyen huong enenmy

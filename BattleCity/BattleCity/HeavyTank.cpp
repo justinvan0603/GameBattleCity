@@ -58,7 +58,14 @@ void HeavyTank::Draw()
 void HeavyTank::Update()
 {
 	if (_isFreeze)
+	{
+		if (_isBonusTank)
+		{
+			this->_listSprite[_currentDirection]->Next();
+			this->_curSprite = this->_listSprite[_currentDirection];
+		}
 		return;
+	}
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();

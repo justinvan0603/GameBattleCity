@@ -65,7 +65,15 @@ void SuperHeavyTank::Draw()
 void SuperHeavyTank::Update()
 {
 	if (_isFreeze)
+	{
+		if (_isBonusTank &&  _hitPoint == 3)
+		{
+			//Ve sprite mau xanh la + sprite do bonus
+			_listSprite[_currentDirection]->Next(_hitPoint - 1);
+			_curSprite = _listSprite[_currentDirection];
+		}
 		return;
+	}
 	FindNearbyObject();
 	this->Move();
 	this->Shoot();

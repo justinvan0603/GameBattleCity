@@ -21,7 +21,7 @@ private:
 	BYTE _keyState[256];
 	BYTE _keyStatePrevious[256];
 
-	DIDEVICEOBJECTDATA _keyEvent[KEYBOARD_BUFFER_SIZE];
+	//DIDEVICEOBJECTDATA _keyEvent[KEYBOARD_BUFFER_SIZE];
 
 	static Keyboard * _instance;
 public:

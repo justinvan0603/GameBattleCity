@@ -71,19 +71,7 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 	}
 	return false;
 }
-void CollisionManager::CollisionStopMoving(Object* A, Object* B)
-{
-	MyRectangle broadphase = BroadphaseRect(A);
-	if (AABBCheck(&broadphase, B))
-	{
 
-		A->setVelocityX(SPEED_NO);
-		A->setVelocityY(SPEED_NO);
-		Enemy* enemy = dynamic_cast<Enemy*>(A);
-		if (enemy != NULL)
-			enemy->InvertDirection();
-	}
-}
 //Xet va cham giua dan va cac object
 bool CollisionManager::CollisionBulletWithObject(Bullet* A, Object* B)
 {
