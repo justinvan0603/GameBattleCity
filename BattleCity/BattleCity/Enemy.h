@@ -9,6 +9,7 @@ protected:
 	bool _isBonusTank;	// Doi tuong co phai la tank mang item khong
 	bool _isFreeze;	//Doi tuong co dang o trang thai dong bang khong
 public:
+	void DeActivateBonus();
 	bool _isCollied; //doi tuong co va cham voi object khac khong
 	Enemy();
 	virtual void Draw()=0; 

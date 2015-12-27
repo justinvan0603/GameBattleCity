@@ -10,7 +10,10 @@ Enemy::Enemy()
 	_isCollied = false;
 	_isFreeze = false;
 }
-
+void Enemy::DeActivateBonus()
+{
+	_isBonusTank = false;
+}
 
 void Enemy::MoveWithCollision()
 {

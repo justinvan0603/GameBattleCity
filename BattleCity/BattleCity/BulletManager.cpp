@@ -105,6 +105,7 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Eagle* 
 			{
 				if (powerUpItem != NULL)
 				{
+					enemy->DeActivateBonus();
 					powerUpItem->enablePowerUp();
 					GameSound::getInstance()->Play(ID_SOUND_ITEM_APPEAR);
 				}
