@@ -513,10 +513,10 @@ void Map::Update()
 	if (_eagle->getEagleStatus() == EAGLE_STATUS::LIVE)
 	{
 		if (n == 0)
-			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _powerUpItem, _eagle);
+			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _eagle);
 		for (int i = 0; i < n; i++)
 		{
-			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _powerUpItem, _eagle, _listEnemyOnMap->at(i));
+			BulletManager::getInstance()->UpdateCollisionWithDynamicObject(_player, _eagle, _powerUpItem, _listEnemyOnMap->at(i));
 		}
 
 	}

@@ -77,7 +77,7 @@ void BulletManager::Update()
 	CleanBulletList();
 }
 
-void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, PowerUp* powerUpItem, Eagle* eagle, Enemy* enemy)
+void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, Eagle* eagle, PowerUp* powerUpItem, Enemy* enemy)
 {
 	for (vector<Bullet*> ::iterator i = _listEnemyBullet.begin(); i != _listEnemyBullet.end(); i++)
 	{
@@ -97,14 +97,17 @@ void BulletManager::UpdateCollisionWithDynamicObject(PlayerTank* player, PowerUp
 	for (vector<Bullet*> ::iterator i = _listPlayerBullet.begin(); i != _listPlayerBullet.end(); i++)
 	{
 		if (enemy == NULL)
-			return;
+			break;
 		bool isCollided = CollisionManager::CollisionBulletWithObject(*i, enemy);
 		if (isCollided)
 		{
 			if(enemy->isBonusTank())
 			{
-				powerUpItem->enablePowerUp();
-				GameSound::getInstance()->Play(ID_SOUND_ITEM_APPEAR);
+				if (powerUpItem != NULL)
+				{
+					powerUpItem->enablePowerUp();
+					GameSound::getInstance()->Play(ID_SOUND_ITEM_APPEAR);
+				}
 			}
 			break;
 		}

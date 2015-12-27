@@ -10,7 +10,7 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
-	switchState(StartingState::get());
+	switchState(MainMenu::get());
 }
 
 void GameState::release()

@@ -34,7 +34,7 @@ public:
 							int level,
 							int **map, 
 							vector<vector<StaticObject*>>* listNearbyObject);	//Them 1 vien dan vao list dua tren ally nao
-	 void UpdateCollisionWithDynamicObject(PlayerTank* player, PowerUp* powerUpItem, Eagle* eagle,Enemy* enemy = 0);
+	 void UpdateCollisionWithDynamicObject(PlayerTank* player, Eagle* eagle, PowerUp* powerUpItem=0, Enemy* enemy = 0);
 	 //Xet va cham dan: player-enemyBullet playerBullet-Enemy, playerbullet, enemybullet -eagle, playerbullet-enemybullet
 	 
 };
