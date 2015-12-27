@@ -180,12 +180,7 @@
 #define IMAGE_STATE_POS D3DXVECTOR3(250.0f,252.0f,0.0f)
 #define DELAY_TIME_TO_START_PLAYING_STATE 6000
 #define TEXT_STAGE "STAGE "
-//#define IMAGE_BG_STARTING_STATE_PATH "Resource\\Other\\bgstartingstate.png"
-//#define IMAGE_BG_STARTING_WIDTH 670
-//#define IMAGE_BG_STARTING_HEIGHT 0
-//#define SPEED_SCROLLING_BG 8
-//#define IMAGE_BG_STARTING_TOP_POS D3DXVECTOR3(0.0f,0.0f,0.0f)
-//#define IMAGE_BG_STARTING_BOTTOM_POS D3DXVECTOR3(0.0f,284.0f,0.0f)
+#define COLOR_GRAY D3DCOLOR_XRGB(99, 99, 99)
 
 
 	//Playing State
@@ -203,6 +198,7 @@
 #define MAP_PATH "Resource\\Map\\Level\\lv"
 #define MAP_FILE_EXTENSION ".txt"
 #define MAP_RESOURCE_PATH_ENVIRONMENT "Resource\\Map\\Environment.png"
+#define MAP_RESOURCE_PATH_WATER	"Resource\\Map\\water.png"
 #define MAP_RESOURCE_PATH_EAGLE	"Resource\\Map\\Eagle.png"
 #define MAP_RESOURCE_PATH_BG	"Resource\\Map\\bg.png"
 #define MAP_NUM_OF_TYPE_OBJ 20
@@ -214,6 +210,7 @@
 #define DELAY_TIME_RESPAWN_1000 1000
 #define DELAY_TIME_RESPAWN_4000 4000
 #define DELAY_FREEZE_TIME 20000
+#define DELAY_TIME_NEXT_SPRITE_WATER 500
 #define POS_RESPAWN_X 100.0f
 #define POS_RESPAWN_Y 51.0f
 #define POS_START_GAMEOVER D3DXVECTOR3(180.0f, 500.0f, 0.0f)
@@ -330,8 +327,14 @@
 #define SCORE_HEAVY_TANK 300
 #define SCORE_SUPER_HEAVY_TANK 400 
 #define SCORE_POWER_UP 500
-#define DELAY_TIME_SCORE 16000
+#define DELAY_TIME_SCORE 17000
 #define DELAY_TIME_DRAW_SCORE 3000
+#define TEXT_PTS "PTS"
+#define TEXT_TOTAL "TOTAL"
+#define TEXT_LINE "______"
+#define TEXT_PLAYER "PLAYER"
+#define TEXT_STAGE "STAGE "
+#define TEXT_HISCORE "HI-SCORE"
 
 //Define GameOverState
 #define ICON_GAME_OVER_PATH "Resource\\Other\\gameover.png"

@@ -6,6 +6,7 @@ class SpriteMapItemMagager
 {
 public:
 	Sprite* getEnvironment();
+	Sprite* getWater();
 	Sprite* getEagleSprite();
 	Sprite* getBackGround();
 	Sprite* getEnemyIcon();
@@ -17,6 +18,7 @@ public:
 	~SpriteMapItemMagager();
 private:
 	Sprite* _environment;		//gach, thep, rung ...
+	Sprite* _water;				//Song, hieu ung chuyen dong.
 	Sprite* _eagle;				//Dai bang
 	Sprite* _backGround;		//Nen den
 	Sprite* _enemyIcon;			//icon dich ben goc phai

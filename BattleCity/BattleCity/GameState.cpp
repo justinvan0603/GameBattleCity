@@ -10,7 +10,7 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 {
 	_spriteHandler = spriteHandler;
 	_text = new Text(_spriteHandler);
-	switchState(MainMenu::get());
+	switchState(StartingState::get());
 }
 
 void GameState::release()
@@ -299,7 +299,6 @@ void Instruction::draw()
 	}
 	}
 
-
 }
 
 void Instruction::reset()
@@ -350,7 +349,7 @@ void StartingState::update()
 
 void StartingState::draw()
 {
-	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(99, 99, 99), 1.0f, 0); //Clear man hinh sang mau xam trang
+	_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET, COLOR_GRAY, 1.0f, 0); //Clear man hinh sang mau xam trang
 	_text->drawText(TEXT_STAGE + to_string(StageManager::getInstance()->getStage()), IMAGE_STATE_POS, COLOR_BLACK);
 }
 
@@ -461,34 +460,35 @@ void ScoreState::update()
 //----------
 void ScoreState::draw()
 {
-	_text->drawText("HI-SCORE", POS_HI_SCORE, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(TEXT_HISCORE, POS_HI_SCORE, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getHighScore()), POS_HI_SCORE_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE);
-	_text->drawText("STAGE", POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(TEXT_STAGE, POS_STAGE_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(StageManager::getInstance()->getStage() - !_isEnd), POS_STAGE_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText("PLAYER", POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(TEXT_PLAYER, POS_PLAYER_TEXT, COLOR_HIGHSCORE_TEXT, TEXT_SIZE_SCORE_STATE);
 	_text->drawText(to_string(ScoreManager::getInstance()->getPlayerScore()), POS_PLAYER_VALUE, COLOR_SCORE_TEXT, TEXT_SIZE_SCORE_STATE, DT_CENTER, 6);
 	_iconTankScore->Render(POS_ICON_TANK_SCRORE_STATE);
-
-	_text->drawText("______", POS_LINE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText("TOTAL", POS_TOTAL_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
-	_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 2);
+	_text->drawText(TEXT_LINE, POS_LINE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+	_text->drawText(TEXT_TOTAL, POS_TOTAL_TEXT, COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 
 	float a = BEGIN_X;
 	if (_delayTime % DELAY_TIME_DRAW_SCORE == 0)
 	{
 		if (_numTypeEnemy < NUM_TYPE_ENEMY)
 		{
-			_numTypeEnemy++;
+			_numTypeEnemy++;	
 			GameSound::getInstance()->Play(ID_SOUND_COUNT_SCORE);
-
 		}
 	}
 	for (int i = 0; i < _numTypeEnemy; i++)
 	{
 		_text->drawText(to_string(ScoreManager::getInstance()->getScoreTank(i)), D3DXVECTOR3(SCORE_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 4);
-		_text->drawText("PTS", D3DXVECTOR3(PTS_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
+		_text->drawText(TEXT_PTS, D3DXVECTOR3(PTS_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE);
 		_text->drawText(to_string(ScoreManager::getInstance()->getNumTank(i)), D3DXVECTOR3(NUM_TANK_POS_X, a, 0.0f), COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 2);
 		a += DISTANCE_LINE;
+	}
+	if(_delayTime <= DELAY_TIME_DRAW_SCORE)
+	{
+		_text->drawText(to_string(ScoreManager::getInstance()->getNumTank()), POS_TOTAL_VALUE, COLOR_WHITE, TEXT_SIZE_SCORE_STATE, DT_RIGHT, 2);
 	}
 }
 
@@ -552,7 +552,7 @@ void GameOverState::update()
 	if (GameTime::DelayTime(_delayTime))
 	{
 		_delayTime = DELAY_TIME_GAMEOVER;
-		//reset player, score, stage, main menu, noi chung la het cac stage
+		//reset player, score, stage, main menu, noi chung la het cac state
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
 		PlayingState::get()->reset();
@@ -616,7 +616,7 @@ void EndGame::update()
 	_colorIndex++;
 	if (Keyboard::getInstance()->getKeyState(DIK_ESCAPE) == KEY_PRESS)
 	{
-		//reset player, score, stage, main menu, noi chung la het cac stage
+		//reset player, score, stage, main menu, noi chung la het cac state
 		StageManager::getInstance()->reset();
 		MainMenu::get()->reset();
 		PlayingState::get()->reset();

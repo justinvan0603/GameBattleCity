@@ -6,6 +6,10 @@ Sprite* SpriteMapItemMagager::getEnvironment()
 	return _environment;
 }
 
+Sprite* SpriteMapItemMagager::getWater()
+{
+	return _water;
+}
 
 Sprite * SpriteMapItemMagager::getEagleSprite()
 {
@@ -45,6 +49,7 @@ Sprite* SpriteMapItemMagager::getRespawnSprite()
 SpriteMapItemMagager::SpriteMapItemMagager(LPD3DXSPRITE spriteHandler)
 {
 	_environment = new Sprite(spriteHandler, MAP_RESOURCE_PATH_ENVIRONMENT, TILE_WIDTH , TILE_HEIGHT , 20, 10);
+	_water = new Sprite(spriteHandler, MAP_RESOURCE_PATH_WATER, TILE_WIDTH, TILE_HEIGHT, 8, 2);
 	_eagle = new Sprite(spriteHandler, MAP_RESOURCE_PATH_EAGLE, TILE_WIDTH * 4, TILE_HEIGHT * 4, 2, 2);
 	_backGround = new Sprite(spriteHandler, MAP_RESOURCE_PATH_BG, TILE_WIDTH, TILE_HEIGHT, 1, 1);
 	_enemyIcon = new Sprite(spriteHandler, RESOURCE_PATH_ENEMY_ICON, TILE_WIDTH * 2, TILE_HEIGHT * 2, 1, 1);

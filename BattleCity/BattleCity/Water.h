@@ -11,6 +11,9 @@ public:
 	void Draw();
 	void Init(Sprite* sprite, int type, D3DXVECTOR3 pos);
 	~Water();
+private:
+	int _delayTime;
+	int _indexDistance;
 };
 #endif
 

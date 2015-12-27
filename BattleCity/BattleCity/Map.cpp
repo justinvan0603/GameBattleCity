@@ -1,5 +1,4 @@
 ﻿#include "Map.h"
-#include <complex>
 #include "GameState.h"
 #include "MediumTank.h"
 #include "HeavyTank.h"
@@ -130,7 +129,7 @@ void Map::InitStaticObject()
 			if(type == ID_STEELWALL_2 || type == ID_STEELWALL_3 || type == ID_STEELWALL_12 || type == ID_STEELWALL_13)
 				temp[type].push_back(new SteelWall(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 			if (type == ID_WATER_4 || type == ID_WATER_5 || type == ID_WATER_14 || type == ID_WATER_15)
-				temp[type].push_back(new Water(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
+				temp[type].push_back(new Water(_spriteItemManager->getWater(), type, getPositionFromMapMatrix(i, j)));
 			if (type == ID_TREES_6 || type == ID_TREES_7 || type == ID_TREES_16 || type == ID_TREES_17)
 				temp[type].push_back(new Trees(_spriteItemManager->getEnvironment(), type, getPositionFromMapMatrix(i, j)));
 			if (type == ID_ICE_8 || type == ID_ICE_9 || type == ID_ICE_18 || type == ID_ICE_19)
@@ -154,7 +153,7 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 	//order - Thu tu xuat hien cac loai tank 
 
 	float distance = 0.0f;
-	bool isBonusTank = false;
+	bool isBonusTank;
 	vector<MediumTank*>* listMedium = new vector<MediumTank*>;
 	vector<LightTank*>* listLight = new vector<LightTank*>;
 	vector<HeavyTank*>* listHeavy = new vector<HeavyTank*>;
@@ -466,11 +465,22 @@ void Map::drawRightMenu()
 //--------------------------------------
 void Map::Update()
 {
-	
-	_player->Update();
+	//Cập nhật tank người chơi
+	if (_eagle->getEagleStatus() == EAGLE_STATUS::LIVE)
+	{
+		_player->Update();
+	}
+
+	//Cập nhật tank địch
 	updateEnemy();
+
+	//Cập nhật đạn
 	BulletManager::getInstance()->Update();
+
+	//Xét va chạm giữa tank người chơi và căn cứ
 	CollisionManager::CollisionPreventMove(_player, _eagle);
+
+	//Xét va chạm giữa tank địch và căn cứ
 	int n = _listEnemyOnMap->size();
 	for (int i = 0; i < n; i++)
 	{
@@ -478,7 +488,9 @@ void Map::Update()
 		if (isCollided)
 			break;
 	}
-	bool isCollision = false;
+
+	//Xét va chạm giữa các xe tank địch với nhau
+	bool isCollision;
 	for (int i = 0; i < n-1; i++)
 	{
 		for (int j = i+1; j < n; j++)
@@ -490,11 +502,14 @@ void Map::Update()
 			
 		}
 	}
+
+	//Xét va chạm giữa các xe tank địch với tank người chơi
 	for (int i = 0; i < n; i++)
 	{
 		CollisionManager::CollisionChangeDirection(_player, _listEnemyOnMap->at(i));
 	}
 
+	//Xét va chạm giữa đạn với tank địch với tank người chơi
 	if (_eagle->getEagleStatus() == EAGLE_STATUS::LIVE)
 	{
 		if (n == 0)
@@ -506,7 +521,13 @@ void Map::Update()
 
 	}
 
-	CollisionManager::CollisionWithItem(_player, _powerUpItem);
+	//Xét va chạm giữa tank người chơi và powerup item
+	if(_powerUpItem->IsEnable())
+	{
+		CollisionManager::CollisionWithItem(_player, _powerUpItem);
+	}
+
+	//Hồi sinh tank của người chơi
 	if (_player->_isTerminated)
 	{
 		if (_player->getLife() > 0)
@@ -893,7 +914,7 @@ void Map::CleanStage()
 	ClearDynamicObject();
 	SetDefaultPositionPlayer();
 	BulletManager::getInstance()->ClearAllBullet();
-	_powerUpItem->disablePowerUp();
+	_powerUpItem->clearPowerUp();
 	_eagle->setEagleStatus(EAGLE_STATUS::LIVE);
 	_player->TurnOffSound();
 }
