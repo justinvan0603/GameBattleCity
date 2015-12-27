@@ -42,8 +42,8 @@ SuperHeavyTank::SuperHeavyTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position,
 	_height = SPRITE_HEIGHT;
 	isShooting = false;
 	this->_isTerminated = false;
-	_isBonusTank = true;
-		_index = _hitPoint - 1;
+	_isBonusTank = isBonus;
+	_index = _hitPoint - 1;
 		for (int i = 0; i < NUM_OF_DIRECTION; i++)
 		{
 			this->_listSprite[i]->setStartFrame(_hitPoint - 1);
