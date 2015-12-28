@@ -232,7 +232,7 @@ namespace ToolParseMap
 
         //------------------------------
         // Thay đổi giá trị mỗi phần tử trong ma trận
-        // Giá trị = "Số thứ tự xuất hiện*100" + "ID của phần tử - 1"   (-1 vì tiled map bắt đầu từ số 0)
+        // Giá trị mới = Số thứ tự xuất hiện*100 + (Giá trị cũ – 1)        
         // Ví dụ: Số 4 thứ 144 trên ma trận: 4 -> 14403     (144: số thứ tự, 3: ID - 1 ) 
         // Vị trí nào có giá trị = 0 sẽ được đưa về -1
         //------------------------------
@@ -416,6 +416,7 @@ namespace ToolParseMap
             textBoxLight.Text = num[1].ToString();
             textBoxHeavy.Text = num[2].ToString();
             textBoxSuper.Text = num[3].ToString();
+            textBoxOrder.Text = _order;
         }
 
         //------------------------------
@@ -457,24 +458,26 @@ namespace ToolParseMap
                 max -= _numtank[i];
             }
             _numtank[3] = max;
-            SetText(_numtank);
             RandomOrder();
+            SetText(_numtank);        
         }
 
         private void radioButtonCustom_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonCustom.Checked)
             {
+                RandomOrder();
                 textBoxMedium.ReadOnly = textBoxLight.ReadOnly = false;
                 textBoxHeavy.ReadOnly = textBoxSuper.ReadOnly = false;
                 textBoxTotal.ReadOnly = false;
-                RandomOrder();
+                textBoxOrder.ReadOnly = false;               
             }
             else
             {
                 textBoxMedium.ReadOnly = textBoxLight.ReadOnly = true;
                 textBoxHeavy.ReadOnly = textBoxSuper.ReadOnly = true;
                 textBoxTotal.ReadOnly = true;
+                textBoxOrder.ReadOnly = true;
             }
         }
 
@@ -541,7 +544,7 @@ namespace ToolParseMap
             if((int.Parse(textBoxMedium.Text) + int.Parse(textBoxLight.Text) +
                 int.Parse(textBoxHeavy.Text) + int.Parse(textBoxSuper.Text) != int.Parse(textBoxTotal.Text)))
             {
-                MessageBox.Show("Number tank not correct ", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("Number tank not correct", "Error", MessageBoxButtons.OK);
                 return false;
             }
             if (int.Parse(textBoxTotal.Text) == 0)
@@ -549,9 +552,28 @@ namespace ToolParseMap
                 MessageBox.Show("Total number tank must more than zero value ", "Error", MessageBoxButtons.OK);
                 return false;
             }
+            //Kiểm tra ô order
+            List<char> list = new List<char>(new[] { '0', '1', '2', '3' });
+            String orderText = textBoxOrder.Text;
+            foreach (var item in orderText)
+            {
+                if (!list.Contains(item))
+                {
+                    MessageBox.Show("Only have '0', '1', '2', '3' in order string", "Error", MessageBoxButtons.OK);
+                    return false;
+                }
+            }
+            for(int i=0;i<orderText.Length;i++)
+            {
+                if (list.LastIndexOf(orderText[i]) != i)
+                {
+                    MessageBox.Show("Duplicate order character", "Error", MessageBoxButtons.OK);
+                    return false;
+                }
+                    
+            }
+      
             return true;
         }
-
-        
     }
 }

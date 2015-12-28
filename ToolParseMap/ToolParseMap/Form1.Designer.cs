@@ -39,6 +39,7 @@
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBoxStep2 = new System.Windows.Forms.GroupBox();
+            this.buttonRandom = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxTotal = new System.Windows.Forms.TextBox();
             this.radioButtonDefault = new System.Windows.Forms.RadioButton();
@@ -54,7 +55,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxStep3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.buttonRandom = new System.Windows.Forms.Button();
+            this.textBoxOrder = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBoxStep1.SuspendLayout();
             this.groupBoxStep2.SuspendLayout();
             this.groupBoxStep3.SuspendLayout();
@@ -157,6 +159,8 @@
             // 
             // groupBoxStep2
             // 
+            this.groupBoxStep2.Controls.Add(this.label8);
+            this.groupBoxStep2.Controls.Add(this.textBoxOrder);
             this.groupBoxStep2.Controls.Add(this.buttonRandom);
             this.groupBoxStep2.Controls.Add(this.label7);
             this.groupBoxStep2.Controls.Add(this.textBoxTotal);
@@ -175,10 +179,20 @@
             this.groupBoxStep2.Controls.Add(this.label2);
             this.groupBoxStep2.Location = new System.Drawing.Point(12, 92);
             this.groupBoxStep2.Name = "groupBoxStep2";
-            this.groupBoxStep2.Size = new System.Drawing.Size(235, 242);
+            this.groupBoxStep2.Size = new System.Drawing.Size(235, 266);
             this.groupBoxStep2.TabIndex = 7;
             this.groupBoxStep2.TabStop = false;
             this.groupBoxStep2.Text = "Step 2: Generate Enemy Tank";
+            // 
+            // buttonRandom
+            // 
+            this.buttonRandom.Location = new System.Drawing.Point(68, 43);
+            this.buttonRandom.Name = "buttonRandom";
+            this.buttonRandom.Size = new System.Drawing.Size(75, 23);
+            this.buttonRandom.TabIndex = 22;
+            this.buttonRandom.Text = "Random";
+            this.buttonRandom.UseVisualStyleBackColor = true;
+            this.buttonRandom.Click += new System.EventHandler(this.buttonRandom_Click);
             // 
             // label7
             // 
@@ -309,7 +323,7 @@
             // 
             this.groupBoxStep3.Controls.Add(this.label3);
             this.groupBoxStep3.Controls.Add(this.ButtonParse);
-            this.groupBoxStep3.Location = new System.Drawing.Point(12, 340);
+            this.groupBoxStep3.Location = new System.Drawing.Point(12, 364);
             this.groupBoxStep3.Name = "groupBoxStep3";
             this.groupBoxStep3.Size = new System.Drawing.Size(235, 73);
             this.groupBoxStep3.TabIndex = 8;
@@ -325,21 +339,30 @@
             this.label3.TabIndex = 1;
             this.label3.Text = "Parse map:";
             // 
-            // buttonRandom
+            // textBoxOrder
             // 
-            this.buttonRandom.Location = new System.Drawing.Point(68, 43);
-            this.buttonRandom.Name = "buttonRandom";
-            this.buttonRandom.Size = new System.Drawing.Size(75, 23);
-            this.buttonRandom.TabIndex = 22;
-            this.buttonRandom.Text = "Random";
-            this.buttonRandom.UseVisualStyleBackColor = true;
-            this.buttonRandom.Click += new System.EventHandler(this.buttonRandom_Click);
+            this.textBoxOrder.Location = new System.Drawing.Point(123, 237);
+            this.textBoxOrder.MaxLength = 4;
+            this.textBoxOrder.Name = "textBoxOrder";
+            this.textBoxOrder.ReadOnly = true;
+            this.textBoxOrder.Size = new System.Drawing.Size(56, 20);
+            this.textBoxOrder.TabIndex = 23;
+            this.textBoxOrder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMedium_KeyPress);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(29, 240);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(33, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Order";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(255, 419);
+            this.ClientSize = new System.Drawing.Size(255, 444);
             this.Controls.Add(this.groupBoxStep3);
             this.Controls.Add(this.groupBoxStep2);
             this.Controls.Add(this.groupBoxStep1);
@@ -386,6 +409,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxTotal;
         private System.Windows.Forms.Button buttonRandom;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxOrder;
     }
 }
 
