@@ -10,6 +10,10 @@ Enemy::Enemy()
 	_isCollied = false;
 	_isFreeze = false;
 }
+bool Enemy::isFreeze()
+{
+	return _isFreeze;
+}
 void Enemy::DeActivateBonus()
 {
 	_isBonusTank = false;

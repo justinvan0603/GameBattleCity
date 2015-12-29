@@ -21,6 +21,7 @@ public:
 	bool isBonusTank();		//kiem tra phai la bonus tank khong
 	void ActivateFreeze();	//Ham kich hoat trang thai dong bang
 	void DeactivateFreeze();	//Huy trang thai dong bang
+	bool isFreeze();
 	~Enemy();
 };
 

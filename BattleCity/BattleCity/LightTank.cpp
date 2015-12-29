@@ -28,7 +28,7 @@ LightTank::LightTank(LPD3DXSPRITE spriteHandler, D3DXVECTOR2 position, bool isBo
 	this->_id = ID_LIGHT_TANK;
 	this->_level = LEVEL_ONE;
 	this->_spriteHandler = spriteHandler;
-	this->_currentDirection = RIGHT;
+	this->_currentDirection = DOWN;
 	this->_left = (int)position.x; //DEFAULT_TOP_LEFT.x;
 	this->_top = (int)position.y;// DEFAULT_TOP_LEFT.y;
 	this->_vx = (int)DYNAMIC_OBJECT_HIGH_SPEED.x;

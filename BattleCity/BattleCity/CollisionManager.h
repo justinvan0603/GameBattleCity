@@ -18,7 +18,7 @@ public:
 	static bool CollisionPreventMove(Object* A, Object* B);	//Xet va cham voi object tinh va ngan chan di chuyen
 	static bool CollisionBulletWithObject(Bullet* A, Object* B);	//Xet va cham dan voi object
 	static bool CollisionWithScreen(Object* A);	//Xet va cham object dong voi man hinh
-	static bool CollisionChangeDirection(DynamicObject *A, DynamicObject *B);	//Xet va cham giua player- enemy neu co va cham chuyen huong enenmy
+	static bool CollisionChangeDirection(DynamicObject *A, Enemy *B);	//Xet va cham giua player- enemy neu co va cham chuyen huong enenmy
 	static bool CollisionEnemy(DynamicObject* A, DynamicObject* B);	//Xet va cham giua 2 enemy
 	static bool CollisionWithItem(PlayerTank* A, PowerUp *B);	//Xet va cham giua player va item
 	static int FindRespawnPosition(vector<MyRectangle*>* listposition, int currentposition, PlayerTank* A, vector<Enemy*>* enemyOnMap);

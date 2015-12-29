@@ -329,7 +329,7 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 	//return false;
 }
 //Kiem tra va cham player va enemy
-bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject *B)
+bool CollisionManager::CollisionChangeDirection(DynamicObject *A, Enemy *B)
 {
 
 	MyRectangle broadphaseA = BroadphaseRect(A);
@@ -348,14 +348,16 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 			if (A->getLeft() < B->getLeft())
 			{
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
-				B->RandomChangeDirection();
+				if (!B->isFreeze())
+					B->RandomChangeDirection();
 				return true;
 
 			}
 			if (A->getRight() > B->getRight())
 			{
 				A->setPositionX(A->getPositionX() + B->getRight() - A->getLeft() + 1);
-				B->RandomChangeDirection();
+				if (!B->isFreeze())
+					B->RandomChangeDirection();
 				return true;
 
 			}
@@ -365,24 +367,28 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, DynamicObject 
 			if (A->getTop() < B->getTop())
 			{
 				A->setPositionY(A->getPositionY() + B->getTop() - A->getBottom() - 1);
-				B->RandomChangeDirection();
+				if (!B->isFreeze())
+					B->RandomChangeDirection();
 				return true;
 
 			}
 			if (A->getBottom() > B->getBottom())
 			{
 				A->setPositionY(A->getPositionY() + B->getBottom() - A->getTop() + 1);
-				B->RandomChangeDirection();
+				if (!B->isFreeze())
+					B->RandomChangeDirection();
 				return true;
 			}
 		}
 		if (A->getCurrentMoveDirection() == B->getCurrentMoveDirection())
 		{
 			if (B->getRight() < A->getLeft() || B->getBottom() < A->getTop())
-				B->InvertDirection();
+				if (!B->isFreeze())
+					B->InvertDirection();
 			return true;
 		}
-		B->InvertDirection();
+		if (!B->isFreeze())
+			B->InvertDirection();
 		//B->RandomChangeDirection();
 		return true;
 	}
