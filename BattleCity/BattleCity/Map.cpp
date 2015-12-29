@@ -151,116 +151,97 @@ void Map::InitListEnemy(int numOfEnemy[], string order)
 	//	2 - heavy  tank
 	//	3 - super heavy tank
 	//order - Thu tu xuat hien cac loai tank 
-
+	int i = 0;
 	float distance = 0.0f;
 	bool isBonusTank;
-	vector<MediumTank*>* listMedium = new vector<MediumTank*>;
-	vector<LightTank*>* listLight = new vector<LightTank*>;
-	vector<HeavyTank*>* listHeavy = new vector<HeavyTank*>;
-	vector<SuperHeavyTank*>* listSuper = new vector<SuperHeavyTank*>;
-	for (int i = 0; i < _maxEnemy; i++)
-	{
-		isBonusTank = false;
-		if (i == 3 || i == 10 || i == 17)
-		{
-			//set tank has powerup
-			isBonusTank = true;
-		}
-		if (distance > MAX_RESPAWN_POS_X)
-			distance = 0.0f;
-		if(numOfEnemy[ID_MEDIUM_TANK] > 0)
-		{
-			MediumTank* temp;
-			temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
-			numOfEnemy[ID_MEDIUM_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _listStaticObject);
-			listMedium->push_back(temp);
-			distance += DISTANCE_RESPAWN_POS_X;
-			continue;
-		}
-		if(numOfEnemy[ID_LIGHT_TANK] > 0)
-		{
-			LightTank* temp;
-			temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
-			numOfEnemy[ID_LIGHT_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _listStaticObject);
-			listLight->push_back(temp);
-			distance += DISTANCE_RESPAWN_POS_X;
-			continue;
-		}
-		if (numOfEnemy[ID_HEAVY_TANK] > 0)
-		{
-			HeavyTank* temp;
-			temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
-			numOfEnemy[ID_HEAVY_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _listStaticObject);
-			listHeavy->push_back(temp);
-			distance += DISTANCE_RESPAWN_POS_X;
-			continue;
-		}
-		if (numOfEnemy[ID_SUPER_HEAVY_TANK] > 0)
-		{
-			SuperHeavyTank* temp;
-			temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
-			numOfEnemy[ID_SUPER_HEAVY_TANK] -= 1;
-			temp->InitMapData(_mapMatrix, _listStaticObject);
-			listSuper->push_back(temp);
-			distance += DISTANCE_RESPAWN_POS_X;
-		}
-	}
-	int i = 0;
-	int n;
 	while(i<NUM_TYPE_ENEMY)
 	{
 		switch (order[i] - '0')
 		{
 			case ID_MEDIUM_TANK:
 			{
-				n = listMedium->size();
-				for (int j = 0; j < n;j++)
+				while(numOfEnemy[ID_MEDIUM_TANK] > 0)
 				{
-					_listEnemy->push_back(listMedium->front());
-					listMedium->erase(listMedium->begin());
-				}		
-				delete listMedium;
+					_numEnemy++;
+					if (_numEnemy == 4 || _numEnemy == 11 || _numEnemy == 18)
+						isBonusTank = true;
+					else
+						isBonusTank = false;
+					MediumTank* temp;
+					temp = new MediumTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);					
+					temp->InitMapData(_mapMatrix, _listStaticObject);					
+					distance += DISTANCE_RESPAWN_POS_X;
+					if (distance > MAX_RESPAWN_POS_X)
+						distance = 0.0f;
+					_listEnemy->push_back(temp);
+					numOfEnemy[ID_MEDIUM_TANK] -= 1;
+				}
 				break;
 			}
 			case ID_LIGHT_TANK:
 			{
-				n = listLight->size();
-				for (int j = 0; j < n; j++)
+				while (numOfEnemy[ID_LIGHT_TANK] > 0)
 				{
-					_listEnemy->push_back(listLight->front());
-					listLight->erase(listLight->begin());
+					_numEnemy++;
+					if (_numEnemy == 4 || _numEnemy == 11 || _numEnemy == 18)
+						isBonusTank = true;
+					else
+						isBonusTank = false;
+					LightTank* temp;
+					temp = new LightTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
+					temp->InitMapData(_mapMatrix, _listStaticObject);
+					distance += DISTANCE_RESPAWN_POS_X;
+					if (distance > MAX_RESPAWN_POS_X)
+						distance = 0.0f;
+					_listEnemy->push_back(temp);
+					numOfEnemy[ID_LIGHT_TANK] -= 1;
 				}
-				delete listLight;
 				break;
 			}
 			case ID_HEAVY_TANK:
 			{
-				n = listHeavy->size();
-				for (int j = 0; j < n; j++)
+				while (numOfEnemy[ID_HEAVY_TANK] > 0)
 				{
-					_listEnemy->push_back(listHeavy->front());
-					listHeavy->erase(listHeavy->begin());
+					_numEnemy++;
+					if (_numEnemy == 4 || _numEnemy == 11 || _numEnemy == 18)
+						isBonusTank = true;
+					else
+						isBonusTank = false;
+					HeavyTank* temp;
+					temp = new HeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
+					temp->InitMapData(_mapMatrix, _listStaticObject);
+					distance += DISTANCE_RESPAWN_POS_X;
+					if (distance > MAX_RESPAWN_POS_X)
+						distance = 0.0f;
+					_listEnemy->push_back(temp);
+					numOfEnemy[ID_HEAVY_TANK] -= 1;
 				}
-				delete listHeavy;
 				break;
 			}
 			case ID_SUPER_HEAVY_TANK:
 			{
-				n = listSuper->size();
-				for (int j = 0; j < n; j++)
+				while (numOfEnemy[ID_SUPER_HEAVY_TANK] > 0)
 				{
-					_listEnemy->push_back(listSuper->front());
-					listSuper->erase(listSuper->begin());
+					_numEnemy++;
+					if (_numEnemy == 4 || _numEnemy == 11 || _numEnemy == 18)
+						isBonusTank = true;
+					else
+						isBonusTank = false;
+					SuperHeavyTank* temp;
+					temp = new SuperHeavyTank(_spriteHandler, D3DXVECTOR2(POS_RESPAWN_X + distance, POS_RESPAWN_Y), isBonusTank);
+					temp->InitMapData(_mapMatrix, _listStaticObject);
+					distance += DISTANCE_RESPAWN_POS_X;
+					if (distance > MAX_RESPAWN_POS_X)
+						distance = 0.0f;
+					_listEnemy->push_back(temp);
+					numOfEnemy[ID_SUPER_HEAVY_TANK] -= 1;
 				}
-				delete listSuper;
 				break;
 			}
 		}
 		i++;
 	}
+	_numEnemy = 0;
 }
 
 //---------------------------------------
