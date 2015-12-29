@@ -60,8 +60,9 @@ void HeavyTank::Update()
 	if (_isFreeze)
 	{
 		if (_isBonusTank)
+
 		{
-			this->_listSprite[_currentDirection]->Next();
+			this->_listSprite[_currentDirection]->NextInCurRow();
 			this->_curSprite = this->_listSprite[_currentDirection];
 		}
 		return;

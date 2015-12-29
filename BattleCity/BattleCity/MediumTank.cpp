@@ -62,7 +62,7 @@ void MediumTank::Update()
 	{
 		if (_isBonusTank)
 		{
-			this->_listSprite[_currentDirection]->Next();
+			this->_listSprite[_currentDirection]->NextInCurRow();
 			this->_curSprite = this->_listSprite[_currentDirection];
 		}
 		return;

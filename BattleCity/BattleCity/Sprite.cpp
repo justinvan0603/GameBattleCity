@@ -62,6 +62,18 @@ void Sprite::Next(int startFrame)
 	if (this->_Index == _Count - 1)
 		this->_Index = startFrame;
 }
+void Sprite::NextInCurRow()
+{
+	this->_Index++;
+	if (this->_Index == _SpritePerRow)
+	{
+		this->_Index = 0;
+	}
+	if (this->_Index == _Count)
+	{
+		this->_Index = _SpritePerRow;
+	}
+}
 void Sprite::NextColumn()
 {
 
