@@ -38,7 +38,7 @@ bool CollisionManager::CollisionPreventMove(Object* A, Object* B)
 		if (A->getTop() < B->getBottom() && A->getBottom() > B->getTop())
 		{
 			if (A->getLeft() < B->getLeft())
-			{
+			{ 
 				A->setPositionX(A->getPositionX() + B->getLeft() - A->getRight() - 1);
 
 				return true;

@@ -72,6 +72,17 @@ void SuperHeavyTank::Update()
 			_listSprite[_currentDirection]->Next(_hitPoint - 1);
 			_curSprite = _listSprite[_currentDirection];
 		}
+		//Ney khong phai bonus hoac la bi ban trung dan
+		else if (!_isBonusTank || _hitPoint < 3)
+		{
+			if (_index > _hitPoint - 1)
+			{//Set lai frame row 1 dung voi HP
+				_index = _hitPoint - 1;
+				for (int i = 0; i < NUM_OF_DIRECTION; i++)
+					_listSprite[i]->setStartFrame(_index);
+			}
+			_curSprite = _listSprite[_currentDirection];
+		}
 		return;
 	}
 	FindNearbyObject();
