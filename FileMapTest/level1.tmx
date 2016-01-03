@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="52" height="52" tilewidth="8" tileheight="8" nextobjectid="1">
+ <tileset firstgid="1" name="mapEnvironment.png" tilewidth="8" tileheight="8" tilecount="20">
+  <image source="mapEnvironment.png" width="80" height="16"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="52" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztmckOwzAIRLvve/v/31oukayRGmcCeKl4EuJgGbsMsUmzWPAsxVYz5rUSHzmLXTqOj4Q+9eIPuZmbo9x87/jIkJu5OcrN946PhD7c/Nr6HMVOhGdh42v1eYt9CM/Cxg99/lsfFpy/Ftskvvfz7Sp2S3zp802Ltz6l8danNN79QWm8+wMWzN9WbDfircmtpz3f7mKPEW9Nbj3t/cPqsxc7JJ4db02fp9gr8ey4tT5atPq0xpD3X/vN6dMacf/Ygv0VgvXuXf/serh/7K8QrHfv+mfXw/2HPm3rY02cb20T76e+aOtfq4/186etf60+1s+fd/5616f0OFI7v6HPOOzvx/6KzS/bD3r/f439FZtfth8srQ9L6/qwlNbH+ntcjtrf56yp/f10apypeW1VH4wzNa/W+liRu396I3f/9EboY8MXQUIg/Q==
+  </data>
+ </layer>
+</map>

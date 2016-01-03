@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="52" height="52" tilewidth="8" tileheight="8" nextobjectid="1">
+ <tileset firstgid="1" name="mapEnvironment" tilewidth="8" tileheight="8" tilecount="20">
+  <image source="mapEnvironment.png" width="80" height="16"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="52" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztmNsKAjEMRL0rePf/P9a8LNSBZRzbkKg5EPLQ3S7mSJt2scjN0mLV5G/naHFq8rdTfl7Bemwtdk3Gccxri02T1e+NButxtbg1Gccxny0uTVa/N5ryk9sPgn4wI3uLg5DZ/L3+534Pepoycrd4CHlu3rn/g+ofmeb9FT+sfkh2PyqqH7aeRqP6YetpNOUnlx+sJ9YfYePR/TTWE+uPsPHo80758fXD1hsG299793MVtt4w2P4evZ+Xn9x+WPZG9YnPq/u5N6pPfL78+NLrh6H2v+z+Jxq1/2X3P9GUn1x+mA/WT6v3N+p6qvpmPlg/rd7fqOup6rv85Pajop5HR9+fjkY9j46+Px1N+fH109vP9vbfo/309rO9/Xf5+S8/bL/N3i8jbL/N1i8zvPxEefXyE+XVq27M96fzsfe96sZ8fzofe7/8vEeUnycbVCrR
+  </data>
+ </layer>
+</map>
