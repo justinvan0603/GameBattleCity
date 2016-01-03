@@ -895,6 +895,7 @@ void Map::CleanStage()
 	ClearDynamicObject();
 	SetDefaultValuePlayer();
 	BulletManager::getInstance()->ClearAllBullet();
+	EffectManager::getInstance()->ClearAllEffect();
 	_powerUpItem->clearPowerUp();
 	_eagle->setEagleStatus(EAGLE_STATUS::LIVE);
 	

@@ -5,7 +5,7 @@
 #include "DefaultConstant.h"
 //player default value
 #define DEFAULT_PLAYER_LIFE 3
-#define DEFAULT_PLAYER_POSITION_X	243
+#define DEFAULT_PLAYER_POSITION_X	240
 #define DEFAULT_PLAYER_POSITION_Y	434
 #define DEFAULT_PLAYER_POSITION_X_2 350
 #define DEFAULT_PLAYER_SPEED_X 4
