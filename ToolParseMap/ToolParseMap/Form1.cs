@@ -565,7 +565,7 @@ namespace ToolParseMap
             }
             for(int i=0;i<orderText.Length;i++)
             {
-                if (list.LastIndexOf(orderText[i]) != i)
+                if (orderText.LastIndexOf(orderText[i]) != i)
                 {
                     MessageBox.Show("Duplicate order character", "Error", MessageBoxButtons.OK);
                     return false;
