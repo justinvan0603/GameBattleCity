@@ -71,6 +71,7 @@ namespace ToolParseMap
                 groupBoxStep2.Enabled = groupBoxStep3.Enabled = true;
                 _filePath = openFileDialog1.FileName;                
                 _fileLines = File.ReadAllLines(_filePath);
+                _numRow = _numCol = 0;
                 GetInfoMapFromFile();
             }
         }
@@ -124,7 +125,7 @@ namespace ToolParseMap
             }         
             if (_numCol == 0 || _numRow == 0)
             {
-                MessageBox.Show("File not correct!","Warning",MessageBoxButtons.OK);
+                MessageBox.Show("File not correct!","Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             _mapMatrix = new string[_numRow][];
@@ -406,7 +407,7 @@ namespace ToolParseMap
                         outputFile.WriteLine(string.Join(",",_mapMatrix[i]));
                     }                
                 }
-                MessageBox.Show("Parse map completed!\n" + saveFileDialog1.FileName, "Success", MessageBoxButtons.OK);
+                MessageBox.Show("Parse map completed!\n" + saveFileDialog1.FileName, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -538,18 +539,18 @@ namespace ToolParseMap
             if(textBoxMedium.Text == "" || textBoxLight.Text == "" ||
                 textBoxHeavy.Text == "" || textBoxSuper.Text == "" || textBoxTotal.Text == "")
             {
-                MessageBox.Show("Num tank textbox not be empty","Error",MessageBoxButtons.OK);
+                MessageBox.Show("Num tank textbox not be empty","Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if((int.Parse(textBoxMedium.Text) + int.Parse(textBoxLight.Text) +
                 int.Parse(textBoxHeavy.Text) + int.Parse(textBoxSuper.Text) != int.Parse(textBoxTotal.Text)))
             {
-                MessageBox.Show("Number tank not correct", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("Number tank not correct", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (int.Parse(textBoxTotal.Text) == 0)
             {
-                MessageBox.Show("Total number tank must more than zero value ", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("Total number tank must more than zero value ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             //Kiểm tra ô order
@@ -559,7 +560,7 @@ namespace ToolParseMap
             {
                 if (!list.Contains(item))
                 {
-                    MessageBox.Show("Only have '0', '1', '2', '3' in order string", "Error", MessageBoxButtons.OK);
+                    MessageBox.Show("Only have '0', '1', '2', '3' in order string", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -567,7 +568,7 @@ namespace ToolParseMap
             {
                 if (orderText.LastIndexOf(orderText[i]) != i)
                 {
-                    MessageBox.Show("Duplicate order character", "Error", MessageBoxButtons.OK);
+                    MessageBox.Show("Duplicate order character", "Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
                     return false;
                 }
                     
