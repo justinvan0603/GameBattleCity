@@ -22,6 +22,6 @@ public:
 	void AddBulletEffect(D3DXVECTOR2 position);	//Them effect dan no vao list
 	void AddDestroyEffect(D3DXVECTOR2 position);	//Khi co xe tank hay eagle bi tieu diet thi add hieu ung no tank vao
 	void Draw();
-	
+	void ClearAllEffect();
 };
 

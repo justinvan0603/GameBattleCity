@@ -46,3 +46,18 @@ void EffectManager::Draw()
 		}
 	}
 }
+void EffectManager::ClearAllEffect()
+{
+	for (vector<Effect*>::iterator i = _listEffect.begin(); i != _listEffect.end();)
+	{
+		if ((*i))
+		{
+			delete *i;
+			*i = NULL;
+			i = _listEffect.erase(i);
+		}
+		else
+			i++;
+	}
+	_listEffect.clear();
+}
