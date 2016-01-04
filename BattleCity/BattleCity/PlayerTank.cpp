@@ -82,7 +82,7 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_DOWN))
 	{
 		_isMoving = true;
-		this->_vy = PLAYER_SPEED_PROMOTED_Y;
+		this->_vy = DEFAULT_PLAYER_SPEED_Y;
 		_curSprite = _listSprite[DOWN];
 		_currentDirection = DOWN;
 		return;
@@ -91,7 +91,7 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_LEFT))
 	{
 		_isMoving = true;
-		this->_vx = -PLAYER_SPEED_PROMOTED_X;
+		this->_vx = -DEFAULT_PLAYER_SPEED_X;
 		_curSprite = _listSprite[LEFT];
 		_currentDirection = LEFT;
 		return;
@@ -99,7 +99,7 @@ void PlayerTank::Move()
 	if (Keyboard::getInstance()->IsKeyDown(DIK_RIGHT))
 	{
 		_isMoving = true;
-		this->_vx = PLAYER_SPEED_PROMOTED_X;
+		this->_vx = DEFAULT_PLAYER_SPEED_X;
 		_curSprite = _listSprite[RIGHT];
 		_currentDirection = RIGHT;
 		return;
@@ -120,7 +120,7 @@ void PlayerTank::Shoot()
 		D3DXVECTOR2 bulletPosition = CalculateBulletPosition(_left, _top,_currentDirection);
 		if (BulletManager::getInstance()->getPlayerBulletSize() == 0)
 		{
-			if (GameTime::RenderFrame(_startTime, 100))
+			if (GameTime::RenderFrame(_startTime, PLAYER_PROMOTED_BULLET_RELOAD_TIME))
 			{
 				BulletManager::getInstance()->AddBullet(_spriteHandler, _currentDirection, bulletPosition, ALLY_PLAYER, _level, _map, _listNearByObject);
 				_startTime = GetTickCount();
