@@ -39,6 +39,8 @@
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBoxStep2 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBoxOrder = new System.Windows.Forms.TextBox();
             this.buttonRandom = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxTotal = new System.Windows.Forms.TextBox();
@@ -55,8 +57,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxStep3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBoxOrder = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.groupBoxStep1.SuspendLayout();
             this.groupBoxStep2.SuspendLayout();
             this.groupBoxStep3.SuspendLayout();
@@ -184,6 +184,25 @@
             this.groupBoxStep2.TabStop = false;
             this.groupBoxStep2.Text = "Step 2: Generate Enemy Tank";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(29, 240);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(33, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Order";
+            // 
+            // textBoxOrder
+            // 
+            this.textBoxOrder.Location = new System.Drawing.Point(123, 237);
+            this.textBoxOrder.MaxLength = 4;
+            this.textBoxOrder.Name = "textBoxOrder";
+            this.textBoxOrder.ReadOnly = true;
+            this.textBoxOrder.Size = new System.Drawing.Size(56, 20);
+            this.textBoxOrder.TabIndex = 23;
+            this.textBoxOrder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMedium_KeyPress);
+            // 
             // buttonRandom
             // 
             this.buttonRandom.Location = new System.Drawing.Point(68, 43);
@@ -206,6 +225,7 @@
             // textBoxTotal
             // 
             this.textBoxTotal.Location = new System.Drawing.Point(123, 107);
+            this.textBoxTotal.MaxLength = 2;
             this.textBoxTotal.Name = "textBoxTotal";
             this.textBoxTotal.ReadOnly = true;
             this.textBoxTotal.Size = new System.Drawing.Size(33, 20);
@@ -250,6 +270,7 @@
             // textBoxSuper
             // 
             this.textBoxSuper.Location = new System.Drawing.Point(123, 211);
+            this.textBoxSuper.MaxLength = 2;
             this.textBoxSuper.Name = "textBoxSuper";
             this.textBoxSuper.ReadOnly = true;
             this.textBoxSuper.Size = new System.Drawing.Size(33, 20);
@@ -259,6 +280,7 @@
             // textBoxHeavy
             // 
             this.textBoxHeavy.Location = new System.Drawing.Point(123, 185);
+            this.textBoxHeavy.MaxLength = 2;
             this.textBoxHeavy.Name = "textBoxHeavy";
             this.textBoxHeavy.ReadOnly = true;
             this.textBoxHeavy.Size = new System.Drawing.Size(33, 20);
@@ -268,6 +290,7 @@
             // textBoxLight
             // 
             this.textBoxLight.Location = new System.Drawing.Point(123, 159);
+            this.textBoxLight.MaxLength = 2;
             this.textBoxLight.Name = "textBoxLight";
             this.textBoxLight.ReadOnly = true;
             this.textBoxLight.Size = new System.Drawing.Size(33, 20);
@@ -277,6 +300,7 @@
             // textBoxMedium
             // 
             this.textBoxMedium.Location = new System.Drawing.Point(123, 133);
+            this.textBoxMedium.MaxLength = 2;
             this.textBoxMedium.Name = "textBoxMedium";
             this.textBoxMedium.ReadOnly = true;
             this.textBoxMedium.Size = new System.Drawing.Size(33, 20);
@@ -338,25 +362,6 @@
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 1;
             this.label3.Text = "Parse map:";
-            // 
-            // textBoxOrder
-            // 
-            this.textBoxOrder.Location = new System.Drawing.Point(123, 237);
-            this.textBoxOrder.MaxLength = 4;
-            this.textBoxOrder.Name = "textBoxOrder";
-            this.textBoxOrder.ReadOnly = true;
-            this.textBoxOrder.Size = new System.Drawing.Size(56, 20);
-            this.textBoxOrder.TabIndex = 23;
-            this.textBoxOrder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMedium_KeyPress);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(29, 240);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(33, 13);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "Order";
             // 
             // Form1
             // 
