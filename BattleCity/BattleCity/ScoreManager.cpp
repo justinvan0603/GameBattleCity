@@ -99,18 +99,18 @@ ScoreManager::ScoreManager()
 	_playerScore = 0;
 	//Doc file lay diem cao nhat
 	string line;
-	fstream _mapFile;
+	fstream _hiscoreFile;
 	string scoreFilePath = HI_SCORE_FILE_PATH;
-	_mapFile.open(scoreFilePath, ios::in);
-	if (!_mapFile.fail())
+	_hiscoreFile.open(scoreFilePath, ios::in);
+	if (!_hiscoreFile.fail())
 	{
-		while (!_mapFile.eof())
+		while (!_hiscoreFile.eof())
 		{
-			getline(_mapFile, line);
+			getline(_hiscoreFile, line);
 			_highScore = std::stoi(line);
 		}
 	}
-	_mapFile.close();
+	_hiscoreFile.close();
 }
 
 
