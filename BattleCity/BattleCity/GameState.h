@@ -27,6 +27,7 @@ public:
 
 	virtual ~GameState()
 	{
+		
 	}
 
 protected:

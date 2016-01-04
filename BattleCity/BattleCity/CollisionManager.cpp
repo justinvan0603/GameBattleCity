@@ -389,7 +389,6 @@ bool CollisionManager::CollisionChangeDirection(DynamicObject *A, Enemy *B)
 		}
 		if (!B->isFreeze())
 			B->InvertDirection();
-		//B->RandomChangeDirection();
 		return true;
 	}
 	return false;

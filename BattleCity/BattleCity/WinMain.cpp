@@ -21,6 +21,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		game->GameUpdate();
 		game->GameDraw();
 	}
-	//Game.Release();
+	game->GameRelease();
 	return 0;
 }

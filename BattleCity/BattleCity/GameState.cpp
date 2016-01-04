@@ -15,9 +15,10 @@ void GameState::initialize(LPD3DXSPRITE spriteHandler)
 
 void GameState::release()
 {
+	//Xoa bien ve chu va release doi tuong ve SpriteHandler, cac bien singletton con lai he dieu hanh tu don
 	SAFE_RELEASE(_text);
-	SAFE_RELEASE(_spriteHandler);
-	SAFE_RELEASE(_gameState);
+	if (_spriteHandler)
+		_spriteHandler->Release();
 }
 
 
@@ -73,6 +74,7 @@ MainMenu::~MainMenu()
 {
 	SAFE_RELEASE(_menuImage);
 	SAFE_RELEASE(_selector);
+	
 }
 
 void MainMenu::update()
