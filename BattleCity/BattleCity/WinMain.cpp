@@ -7,6 +7,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	Game *game = new Game();
 	if (!game->GameInit(hInstance))
 		return false;
+
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
 
@@ -18,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			DispatchMessage(&msg);
 		}
 		game->GameUpdate();
-		game->GameDraw();	
+		game->GameDraw();
 	}
 	//Game.Release();
 	return 0;

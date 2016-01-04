@@ -233,30 +233,30 @@ bool CollisionManager::CollisionWithScreen(Object* A)
 		if (collisionRect.getTop() < POS_MAP_TOP_LEFT_Y && enemy->getCurrentMoveDirection() == UP )
 		{
 			A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y - A->getTop() +1);
-			if (A->getId() == ID_BULLET)
-				A->_isTerminated = true;
+			//if (A->getId() == ID_BULLET)
+				//A->_isTerminated = true;
 			return true;
 		}
 		if (collisionRect.getBottom() > POS_MAP_TOP_LEFT_Y + MAP_HEIGHT && enemy->getCurrentMoveDirection() == DOWN)
 		{
 			A->setPositionY(A->getPositionY() + POS_MAP_TOP_LEFT_Y + MAP_HEIGHT - A->getBottom() -1);
-			if (A->getId() == ID_BULLET)
-				A->_isTerminated = true;
+			//if (A->getId() == ID_BULLET)
+				//A->_isTerminated = true;
 			return true;
 		}
 		if (collisionRect.getLeft() < POS_MAP_TOP_LEFT_X && enemy->getCurrentMoveDirection() == LEFT)
 		{
 			A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X - A->getLeft() +1);
-			if (A->getId() == ID_BULLET)
-				A->_isTerminated = true;
+		//	if (A->getId() == ID_BULLET)
+			//	A->_isTerminated = true;
 			return true;
 
 		}
 		if (collisionRect.getRight() > POS_MAP_TOP_LEFT_X + MAP_WIDTH && enemy->getCurrentMoveDirection() == RIGHT)
 		{
 			A->setPositionX(A->getPositionX() + POS_MAP_TOP_LEFT_X + MAP_WIDTH - A->getRight() -1);
-			if (A->getId() == ID_BULLET)
-				A->_isTerminated = true;
+		//	if (A->getId() == ID_BULLET)
+			//	A->_isTerminated = true;
 			return true;
 		}
 	}

@@ -124,6 +124,7 @@ void DynamicObject::FindNearbyObject()
 
 			if (currentObjectRow + nearbyObjectCountHeight < 52)
 			{
+			
 				value = _map[currentObjectRow + nearbyObjectCountHeight][i];
 				if (value != -1)
 				{

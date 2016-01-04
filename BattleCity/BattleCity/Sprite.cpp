@@ -62,6 +62,7 @@ void Sprite::Next(int startFrame)
 	if (this->_Index == _Count - 1)
 		this->_Index = startFrame;
 }
+//Chuyen frame cho super heavy dung sprite vi du khi dang bi dong bang
 void Sprite::NextInCurRow()
 {
 	this->_Index++;
